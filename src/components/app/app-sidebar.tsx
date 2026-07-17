@@ -27,6 +27,7 @@ import {
   HelpCircle,
   PieChart,
   Zap,
+  Sparkles,
   Link2,
   Plug,
   Settings,
@@ -109,7 +110,8 @@ const groups: NavGroup[] = [
       { to: "/app/landing-pages", title: "Landing Pages",   icon: LayoutPanelTop },
       { to: "/app/quiz",          title: "Quiz",            icon: HelpCircle },
       { to: "/app/relatorios",    title: "Relatórios Gerenciais", icon: PieChart },
-      { to: "/app/matchmaking",   title: "Matchmaking 360", icon: Zap },
+      { to: "/app/matchmaking",   title: "Matchmaking IA",  icon: Zap },
+      { to: "/app/criativos",     title: "Criativos IA",    icon: Sparkles },
     ],
   },
   {
