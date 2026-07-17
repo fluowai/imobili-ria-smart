@@ -174,7 +174,15 @@ function AppDashboard() {
           <ul className="mt-4 space-y-3">
             {tarefas.map((t) => (
               <li key={t.id} className="flex items-start gap-3 rounded-xl border border-border p-3">
-                <input type="checkbox" className="mt-1 accent-[color:var(--color-primary)]" />
+                <input
+                  type="checkbox"
+                  className="mt-1 accent-[color:var(--color-primary)]"
+                  checked={t.status === "concluida"}
+                  onChange={() => {
+                    if (tarefasQuery.data && t.status !== "concluida") toggleMutation.mutate(t.id);
+                  }}
+                />
+
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-foreground">{t.titulo}</p>
                   <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
