@@ -1,0 +1,7 @@
+# Substitua seu-dominio.com pelo domínio real em produção.
+# Em desenvolvimento local, use :80 no lugar do bloco de domínio.
+
+{$DOMAIN:localhost} {
+	encode zstd gzip
+	reverse_proxy app:3000
+}
