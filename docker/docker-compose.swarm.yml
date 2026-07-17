@@ -2,13 +2,12 @@ version: "3.8"
 
 services:
   app:
-    # URL completa do GHCR para o Portainer conseguir baixar
     image: ghcr.io/fluowai/imobili-ria-smart:latest
     environment:
-      # Insira aqui as variáveis do Supabase e outras que sua aplicação usa
-      VITE_SUPABASE_URL: "${VITE_SUPABASE_URL}"
-      VITE_SUPABASE_ANON_KEY: "${VITE_SUPABASE_ANON_KEY}"
-      JWT_SECRET: "${JWT_SECRET}"
+      VITE_SUPABASE_URL: "https://cgxujqgzucwgdlcssrka.supabase.co"
+      VITE_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNneHVqcWd6dWN3Z2RsY3NzcmthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTE1MjUsImV4cCI6MjA5OTg2NzUyNX0.jzVI-tlrZHvaIncHNB7z9ah4-i89L8roTdQIMlKu-Xc"
+      VITE_SUPABASE_PUBLISHABLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNneHVqcWd6dWN3Z2RsY3NzcmthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTE1MjUsImV4cCI6MjA5OTg2NzUyNX0.jzVI-tlrZHvaIncHNB7z9ah4-i89L8roTdQIMlKu-Xc"
+      JWT_SECRET: "uiRbeadX1F/vtLbJe9k7R3FNkYYZld5eLe1kdwmjIhPDYPe+1I2RzPuoLqonsMBFR8gO2Zn/ScTub7jGYdPwPw=="
     networks:
       - woopanel1
       - imobfluow_internal
@@ -19,17 +18,60 @@ services:
       update_config:
         order: stop-first
         failure_action: rollback
-      rollback_config:
-        order: stop-first
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=woopanel1"
         - "traefik.http.routers.imobfluow_app.rule=Host(`imobfluow.wootech.com.br`)"
         - "traefik.http.routers.imobfluow_app.entrypoints=websecure"
         - "traefik.http.routers.imobfluow_app.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.imobfluow_app.priority=10"
+        - "traefik.http.routers.imobfluow_app.priority=1"
         - "traefik.http.routers.imobfluow_app.service=imobfluow_app"
         - "traefik.http.services.imobfluow_app.loadbalancer.server.port=3000"
+
+  whatsapp-service:
+    image: ghcr.io/fluowai/meugabinete-whatsapp-service:latest
+    environment:
+      PORT: 3001
+      ALLOWED_ORIGINS: "https://imobfluow.wootech.com.br"
+      DATABASE_URL: "file:/app/data/whatsapp_sessions.db?_pragma=foreign_keys(1)"
+      SUPABASE_URL: "https://cgxujqgzucwgdlcssrka.supabase.co"
+      SUPABASE_SERVICE_ROLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNneHVqcWd6dWN3Z2RsY3NzcmthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTE1MjUsImV4cCI6MjA5OTg2NzUyNX0.jzVI-tlrZHvaIncHNB7z9ah4-i89L8roTdQIMlKu-Xc"
+      SUPABASE_BUCKET: "imobfluow"
+      JWT_SECRET: "uiRbeadX1F/vtLbJe9k7R3FNkYYZld5eLe1kdwmjIhPDYPe+1I2RzPuoLqonsMBFR8gO2Zn/ScTub7jGYdPwPw=="
+      AI_PROVIDER: "gemini"
+      GEMINI_API_KEY: ""
+      CEP_FREE_PROVIDER: "viacep"
+      MINIO_ENDPOINT: "n.woopanel.com.br"
+      MINIO_ACCESS_KEY: "vswlXbleffrlVSV5UgpH"
+      MINIO_SECRET_KEY: "GFKo0uiyw3GkHRJklPKTmN9DRpcV2VGqAXh7bucl"
+      MINIO_BUCKET: "imobfluow"
+      MINIO_USE_SSL: "true"
+      MINIO_PUBLIC_URL: "https://n.woopanel.com.br/imobfluow"
+    volumes:
+      - whatsapp_data:/app/data
+    networks:
+      - woopanel1
+      - imobfluow_internal
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+      update_config:
+        order: stop-first
+        failure_action: rollback
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=woopanel1"
+        - "traefik.http.routers.imobfluow_wa.rule=Host(`imobfluow.wootech.com.br`) && PathPrefix(`/wa`, `/api`)"
+        - "traefik.http.routers.imobfluow_wa.entrypoints=websecure"
+        - "traefik.http.routers.imobfluow_wa.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.imobfluow_wa.priority=10"
+        - "traefik.http.routers.imobfluow_wa.service=imobfluow_wa"
+        - "traefik.http.services.imobfluow_wa.loadbalancer.server.port=3001"
+
+volumes:
+  whatsapp_data:
+    driver: local
 
 networks:
   woopanel1:
