@@ -1,0 +1,59 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+  # O nome da imagem será algo como: ghcr.io/seu-usuario/imobfluow-app
+  IMAGE_NAME: ${{ github.repository_owner }}/imobfluow-app
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    
+    # Necessário para fazer o push no GHCR usando o GITHUB_TOKEN automático
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=sha
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      # (Opcional) Chamar o Webhook do Portainer para atualizar a stack automaticamente
+      # Para funcionar, crie a Secret PORTAINER_WEBHOOK_URL nas configurações do repositório no GitHub
+      - name: Update Portainer Stack
+        if: ${{ env.PORTAINER_WEBHOOK != '' }}
+        env:
+          PORTAINER_WEBHOOK: ${{ secrets.PORTAINER_WEBHOOK_URL }}
+        run: |
+          echo "Disparando webhook do Portainer para atualizar a stack..."
+          curl -X POST "$PORTAINER_WEBHOOK"
