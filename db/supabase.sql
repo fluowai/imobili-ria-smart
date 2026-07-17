@@ -318,4 +318,52 @@ end $$;
 -- insert into public.imobiliarias (nome, slug) values ('Terra & Lar', 'terra-e-lar')
 -- on conflict (slug) do nothing;
 
+-- ============================================================
+-- MIGRAÇÃO: tipo de carteira (urbana/rural/ambas) + onboarding
+-- ============================================================
+do $$ begin
+  create type public.imob_tipo as enum ('urbana','rural','ambas');
+exception when duplicate_object then null; end $$;
+
+alter table public.imobiliarias
+  add column if not exists tipo public.imob_tipo not null default 'ambas',
+  add column if not exists onboarding_completed boolean not null default false,
+  add column if not exists instancia_nome text,
+  add column if not exists llm_keys jsonb not null default '{}'::jsonb;
+
+-- Permite que admin_imob da imobiliária atualize a própria linha (onboarding, keys)
+drop policy if exists "imob member update" on public.imobiliarias;
+create policy "imob member update" on public.imobiliarias for update to authenticated
+  using (public.is_member(id))
+  with check (public.is_member(id));
+
+-- Atualiza trigger para respeitar tipo escolhido no signup
+create or replace function public.handle_new_user()
+returns trigger language plpgsql security definer set search_path = public as $$
+declare
+  v_nome text;
+  v_imob_nome text;
+  v_slug text;
+  v_imob_id uuid;
+  v_tipo public.imob_tipo;
+begin
+  v_nome := coalesce(new.raw_user_meta_data->>'nome','');
+  insert into public.profiles(id, nome) values (new.id, v_nome)
+  on conflict (id) do nothing;
+
+  v_imob_nome := coalesce(nullif(new.raw_user_meta_data->>'imobiliaria',''),
+    'Imobiliária ' || coalesce(nullif(v_nome,''), split_part(new.email,'@',1)));
+  v_slug := lower(regexp_replace(v_imob_nome, '[^a-zA-Z0-9]+', '-', 'g')) || '-' || substr(new.id::text, 1, 8);
+  v_tipo := coalesce(nullif(new.raw_user_meta_data->>'tipo','')::public.imob_tipo, 'ambas');
+
+  insert into public.imobiliarias(nome, slug, tipo)
+  values (v_imob_nome, v_slug, v_tipo)
+  returning id into v_imob_id;
+
+  insert into public.memberships(user_id, imobiliaria_id, role)
+  values (new.id, v_imob_id, 'admin_imob');
+
+  return new;
+end $$;
+
 -- Fim.
