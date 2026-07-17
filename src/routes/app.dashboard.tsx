@@ -55,6 +55,28 @@ const prioridadeStyle = {
 
 function AppDashboard() {
   const maxFunil = Math.max(...funil.map((f) => f.valor));
+  const qc = useQueryClient();
+  const tarefasQuery = useQuery({
+    queryKey: ["tarefas", "abertas"],
+    queryFn: () => listTarefas({ data: { status: "aberta" } }),
+    retry: false,
+  });
+  const toggleMutation = useMutation({
+    mutationFn: (id: string) => updateTarefa({ data: { id, patch: { status: "concluida" } } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["tarefas"] }),
+  });
+
+  const tarefas: UITarefa[] = tarefasQuery.data && tarefasQuery.data.length > 0
+    ? tarefasQuery.data.slice(0, 6).map((t: any) => ({
+        id: t.id,
+        titulo: t.titulo,
+        responsavel: t.responsavelId ? "Responsável" : "Sem responsável",
+        vencimento: formatVencimento(t.vencimento),
+        prioridade: "media" as const,
+        status: t.status,
+      }))
+    : (tarefasMock as unknown as UITarefa[]);
+
   return (
     <div className="space-y-8">
       <PageHeader
