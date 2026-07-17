@@ -53,7 +53,7 @@ function AppLayout() {
     <div className="theme-app min-h-screen bg-background text-foreground">
       <SidebarProvider>
         <div className="flex min-h-screen w-full">
-          <AppSidebar tipo={imob?.tipo ?? "ambas"} nomeImob={imob?.nome} />
+          <AppSidebar tipo={imob?.tipo ?? "urbana"} nomeImob={imob?.nome} />
           <div className="flex min-w-0 flex-1 flex-col">
             <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-3 backdrop-blur md:px-6">
               <SidebarTrigger />
