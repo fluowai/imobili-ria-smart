@@ -1,4 +1,4 @@
-import { Outlet, createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
+import { Outlet, createFileRoute, Navigate, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Bell, Loader2, Plus, Search } from "lucide-react";
 
 import { AppSidebar } from "@/components/app/app-sidebar";
@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { useImobiliaria } from "@/hooks/use-imobiliaria";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/app")({
@@ -15,10 +16,12 @@ export const Route = createFileRoute("/app")({
 
 function AppLayout() {
   const { user, loading, configured, signOut } = useAuth();
+  const { imob, loading: imobLoading } = useImobiliaria();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const pathname = useRouterState({ select: (r) => r.location.pathname });
 
-  if (configured && loading) {
+  if (configured && (loading || (user && imobLoading))) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="size-6 animate-spin text-muted-foreground" />
@@ -27,6 +30,9 @@ function AppLayout() {
   }
   if (configured && !user) {
     return <Navigate to="/auth/login" />;
+  }
+  if (configured && user && imob && !imob.onboarding_completed && !pathname.startsWith("/onboarding")) {
+    return <Navigate to="/onboarding" />;
   }
 
   const initials = (user?.user_metadata?.nome || user?.email || "?")
