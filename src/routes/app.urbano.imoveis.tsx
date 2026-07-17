@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Building2, Search, Plus, Eye, Star, MapPin, BedDouble, Bath, Car, Ruler, Filter, Grid3x3, List } from "lucide-react";
+import { Building2, Search, Eye, Star, MapPin, BedDouble, Bath, Car, Ruler, Filter, Grid3x3, List } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { imoveisUrbanos, fmtBRL, type ImovelStatus, type ImovelTipo, type ImovelFinalidade } from "@/mocks/urbano";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { NovoImovelDialog } from "@/components/app/novo-imovel-dialog";
 
 export const Route = createFileRoute("/app/urbano/imoveis")({
   head: () => ({
@@ -76,7 +77,7 @@ function ImoveisUrbanosPage() {
         actions={
           <>
             <Button variant="outline" size="sm"><Filter className="mr-2 h-4 w-4" />Filtros avançados</Button>
-            <Button size="sm"><Plus className="mr-2 h-4 w-4" />Novo imóvel</Button>
+            <NovoImovelDialog tipo="urbano" />
           </>
         }
       />

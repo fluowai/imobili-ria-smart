@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
-import { kanbanColunas, leads } from "@/mocks/app";
+import { kanbanColunas, leads as leadsMock } from "@/mocks/app";
 import type { LeadStatus } from "@/mocks/app";
+import { listLeads } from "@/lib/leads.functions";
 
 export const Route = createFileRoute("/app/kanban")({
   head: () => ({
@@ -16,7 +19,40 @@ export const Route = createFileRoute("/app/kanban")({
   component: KanbanPage,
 });
 
+function dbToUiStatus(s: string): LeadStatus {
+  if (s === "qualificando") return "contato";
+  return (["novo", "visita", "proposta", "fechado", "perdido"].includes(s) ? s : "novo") as LeadStatus;
+}
+
 function KanbanPage() {
+  const list = listLeads;
+  const query = useQuery({
+    queryKey: ["leads"],
+    queryFn: () => list({ data: {} }),
+    retry: false,
+  });
+
+  const cards = useMemo(() => {
+    if (query.data && query.data.length > 0) {
+      return query.data.map((l) => ({
+        id: l.id,
+        nome: l.nome,
+        interesse: l.interesse ?? "",
+        valor: 0,
+        responsavel: "—",
+        status: dbToUiStatus(l.status),
+      }));
+    }
+    return leadsMock.map((l) => ({
+      id: l.id,
+      nome: l.nome,
+      interesse: l.interesse,
+      valor: l.valor,
+      responsavel: l.responsavel,
+      status: l.status,
+    }));
+  }, [query.data]);
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -33,8 +69,8 @@ function KanbanPage() {
 
       <div className="flex gap-4 overflow-x-auto pb-4">
         {kanbanColunas.map((col) => {
-          const cards = leads.filter((l) => l.status === (col.id as LeadStatus));
-          const total = cards.reduce((a, l) => a + l.valor, 0);
+          const items = cards.filter((l) => l.status === (col.id as LeadStatus));
+          const total = items.reduce((a, l) => a + l.valor, 0);
           return (
             <div
               key={col.id}
@@ -45,7 +81,7 @@ function KanbanPage() {
                   <span className="size-2 rounded-full" style={{ background: col.cor }} />
                   <p className="font-medium">{col.titulo}</p>
                   <span className="rounded-full bg-secondary px-1.5 py-0.5 text-xs text-muted-foreground">
-                    {cards.length}
+                    {items.length}
                   </span>
                 </div>
                 <Button variant="ghost" size="icon" className="size-7">
@@ -56,7 +92,7 @@ function KanbanPage() {
                 R$ {(total / 1000).toFixed(0)}k em pipeline
               </div>
               <div className="flex-1 space-y-2 p-2">
-                {cards.map((c) => (
+                {items.map((c) => (
                   <div
                     key={c.id}
                     className="cursor-grab rounded-xl border border-border bg-background p-3 shadow-sm transition-transform hover:-translate-y-0.5"
@@ -65,7 +101,7 @@ function KanbanPage() {
                     <p className="mt-0.5 text-xs text-muted-foreground">{c.interesse}</p>
                     <div className="mt-3 flex items-center justify-between">
                       <span className="text-xs font-semibold tabular-nums text-primary">
-                        R$ {(c.valor / 1000).toFixed(0)}k
+                        {c.valor ? `R$ ${(c.valor / 1000).toFixed(0)}k` : "—"}
                       </span>
                       <span className="grid size-6 place-items-center rounded-full bg-primary/15 text-[10px] font-semibold text-primary">
                         {c.responsavel.slice(0, 2).toUpperCase()}
@@ -73,7 +109,7 @@ function KanbanPage() {
                     </div>
                   </div>
                 ))}
-                {cards.length === 0 && (
+                {items.length === 0 && (
                   <div className="rounded-xl border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
                     Nenhum card
                   </div>

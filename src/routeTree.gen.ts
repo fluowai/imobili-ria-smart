@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -64,12 +65,12 @@ import { Route as AppUrbanoChavesRouteImport } from './routes/app.urbano.chaves'
 import { Route as AppRuralValuationRouteImport } from './routes/app.rural.valuation'
 import { Route as AppRuralTerritorioRouteImport } from './routes/app.rural.territorio'
 import { Route as AppRuralImoveisRouteImport } from './routes/app.rural.imoveis'
-import { Route as ApiAuthRegisterRouteImport } from './routes/api/auth.register'
-import { Route as ApiAuthRefreshRouteImport } from './routes/api/auth.refresh'
-import { Route as ApiAuthMeRouteImport } from './routes/api/auth.me'
-import { Route as ApiAuthLogoutRouteImport } from './routes/api/auth.logout'
-import { Route as ApiAuthLoginRouteImport } from './routes/api/auth.login'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -345,36 +346,12 @@ const AppRuralImoveisRoute = AppRuralImoveisRouteImport.update({
   path: '/rural/imoveis',
   getParentRoute: () => AppRoute,
 } as any)
-const ApiAuthRegisterRoute = ApiAuthRegisterRouteImport.update({
-  id: '/api/auth/register',
-  path: '/api/auth/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAuthRefreshRoute = ApiAuthRefreshRouteImport.update({
-  id: '/api/auth/refresh',
-  path: '/api/auth/refresh',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAuthMeRoute = ApiAuthMeRouteImport.update({
-  id: '/api/auth/me',
-  path: '/api/auth/me',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAuthLogoutRoute = ApiAuthLogoutRouteImport.update({
-  id: '/api/auth/logout',
-  path: '/api/auth/logout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAuthLoginRoute = ApiAuthLoginRouteImport.update({
-  id: '/api/auth/login',
-  path: '/api/auth/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/billing': typeof AdminBillingRoute
@@ -419,11 +396,6 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
-  '/api/auth/login': typeof ApiAuthLoginRoute
-  '/api/auth/logout': typeof ApiAuthLogoutRoute
-  '/api/auth/me': typeof ApiAuthMeRoute
-  '/api/auth/refresh': typeof ApiAuthRefreshRoute
-  '/api/auth/register': typeof ApiAuthRegisterRoute
   '/app/rural/imoveis': typeof AppRuralImoveisRoute
   '/app/rural/territorio': typeof AppRuralTerritorioRoute
   '/app/rural/valuation': typeof AppRuralValuationRoute
@@ -435,6 +407,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/billing': typeof AdminBillingRoute
@@ -479,11 +452,6 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
-  '/api/auth/login': typeof ApiAuthLoginRoute
-  '/api/auth/logout': typeof ApiAuthLogoutRoute
-  '/api/auth/me': typeof ApiAuthMeRoute
-  '/api/auth/refresh': typeof ApiAuthRefreshRoute
-  '/api/auth/register': typeof ApiAuthRegisterRoute
   '/app/rural/imoveis': typeof AppRuralImoveisRoute
   '/app/rural/territorio': typeof AppRuralTerritorioRoute
   '/app/rural/valuation': typeof AppRuralValuationRoute
@@ -498,6 +466,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/billing': typeof AdminBillingRoute
@@ -542,11 +511,6 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
-  '/api/auth/login': typeof ApiAuthLoginRoute
-  '/api/auth/logout': typeof ApiAuthLogoutRoute
-  '/api/auth/me': typeof ApiAuthMeRoute
-  '/api/auth/refresh': typeof ApiAuthRefreshRoute
-  '/api/auth/register': typeof ApiAuthRegisterRoute
   '/app/rural/imoveis': typeof AppRuralImoveisRoute
   '/app/rural/territorio': typeof AppRuralTerritorioRoute
   '/app/rural/valuation': typeof AppRuralValuationRoute
@@ -562,6 +526,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/app'
+    | '/onboarding'
     | '/admin/analytics'
     | '/admin/audit-log'
     | '/admin/billing'
@@ -606,11 +571,6 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/admin/'
     | '/app/'
-    | '/api/auth/login'
-    | '/api/auth/logout'
-    | '/api/auth/me'
-    | '/api/auth/refresh'
-    | '/api/auth/register'
     | '/app/rural/imoveis'
     | '/app/rural/territorio'
     | '/app/rural/valuation'
@@ -622,6 +582,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/onboarding'
     | '/admin/analytics'
     | '/admin/audit-log'
     | '/admin/billing'
@@ -666,11 +627,6 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/admin'
     | '/app'
-    | '/api/auth/login'
-    | '/api/auth/logout'
-    | '/api/auth/me'
-    | '/api/auth/refresh'
-    | '/api/auth/register'
     | '/app/rural/imoveis'
     | '/app/rural/territorio'
     | '/app/rural/valuation'
@@ -684,6 +640,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/app'
+    | '/onboarding'
     | '/admin/analytics'
     | '/admin/audit-log'
     | '/admin/billing'
@@ -728,11 +685,6 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/admin/'
     | '/app/'
-    | '/api/auth/login'
-    | '/api/auth/logout'
-    | '/api/auth/me'
-    | '/api/auth/refresh'
-    | '/api/auth/register'
     | '/app/rural/imoveis'
     | '/app/rural/territorio'
     | '/app/rural/valuation'
@@ -747,16 +699,19 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
+  OnboardingRoute: typeof OnboardingRoute
   AuthLoginRoute: typeof AuthLoginRoute
-  ApiAuthLoginRoute: typeof ApiAuthLoginRoute
-  ApiAuthLogoutRoute: typeof ApiAuthLogoutRoute
-  ApiAuthMeRoute: typeof ApiAuthMeRoute
-  ApiAuthRefreshRoute: typeof ApiAuthRefreshRoute
-  ApiAuthRegisterRoute: typeof ApiAuthRegisterRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -1142,41 +1097,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRuralImoveisRouteImport
       parentRoute: typeof AppRoute
     }
-    '/api/auth/register': {
-      id: '/api/auth/register'
-      path: '/api/auth/register'
-      fullPath: '/api/auth/register'
-      preLoaderRoute: typeof ApiAuthRegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/auth/refresh': {
-      id: '/api/auth/refresh'
-      path: '/api/auth/refresh'
-      fullPath: '/api/auth/refresh'
-      preLoaderRoute: typeof ApiAuthRefreshRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/auth/me': {
-      id: '/api/auth/me'
-      path: '/api/auth/me'
-      fullPath: '/api/auth/me'
-      preLoaderRoute: typeof ApiAuthMeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/auth/logout': {
-      id: '/api/auth/logout'
-      path: '/api/auth/logout'
-      fullPath: '/api/auth/logout'
-      preLoaderRoute: typeof ApiAuthLogoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/auth/login': {
-      id: '/api/auth/login'
-      path: '/api/auth/login'
-      fullPath: '/api/auth/login'
-      preLoaderRoute: typeof ApiAuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -1302,12 +1222,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
+  OnboardingRoute: OnboardingRoute,
   AuthLoginRoute: AuthLoginRoute,
-  ApiAuthLoginRoute: ApiAuthLoginRoute,
-  ApiAuthLogoutRoute: ApiAuthLogoutRoute,
-  ApiAuthMeRoute: ApiAuthMeRoute,
-  ApiAuthRefreshRoute: ApiAuthRefreshRoute,
-  ApiAuthRegisterRoute: ApiAuthRegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

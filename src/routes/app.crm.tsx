@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Filter, Plus, Search } from "lucide-react";
 
 import { PageHeader } from "@/components/shared/page-header";
@@ -8,6 +9,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
   Table,
   TableBody,
   TableCell,
@@ -15,9 +25,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { leads } from "@/mocks/app";
+import { leads as leadsMock } from "@/mocks/app";
 import type { LeadStatus } from "@/mocks/app";
 import { cn } from "@/lib/utils";
+import { createLead, listLeads } from "@/lib/leads.functions";
 
 export const Route = createFileRoute("/app/crm")({
   head: () => ({
@@ -38,13 +49,43 @@ const statusStyle: Record<LeadStatus, string> = {
   perdido:  "bg-destructive/15 text-destructive border-destructive/30",
 };
 
+// Mapeia enum do banco → UI (banco usa "qualificando", UI usa "contato").
+function dbToUiStatus(s: string): LeadStatus {
+  if (s === "qualificando") return "contato";
+  return (["novo", "visita", "proposta", "fechado", "perdido"].includes(s) ? s : "novo") as LeadStatus;
+}
+
 function CrmPage() {
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"todos" | LeadStatus>("todos");
 
+  const list = listLeads;
+  const query = useQuery({
+    queryKey: ["leads"],
+    queryFn: () => list({ data: {} }),
+    retry: false,
+  });
+
+  const rows = useMemo(() => {
+    if (query.data && query.data.length > 0) {
+      return query.data.map((l) => ({
+        id: l.id,
+        nome: l.nome,
+        email: l.email ?? "",
+        interesse: l.interesse ?? "",
+        origem: l.origem,
+        responsavel: "—",
+        valor: 0,
+        status: dbToUiStatus(l.status),
+        ultimoContato: new Date(l.createdAt).toLocaleDateString("pt-BR"),
+      }));
+    }
+    return leadsMock;
+  }, [query.data]);
+
   const filtered = useMemo(
     () =>
-      leads.filter((l) => {
+      rows.filter((l) => {
         if (tab !== "todos" && l.status !== tab) return false;
         if (!q) return true;
         const t = q.toLowerCase();
@@ -54,7 +95,7 @@ function CrmPage() {
           l.interesse.toLowerCase().includes(t)
         );
       }),
-    [q, tab],
+    [q, tab, rows],
   );
 
   return (
@@ -68,9 +109,7 @@ function CrmPage() {
             <Button variant="outline" size="sm">
               <Filter className="mr-1.5 size-4" /> Filtros
             </Button>
-            <Button size="sm">
-              <Plus className="mr-1.5 size-4" /> Novo lead
-            </Button>
+            <NovoLeadDialog />
           </>
         }
       />
@@ -115,7 +154,7 @@ function CrmPage() {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <span className="grid size-9 place-items-center rounded-full bg-primary/15 text-xs font-semibold text-primary">
-                      {l.nome.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+                      {l.nome.split(" ").map((n: string) => n[0]).slice(0, 2).join("")}
                     </span>
                     <div className="min-w-0">
                       <p className="font-medium">{l.nome}</p>
@@ -129,7 +168,7 @@ function CrmPage() {
                 </TableCell>
                 <TableCell className="text-sm">{l.responsavel}</TableCell>
                 <TableCell className="text-right tabular-nums">
-                  R$ {l.valor.toLocaleString("pt-BR")}
+                  {l.valor ? `R$ ${l.valor.toLocaleString("pt-BR")}` : "—"}
                 </TableCell>
                 <TableCell>
                   <span
@@ -157,5 +196,95 @@ function CrmPage() {
         </Table>
       </div>
     </div>
+  );
+}
+
+function NovoLeadDialog() {
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({ nome: "", email: "", telefone: "", interesse: "" });
+  const qc = useQueryClient();
+  const create = createLead;
+  const mutation = useMutation({
+    mutationFn: (data: typeof form) =>
+      create({
+        data: {
+          nome: data.nome,
+          email: data.email || undefined,
+          telefone: data.telefone || undefined,
+          interesse: data.interesse || undefined,
+          origem: "site",
+          status: "novo",
+          score: 0,
+        },
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["leads"] });
+      setOpen(false);
+      setForm({ nome: "", email: "", telefone: "", interesse: "" });
+    },
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="sm">
+          <Plus className="mr-1.5 size-4" /> Novo lead
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Novo lead</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-3">
+          <div className="grid gap-1.5">
+            <Label htmlFor="l-nome">Nome</Label>
+            <Input
+              id="l-nome"
+              value={form.nome}
+              onChange={(e) => setForm({ ...form, nome: e.target.value })}
+            />
+          </div>
+          <div className="grid gap-1.5">
+            <Label htmlFor="l-email">Email</Label>
+            <Input
+              id="l-email"
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+          </div>
+          <div className="grid gap-1.5">
+            <Label htmlFor="l-tel">Telefone</Label>
+            <Input
+              id="l-tel"
+              value={form.telefone}
+              onChange={(e) => setForm({ ...form, telefone: e.target.value })}
+            />
+          </div>
+          <div className="grid gap-1.5">
+            <Label htmlFor="l-int">Interesse</Label>
+            <Input
+              id="l-int"
+              value={form.interesse}
+              onChange={(e) => setForm({ ...form, interesse: e.target.value })}
+            />
+          </div>
+          {mutation.error && (
+            <p className="text-xs text-destructive">{(mutation.error as Error).message}</p>
+          )}
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => mutation.mutate(form)}
+            disabled={!form.nome || mutation.isPending}
+          >
+            {mutation.isPending ? "Salvando..." : "Salvar"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

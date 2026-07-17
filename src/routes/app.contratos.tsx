@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { NovoContratoDialog } from "@/components/app/novo-contrato-dialog";
 
 export const Route = createFileRoute("/app/contratos")({
   head: () => ({
@@ -72,7 +73,7 @@ function ContratosPage() {
         actions={
           <>
             <Button variant="outline" size="sm">Templates</Button>
-            <Button size="sm"><Plus className="mr-2 h-4 w-4" />Novo contrato</Button>
+            <NovoContratoDialog />
           </>
         }
       />
