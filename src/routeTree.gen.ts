@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
 import { Route as AdminSuporteRouteImport } from './routes/admin.suporte'
+import { Route as AdminStorageRouteImport } from './routes/admin.storage'
 import { Route as AdminPlanosRouteImport } from './routes/admin.planos'
 import { Route as AdminMonitoringRouteImport } from './routes/admin.monitoring'
 import { Route as AdminMigracaoRouteImport } from './routes/admin.migracao'
@@ -51,6 +52,11 @@ const AdminTemplatesRoute = AdminTemplatesRouteImport.update({
 const AdminSuporteRoute = AdminSuporteRouteImport.update({
   id: '/suporte',
   path: '/suporte',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStorageRoute = AdminStorageRouteImport.update({
+  id: '/storage',
+  path: '/storage',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminPlanosRoute = AdminPlanosRouteImport.update({
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/admin/migracao': typeof AdminMigracaoRoute
   '/admin/monitoring': typeof AdminMonitoringRoute
   '/admin/planos': typeof AdminPlanosRoute
+  '/admin/storage': typeof AdminStorageRoute
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/admin/': typeof AdminIndexRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/admin/migracao': typeof AdminMigracaoRoute
   '/admin/monitoring': typeof AdminMonitoringRoute
   '/admin/planos': typeof AdminPlanosRoute
+  '/admin/storage': typeof AdminStorageRoute
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/admin': typeof AdminIndexRoute
@@ -175,6 +183,7 @@ export interface FileRoutesById {
   '/admin/migracao': typeof AdminMigracaoRoute
   '/admin/monitoring': typeof AdminMonitoringRoute
   '/admin/planos': typeof AdminPlanosRoute
+  '/admin/storage': typeof AdminStorageRoute
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/admin/': typeof AdminIndexRoute
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/admin/migracao'
     | '/admin/monitoring'
     | '/admin/planos'
+    | '/admin/storage'
     | '/admin/suporte'
     | '/admin/templates'
     | '/admin/'
@@ -216,6 +226,7 @@ export interface FileRouteTypes {
     | '/admin/migracao'
     | '/admin/monitoring'
     | '/admin/planos'
+    | '/admin/storage'
     | '/admin/suporte'
     | '/admin/templates'
     | '/admin'
@@ -236,6 +247,7 @@ export interface FileRouteTypes {
     | '/admin/migracao'
     | '/admin/monitoring'
     | '/admin/planos'
+    | '/admin/storage'
     | '/admin/suporte'
     | '/admin/templates'
     | '/admin/'
@@ -281,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/suporte'
       fullPath: '/admin/suporte'
       preLoaderRoute: typeof AdminSuporteRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/storage': {
+      id: '/admin/storage'
+      path: '/storage'
+      fullPath: '/admin/storage'
+      preLoaderRoute: typeof AdminStorageRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/planos': {
@@ -391,6 +410,7 @@ interface AdminRouteChildren {
   AdminMigracaoRoute: typeof AdminMigracaoRoute
   AdminMonitoringRoute: typeof AdminMonitoringRoute
   AdminPlanosRoute: typeof AdminPlanosRoute
+  AdminStorageRoute: typeof AdminStorageRoute
   AdminSuporteRoute: typeof AdminSuporteRoute
   AdminTemplatesRoute: typeof AdminTemplatesRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -410,6 +430,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminMigracaoRoute: AdminMigracaoRoute,
   AdminMonitoringRoute: AdminMonitoringRoute,
   AdminPlanosRoute: AdminPlanosRoute,
+  AdminStorageRoute: AdminStorageRoute,
   AdminSuporteRoute: AdminSuporteRoute,
   AdminTemplatesRoute: AdminTemplatesRoute,
   AdminIndexRoute: AdminIndexRoute,
