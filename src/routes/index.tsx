@@ -88,16 +88,16 @@ function Landing() {
             title="Imobiliária Urbana"
             desc="Imóveis, locação, condomínios, loteamentos, chaves e financeiro — tudo no mesmo painel."
             icon={Building2}
-            to="/auth/login"
-            cta="Entrar no painel"
+            to="/app/urbano/imoveis"
+            cta="Ver imóveis urbanos"
           />
           <Card
             eyebrow="Carteira Rural"
             title="Imobiliária Rural"
             desc="Fichas com CAR, valuation por IA, território rural com mapas e georreferenciamento."
             icon={Sprout}
-            to="/auth/login"
-            cta="Entrar no painel"
+            to="/app/rural/imoveis"
+            cta="Ver carteira rural"
           />
         </div>
 
