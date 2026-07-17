@@ -9,7 +9,13 @@ interface AuthState {
   loading: boolean;
   configured: boolean;
   signInWithPassword: (email: string, password: string) => Promise<{ error: string | null }>;
-  signUp: (email: string, password: string, nome: string) => Promise<{ error: string | null }>;
+  signUp: (params: {
+    email: string;
+    password: string;
+    nome: string;
+    imobiliaria: string;
+    tipo: "urbana" | "rural" | "ambas";
+  }) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
