@@ -18,7 +18,7 @@ export const Route = createFileRoute("/onboarding")({
   component: OnboardingPage,
 });
 
-type Tipo = "urbana" | "rural" | "ambas";
+type Tipo = "urbana" | "rural";
 
 function OnboardingPage() {
   const { user, loading, configured } = useAuth();
