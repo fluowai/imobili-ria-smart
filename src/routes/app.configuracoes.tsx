@@ -65,7 +65,60 @@ function ConfiguracoesPage() {
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+const portalStatusMeta: Record<PortalStatus, { label: string; className: string; Icon: typeof CheckCircle2 }> = {
+  conectado: { label: "Conectado", className: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",       Icon: CheckCircle2 },
+  erro:      { label: "Erro",      className: "bg-[color:var(--color-destructive)]/15 text-[color:var(--color-destructive)]", Icon: AlertCircle },
+  pausado:   { label: "Pausado",   className: "bg-muted text-muted-foreground",                                              Icon: PauseCircle },
+  pendente:  { label: "Pendente",  className: "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)]",         Icon: Clock },
+};
+
+function PortaisTab() {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <SectionTitle icon={Link2} title="Portais imobiliários" />
+        <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90">
+          <RefreshCw className="size-4" /> Sincronizar tudo
+        </button>
+      </div>
+      <p className="text-sm text-muted-foreground">
+        Publicação e sincronização automática com ZAP, Viva Real, OLX e demais portais.
+      </p>
+      <div className="grid gap-3 md:grid-cols-2">
+        {portais.map((p) => {
+          const meta = portalStatusMeta[p.status];
+          return (
+            <div key={p.id} className="rounded-xl border border-border p-4">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="grid size-10 place-items-center rounded-lg bg-muted text-xl">{p.logo}</span>
+                  <div>
+                    <p className="font-medium text-foreground">{p.nome}</p>
+                    <p className="text-xs text-muted-foreground">Plano: {p.plano}</p>
+                  </div>
+                </div>
+                <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${meta.className}`}>
+                  <meta.Icon className="size-3.5" />
+                  {meta.label}
+                </span>
+              </div>
+              <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                <span>{p.imoveisPublicados} imóveis · {p.leadsMes} leads/mês</span>
+                <span>{p.ultimaSync}</span>
+              </div>
+              <div className="mt-3 flex justify-end">
+                <button className="rounded-lg border border-border px-2.5 py-1 text-xs hover:border-primary/50">
+                  Configurar
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
   return (
     <label className="block">
       <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{label}</span>
