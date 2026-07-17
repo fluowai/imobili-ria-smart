@@ -24,6 +24,8 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nome, setNome] = useState("");
+  const [imobiliaria, setImobiliaria] = useState("");
+  const [tipo, setTipo] = useState<"urbana" | "rural" | "ambas">("urbana");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -38,7 +40,7 @@ function LoginPage() {
     const { error } =
       mode === "login"
         ? await signInWithPassword(email, password)
-        : await signUp(email, password, nome);
+        : await signUp({ email, password, nome, imobiliaria, tipo });
     setBusy(false);
     if (error) setErr(error);
     else if (mode === "signup") setErr("Conta criada! Verifique seu email para confirmar (se exigido) e entre.");
