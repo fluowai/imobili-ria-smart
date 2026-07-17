@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { Mail, Phone, Plus, Search, Sparkles, Star } from "lucide-react";
 
 import { PageHeader } from "@/components/shared/page-header";
@@ -43,7 +42,7 @@ type ClienteUI = {
 
 function ClientesPage() {
   const [q, setQ] = useState("");
-  const list = useServerFn(listClientes);
+  const list = listClientes;
   const query = useQuery({
     queryKey: ["clientes", q],
     queryFn: () => list({ data: { busca: q || undefined } }),
@@ -151,7 +150,7 @@ function NovoClienteDialog() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ nome: "", email: "", telefone: "" });
   const qc = useQueryClient();
-  const create = useServerFn(createCliente);
+  const create = createCliente;
   const mutation = useMutation({
     mutationFn: (data: typeof form) =>
       create({

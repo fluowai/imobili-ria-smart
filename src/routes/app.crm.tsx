@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { Filter, Plus, Search } from "lucide-react";
 
 import { PageHeader } from "@/components/shared/page-header";
@@ -60,7 +59,7 @@ function CrmPage() {
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"todos" | LeadStatus>("todos");
 
-  const list = useServerFn(listLeads);
+  const list = listLeads;
   const query = useQuery({
     queryKey: ["leads"],
     queryFn: () => list({ data: {} }),
@@ -204,7 +203,7 @@ function NovoLeadDialog() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ nome: "", email: "", telefone: "", interesse: "" });
   const qc = useQueryClient();
-  const create = useServerFn(createLead);
+  const create = createLead;
   const mutation = useMutation({
     mutationFn: (data: typeof form) =>
       create({
