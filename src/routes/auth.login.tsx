@@ -24,6 +24,8 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nome, setNome] = useState("");
+  const [imobiliaria, setImobiliaria] = useState("");
+  const [tipo, setTipo] = useState<"urbana" | "rural" | "ambas">("urbana");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -38,7 +40,7 @@ function LoginPage() {
     const { error } =
       mode === "login"
         ? await signInWithPassword(email, password)
-        : await signUp(email, password, nome);
+        : await signUp({ email, password, nome, imobiliaria, tipo });
     setBusy(false);
     if (error) setErr(error);
     else if (mode === "signup") setErr("Conta criada! Verifique seu email para confirmar (se exigido) e entre.");
@@ -71,10 +73,38 @@ function LoginPage() {
 
           <form className="mt-8 space-y-4" onSubmit={onSubmit}>
             {mode === "signup" && (
-              <div className="space-y-1.5">
-                <Label htmlFor="nome">Nome</Label>
-                <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
-              </div>
+              <>
+                <div className="space-y-1.5">
+                  <Label htmlFor="nome">Seu nome</Label>
+                  <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="imobiliaria">Nome da imobiliária</Label>
+                  <Input id="imobiliaria" value={imobiliaria} onChange={(e) => setImobiliaria(e.target.value)} required />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Tipo de carteira</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(["urbana", "rural", "ambas"] as const).map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setTipo(t)}
+                        className={`rounded-md border px-3 py-2 text-sm capitalize transition ${
+                          tipo === t
+                            ? "border-primary bg-primary/10 text-foreground"
+                            : "border-input bg-background text-muted-foreground hover:bg-accent"
+                        }`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Você poderá gerenciar apenas o que selecionar. "Ambas" habilita rural + urbana.
+                  </p>
+                </div>
+              </>
             )}
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
