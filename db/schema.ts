@@ -143,7 +143,7 @@ export const imoveis = pgTable(
     itr: text("itr"),
     // extras
     fotos: jsonb("fotos").$type<string[]>().default([]).notNull(),
-    caracteristicas: jsonb("caracteristicas").$type<Record<string, unknown>>().default({}).notNull(),
+    caracteristicas: jsonb("caracteristicas").$type<JsonObject>().default({}).notNull(),
     createdBy: uuid("created_by").references(() => users.id),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
@@ -246,7 +246,7 @@ export const contratos = pgTable(
     valor: numeric("valor", { precision: 14, scale: 2 }),
     inicio: date("inicio"),
     fim: date("fim"),
-    metadados: jsonb("metadados").$type<Record<string, unknown>>().default({}).notNull(),
+    metadados: jsonb("metadados").$type<JsonObject>().default({}).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
