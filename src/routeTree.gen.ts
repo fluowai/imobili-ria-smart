@@ -9,38 +9,216 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
+import { Route as AdminSuporteRouteImport } from './routes/admin.suporte'
+import { Route as AdminPlanosRouteImport } from './routes/admin.planos'
+import { Route as AdminMonitoringRouteImport } from './routes/admin.monitoring'
+import { Route as AdminImobiliariasRouteImport } from './routes/admin.imobiliarias'
+import { Route as AdminFeatureFlagsRouteImport } from './routes/admin.feature-flags'
+import { Route as AdminEquipeRouteImport } from './routes/admin.equipe'
+import { Route as AdminDominiosRouteImport } from './routes/admin.dominios'
+import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminBillingRouteImport } from './routes/admin.billing'
+import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTemplatesRoute = AdminTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSuporteRoute = AdminSuporteRouteImport.update({
+  id: '/suporte',
+  path: '/suporte',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPlanosRoute = AdminPlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMonitoringRoute = AdminMonitoringRouteImport.update({
+  id: '/monitoring',
+  path: '/monitoring',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminImobiliariasRoute = AdminImobiliariasRouteImport.update({
+  id: '/imobiliarias',
+  path: '/imobiliarias',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFeatureFlagsRoute = AdminFeatureFlagsRouteImport.update({
+  id: '/feature-flags',
+  path: '/feature-flags',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEquipeRoute = AdminEquipeRouteImport.update({
+  id: '/equipe',
+  path: '/equipe',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDominiosRoute = AdminDominiosRouteImport.update({
+  id: '/dominios',
+  path: '/dominios',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBillingRoute = AdminBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditLogRoute = AdminAuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
+  '/admin/billing': typeof AdminBillingRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/dominios': typeof AdminDominiosRoute
+  '/admin/equipe': typeof AdminEquipeRoute
+  '/admin/feature-flags': typeof AdminFeatureFlagsRoute
+  '/admin/imobiliarias': typeof AdminImobiliariasRoute
+  '/admin/monitoring': typeof AdminMonitoringRoute
+  '/admin/planos': typeof AdminPlanosRoute
+  '/admin/suporte': typeof AdminSuporteRoute
+  '/admin/templates': typeof AdminTemplatesRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
+  '/admin/billing': typeof AdminBillingRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/dominios': typeof AdminDominiosRoute
+  '/admin/equipe': typeof AdminEquipeRoute
+  '/admin/feature-flags': typeof AdminFeatureFlagsRoute
+  '/admin/imobiliarias': typeof AdminImobiliariasRoute
+  '/admin/monitoring': typeof AdminMonitoringRoute
+  '/admin/planos': typeof AdminPlanosRoute
+  '/admin/suporte': typeof AdminSuporteRoute
+  '/admin/templates': typeof AdminTemplatesRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
+  '/admin/billing': typeof AdminBillingRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/dominios': typeof AdminDominiosRoute
+  '/admin/equipe': typeof AdminEquipeRoute
+  '/admin/feature-flags': typeof AdminFeatureFlagsRoute
+  '/admin/imobiliarias': typeof AdminImobiliariasRoute
+  '/admin/monitoring': typeof AdminMonitoringRoute
+  '/admin/planos': typeof AdminPlanosRoute
+  '/admin/suporte': typeof AdminSuporteRoute
+  '/admin/templates': typeof AdminTemplatesRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/admin/analytics'
+    | '/admin/audit-log'
+    | '/admin/billing'
+    | '/admin/dashboard'
+    | '/admin/dominios'
+    | '/admin/equipe'
+    | '/admin/feature-flags'
+    | '/admin/imobiliarias'
+    | '/admin/monitoring'
+    | '/admin/planos'
+    | '/admin/suporte'
+    | '/admin/templates'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin/analytics'
+    | '/admin/audit-log'
+    | '/admin/billing'
+    | '/admin/dashboard'
+    | '/admin/dominios'
+    | '/admin/equipe'
+    | '/admin/feature-flags'
+    | '/admin/imobiliarias'
+    | '/admin/monitoring'
+    | '/admin/planos'
+    | '/admin/suporte'
+    | '/admin/templates'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/admin/analytics'
+    | '/admin/audit-log'
+    | '/admin/billing'
+    | '/admin/dashboard'
+    | '/admin/dominios'
+    | '/admin/equipe'
+    | '/admin/feature-flags'
+    | '/admin/imobiliarias'
+    | '/admin/monitoring'
+    | '/admin/planos'
+    | '/admin/suporte'
+    | '/admin/templates'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +226,138 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/templates': {
+      id: '/admin/templates'
+      path: '/templates'
+      fullPath: '/admin/templates'
+      preLoaderRoute: typeof AdminTemplatesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/suporte': {
+      id: '/admin/suporte'
+      path: '/suporte'
+      fullPath: '/admin/suporte'
+      preLoaderRoute: typeof AdminSuporteRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/planos': {
+      id: '/admin/planos'
+      path: '/planos'
+      fullPath: '/admin/planos'
+      preLoaderRoute: typeof AdminPlanosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/monitoring': {
+      id: '/admin/monitoring'
+      path: '/monitoring'
+      fullPath: '/admin/monitoring'
+      preLoaderRoute: typeof AdminMonitoringRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/imobiliarias': {
+      id: '/admin/imobiliarias'
+      path: '/imobiliarias'
+      fullPath: '/admin/imobiliarias'
+      preLoaderRoute: typeof AdminImobiliariasRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/feature-flags': {
+      id: '/admin/feature-flags'
+      path: '/feature-flags'
+      fullPath: '/admin/feature-flags'
+      preLoaderRoute: typeof AdminFeatureFlagsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/equipe': {
+      id: '/admin/equipe'
+      path: '/equipe'
+      fullPath: '/admin/equipe'
+      preLoaderRoute: typeof AdminEquipeRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/dominios': {
+      id: '/admin/dominios'
+      path: '/dominios'
+      fullPath: '/admin/dominios'
+      preLoaderRoute: typeof AdminDominiosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/billing': {
+      id: '/admin/billing'
+      path: '/billing'
+      fullPath: '/admin/billing'
+      preLoaderRoute: typeof AdminBillingRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/audit-log': {
+      id: '/admin/audit-log'
+      path: '/audit-log'
+      fullPath: '/admin/audit-log'
+      preLoaderRoute: typeof AdminAuditLogRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminAuditLogRoute: typeof AdminAuditLogRoute
+  AdminBillingRoute: typeof AdminBillingRoute
+  AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminDominiosRoute: typeof AdminDominiosRoute
+  AdminEquipeRoute: typeof AdminEquipeRoute
+  AdminFeatureFlagsRoute: typeof AdminFeatureFlagsRoute
+  AdminImobiliariasRoute: typeof AdminImobiliariasRoute
+  AdminMonitoringRoute: typeof AdminMonitoringRoute
+  AdminPlanosRoute: typeof AdminPlanosRoute
+  AdminSuporteRoute: typeof AdminSuporteRoute
+  AdminTemplatesRoute: typeof AdminTemplatesRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminAuditLogRoute: AdminAuditLogRoute,
+  AdminBillingRoute: AdminBillingRoute,
+  AdminDashboardRoute: AdminDashboardRoute,
+  AdminDominiosRoute: AdminDominiosRoute,
+  AdminEquipeRoute: AdminEquipeRoute,
+  AdminFeatureFlagsRoute: AdminFeatureFlagsRoute,
+  AdminImobiliariasRoute: AdminImobiliariasRoute,
+  AdminMonitoringRoute: AdminMonitoringRoute,
+  AdminPlanosRoute: AdminPlanosRoute,
+  AdminSuporteRoute: AdminSuporteRoute,
+  AdminTemplatesRoute: AdminTemplatesRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
