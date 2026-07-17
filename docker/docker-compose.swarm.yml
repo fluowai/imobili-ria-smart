@@ -2,19 +2,12 @@ version: "3.8"
 
 services:
   app:
-    # Substitua pela sua imagem no registry se for usar Docker Swarm (ex: ghcr.io/seu_usuario/imobfluow-app:latest)
-    # A action configurada mandará para: ghcr.io/fluowai/imobfluow-app:latest
-    image: ghcr.io/fluowai/imobfluow-app:latest
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
+    # URL completa do GHCR para o Portainer conseguir baixar
+    image: ghcr.io/fluowai/imobili-ria-smart:latest
     environment:
-      DATABASE_URL: "postgres://app:${POSTGRES_PASSWORD}@postgres:5432/app"
-      REDIS_URL: "redis://redis:6379"
-      S3_ENDPOINT: "http://minio:9000"
-      S3_BUCKET: "${S3_BUCKET}"
-      S3_ACCESS_KEY: "${MINIO_ROOT_USER}"
-      S3_SECRET_KEY: "${MINIO_ROOT_PASSWORD}"
+      # Insira aqui as variáveis do Supabase e outras que sua aplicação usa
+      VITE_SUPABASE_URL: "${VITE_SUPABASE_URL}"
+      VITE_SUPABASE_ANON_KEY: "${VITE_SUPABASE_ANON_KEY}"
       JWT_SECRET: "${JWT_SECRET}"
     networks:
       - woopanel1
@@ -37,65 +30,6 @@ services:
         - "traefik.http.routers.imobfluow_app.priority=10"
         - "traefik.http.routers.imobfluow_app.service=imobfluow_app"
         - "traefik.http.services.imobfluow_app.loadbalancer.server.port=3000"
-
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: app
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - imobfluow_internal
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: any
-
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis_data:/data
-    networks:
-      - imobfluow_internal
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: any
-
-  minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    volumes:
-      - minio_data:/data
-    networks:
-      - woopanel1
-      - imobfluow_internal
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: any
-      labels:
-        # Expondo o Console do MinIO para gerenciamento (opcional, se não quiser, pode remover o bloco de labels)
-        - "traefik.enable=true"
-        - "traefik.docker.network=woopanel1"
-        - "traefik.http.routers.imobfluow_s3.rule=Host(`s3-imobfluow.wootech.com.br`)"
-        - "traefik.http.routers.imobfluow_s3.entrypoints=websecure"
-        - "traefik.http.routers.imobfluow_s3.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.imobfluow_s3.service=imobfluow_s3"
-        - "traefik.http.services.imobfluow_s3.loadbalancer.server.port=9001"
-
-volumes:
-  postgres_data:
-    driver: local
-  redis_data:
-    driver: local
-  minio_data:
-    driver: local
 
 networks:
   woopanel1:

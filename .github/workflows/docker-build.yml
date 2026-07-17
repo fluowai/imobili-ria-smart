@@ -8,8 +8,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  # O nome da imagem será algo como: ghcr.io/seu-usuario/imobfluow-app
-  IMAGE_NAME: ${{ github.repository_owner }}/imobfluow-app
+  # O nome da imagem será algo como: ghcr.io/fluowai/imobili-ria-smart
+  IMAGE_NAME: ${{ github.repository_owner }}/imobili-ria-smart
 
 jobs:
   build-and-push-image:
