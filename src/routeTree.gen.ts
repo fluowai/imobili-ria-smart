@@ -16,6 +16,7 @@ import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
 import { Route as AppMensagensRouteImport } from './routes/app.mensagens'
+import { Route as AppEmailRouteImport } from './routes/app.email'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
 import { Route as AdminSuporteRouteImport } from './routes/admin.suporte'
@@ -69,6 +70,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
 const AppMensagensRoute = AppMensagensRouteImport.update({
   id: '/mensagens',
   path: '/mensagens',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEmailRoute = AppEmailRouteImport.update({
+  id: '/email',
+  path: '/email',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/email': typeof AppEmailRoute
   '/app/mensagens': typeof AppMensagensRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin/': typeof AdminIndexRoute
@@ -216,6 +223,7 @@ export interface FileRoutesByTo {
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/email': typeof AppEmailRoute
   '/app/mensagens': typeof AppMensagensRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin': typeof AdminIndexRoute
@@ -245,6 +253,7 @@ export interface FileRoutesById {
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/email': typeof AppEmailRoute
   '/app/mensagens': typeof AppMensagensRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin/': typeof AdminIndexRoute
@@ -275,6 +284,7 @@ export interface FileRouteTypes {
     | '/admin/suporte'
     | '/admin/templates'
     | '/app/dashboard'
+    | '/app/email'
     | '/app/mensagens'
     | '/auth/login'
     | '/admin/'
@@ -301,6 +311,7 @@ export interface FileRouteTypes {
     | '/admin/suporte'
     | '/admin/templates'
     | '/app/dashboard'
+    | '/app/email'
     | '/app/mensagens'
     | '/auth/login'
     | '/admin'
@@ -329,6 +340,7 @@ export interface FileRouteTypes {
     | '/admin/suporte'
     | '/admin/templates'
     | '/app/dashboard'
+    | '/app/email'
     | '/app/mensagens'
     | '/auth/login'
     | '/admin/'
@@ -391,6 +403,13 @@ declare module '@tanstack/react-router' {
       path: '/mensagens'
       fullPath: '/app/mensagens'
       preLoaderRoute: typeof AppMensagensRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/email': {
+      id: '/app/email'
+      path: '/email'
+      fullPath: '/app/email'
+      preLoaderRoute: typeof AppEmailRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/dashboard': {
@@ -577,12 +596,14 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
+  AppEmailRoute: typeof AppEmailRoute
   AppMensagensRoute: typeof AppMensagensRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
+  AppEmailRoute: AppEmailRoute,
   AppMensagensRoute: AppMensagensRoute,
   AppIndexRoute: AppIndexRoute,
 }
