@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Settings, Bell, Shield, CreditCard, Users, Palette, Globe } from "lucide-react";
+import { Settings, Bell, Shield, CreditCard, Users, Palette, Globe, Link2, CheckCircle2, AlertCircle, PauseCircle, Clock, RefreshCw } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
+import { portais, type PortalStatus } from "@/mocks/sistema";
 
 export const Route = createFileRoute("/app/configuracoes")({
   head: () => ({
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/app/configuracoes")({
 
 const tabs = [
   { id: "empresa",       label: "Empresa",       icon: Globe },
+  { id: "portais",       label: "Portais",       icon: Link2 },
   { id: "usuarios",      label: "Usuários",      icon: Users },
   { id: "notificacoes",  label: "Notificações",  icon: Bell },
   { id: "seguranca",     label: "Segurança",     icon: Shield },
@@ -51,6 +53,7 @@ function ConfiguracoesPage() {
 
         <div className="rounded-2xl border border-border bg-card p-6">
           {tab === "empresa" && <EmpresaTab />}
+          {tab === "portais" && <PortaisTab />}
           {tab === "usuarios" && <UsuariosTab />}
           {tab === "notificacoes" && <NotificacoesTab />}
           {tab === "seguranca" && <SegurancaTab />}
