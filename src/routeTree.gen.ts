@@ -19,6 +19,7 @@ import { Route as AppMensagensRouteImport } from './routes/app.mensagens'
 import { Route as AppKanbanRouteImport } from './routes/app.kanban'
 import { Route as AppEmailRouteImport } from './routes/app.email'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppCrmRouteImport } from './routes/app.crm'
 import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
 import { Route as AdminSuporteRouteImport } from './routes/admin.suporte'
 import { Route as AdminStorageRouteImport } from './routes/admin.storage'
@@ -86,6 +87,11 @@ const AppEmailRoute = AppEmailRouteImport.update({
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCrmRoute = AppCrmRouteImport.update({
+  id: '/crm',
+  path: '/crm',
   getParentRoute: () => AppRoute,
 } as any)
 const AdminTemplatesRoute = AdminTemplatesRouteImport.update({
@@ -201,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
+  '/app/crm': typeof AppCrmRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/email': typeof AppEmailRoute
   '/app/kanban': typeof AppKanbanRoute
@@ -229,6 +236,7 @@ export interface FileRoutesByTo {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
+  '/app/crm': typeof AppCrmRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/email': typeof AppEmailRoute
   '/app/kanban': typeof AppKanbanRoute
@@ -260,6 +268,7 @@ export interface FileRoutesById {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
+  '/app/crm': typeof AppCrmRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/email': typeof AppEmailRoute
   '/app/kanban': typeof AppKanbanRoute
@@ -292,6 +301,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/suporte'
     | '/admin/templates'
+    | '/app/crm'
     | '/app/dashboard'
     | '/app/email'
     | '/app/kanban'
@@ -320,6 +330,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/suporte'
     | '/admin/templates'
+    | '/app/crm'
     | '/app/dashboard'
     | '/app/email'
     | '/app/kanban'
@@ -350,6 +361,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/suporte'
     | '/admin/templates'
+    | '/app/crm'
     | '/app/dashboard'
     | '/app/email'
     | '/app/kanban'
@@ -436,6 +448,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/app/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/crm': {
+      id: '/app/crm'
+      path: '/crm'
+      fullPath: '/app/crm'
+      preLoaderRoute: typeof AppCrmRouteImport
       parentRoute: typeof AppRoute
     }
     '/admin/templates': {
@@ -614,6 +633,7 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AppRouteChildren {
+  AppCrmRoute: typeof AppCrmRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppEmailRoute: typeof AppEmailRoute
   AppKanbanRoute: typeof AppKanbanRoute
@@ -622,6 +642,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppCrmRoute: AppCrmRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppEmailRoute: AppEmailRoute,
   AppKanbanRoute: AppKanbanRoute,
