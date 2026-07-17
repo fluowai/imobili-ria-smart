@@ -1,0 +1,11 @@
+node_modules
+.output
+.nitro
+.vite
+dist
+.git
+.DS_Store
+*.log
+.env
+.env.*
+!docker/.env.example
