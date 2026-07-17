@@ -161,7 +161,7 @@ function QRDialog({ instancia, onClose }: { instancia: WaInstance; onClose: () =
   const [qr, setQr] = useState<string | null>(null);
   const [estado, setEstado] = useState<"conectando" | "aguardando" | "pareado" | "timeout" | "erro">("conectando");
   const [erro, setErro] = useState<string | null>(null);
-  const closeRef = useRef<() => void>();
+  const closeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     let mounted = true;
