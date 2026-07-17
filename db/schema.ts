@@ -13,6 +13,15 @@ import {
   date,
 } from "drizzle-orm/pg-core";
 
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | { [k: string]: JsonValue }
+  | JsonValue[];
+export type JsonObject = { [k: string]: JsonValue };
+
 // Roles globais e por imobiliária
 export const appRoleEnum = pgEnum("app_role", [
   "super_admin",
