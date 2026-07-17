@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Bar,
   BarChart,
@@ -15,8 +16,9 @@ import { Building2, Handshake, TrendingUp, Users } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { Badge } from "@/components/ui/badge";
-import { funil, mensagens, tarefas, vendasSerie } from "@/mocks/app";
+import { funil, mensagens, tarefas as tarefasMock, vendasSerie } from "@/mocks/app";
 import { cn } from "@/lib/utils";
+import { listTarefas, updateTarefa } from "@/lib/tarefas.functions";
 
 export const Route = createFileRoute("/app/dashboard")({
   head: () => ({
@@ -28,6 +30,23 @@ export const Route = createFileRoute("/app/dashboard")({
   component: AppDashboard,
 });
 
+type UITarefa = {
+  id: string;
+  titulo: string;
+  responsavel: string;
+  vencimento: string;
+  prioridade: "alta" | "media" | "baixa";
+  status?: string;
+};
+
+function formatVencimento(d: unknown): string {
+  if (!d) return "sem prazo";
+  const date = new Date(d as string);
+  if (Number.isNaN(date.getTime())) return "sem prazo";
+  return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });
+}
+
+
 const prioridadeStyle = {
   alta: "bg-destructive/15 text-destructive border-destructive/30",
   media: "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)] border-[color:var(--color-warning)]/30",
@@ -36,6 +55,28 @@ const prioridadeStyle = {
 
 function AppDashboard() {
   const maxFunil = Math.max(...funil.map((f) => f.valor));
+  const qc = useQueryClient();
+  const tarefasQuery = useQuery({
+    queryKey: ["tarefas", "abertas"],
+    queryFn: () => listTarefas({ data: { status: "aberta" } }),
+    retry: false,
+  });
+  const toggleMutation = useMutation({
+    mutationFn: (id: string) => updateTarefa({ data: { id, patch: { status: "concluida" } } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["tarefas"] }),
+  });
+
+  const tarefas: UITarefa[] = tarefasQuery.data && tarefasQuery.data.length > 0
+    ? tarefasQuery.data.slice(0, 6).map((t: any) => ({
+        id: t.id,
+        titulo: t.titulo,
+        responsavel: t.responsavelId ? "Responsável" : "Sem responsável",
+        vencimento: formatVencimento(t.vencimento),
+        prioridade: "media" as const,
+        status: t.status,
+      }))
+    : (tarefasMock as unknown as UITarefa[]);
+
   return (
     <div className="space-y-8">
       <PageHeader
@@ -133,7 +174,15 @@ function AppDashboard() {
           <ul className="mt-4 space-y-3">
             {tarefas.map((t) => (
               <li key={t.id} className="flex items-start gap-3 rounded-xl border border-border p-3">
-                <input type="checkbox" className="mt-1 accent-[color:var(--color-primary)]" />
+                <input
+                  type="checkbox"
+                  className="mt-1 accent-[color:var(--color-primary)]"
+                  checked={t.status === "concluida"}
+                  onChange={() => {
+                    if (tarefasQuery.data && t.status !== "concluida") toggleMutation.mutate(t.id);
+                  }}
+                />
+
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-foreground">{t.titulo}</p>
                   <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
