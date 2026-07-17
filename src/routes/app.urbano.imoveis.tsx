@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Building2, Search, Plus, Eye, Star, MapPin, BedDouble, Bath, Car, Ruler, Filter, Grid3x3, List } from "lucide-react";
+import { Building2, Search, Eye, Star, MapPin, BedDouble, Bath, Car, Ruler, Filter, Grid3x3, List } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { imoveisUrbanos, fmtBRL, type ImovelStatus, type ImovelTipo, type ImovelFinalidade } from "@/mocks/urbano";
 import { Button } from "@/components/ui/button";
