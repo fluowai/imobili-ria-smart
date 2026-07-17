@@ -124,10 +124,16 @@ const groups: NavGroup[] = [
   },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ tipo = "ambas", nomeImob }: { tipo?: "urbana" | "rural" | "ambas"; nomeImob?: string }) {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const pathname = useRouterState({ select: (r) => r.location.pathname });
+
+  const visibleGroups = groups.filter((g) => {
+    if (g.label === "Carteira Rural") return tipo === "rural" || tipo === "ambas";
+    if (g.label === "Carteira Urbana") return tipo === "urbana" || tipo === "ambas";
+    return true;
+  });
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
@@ -139,16 +145,18 @@ export function AppSidebar() {
           {!collapsed && (
             <div className="min-w-0">
               <p className="font-display text-sm font-semibold leading-tight text-sidebar-foreground">
-                Terra &amp; Lar
+                {nomeImob ?? "ImobiOS"}
               </p>
-              <p className="truncate text-xs text-muted-foreground">Plano Enterprise</p>
+              <p className="truncate text-xs text-muted-foreground capitalize">
+                Carteira {tipo}
+              </p>
             </div>
           )}
         </div>
       </SidebarHeader>
 
       <SidebarContent>
-        {groups.map((group) => (
+        {visibleGroups.map((group) => (
           <SidebarGroup key={group.label}>
             {!collapsed && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
             <SidebarGroupContent>
