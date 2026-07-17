@@ -155,7 +155,7 @@ function CrmPage() {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <span className="grid size-9 place-items-center rounded-full bg-primary/15 text-xs font-semibold text-primary">
-                      {l.nome.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+                      {l.nome.split(" ").map((n: string) => n[0]).slice(0, 2).join("")}
                     </span>
                     <div className="min-w-0">
                       <p className="font-medium">{l.nome}</p>

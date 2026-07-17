@@ -30,10 +30,9 @@ export function NovoLancamentoDialog() {
     vencimento: "",
   });
   const qc = useQueryClient();
-  const create = useServerFn(createLancamento);
   const mutation = useMutation({
     mutationFn: () =>
-      create({
+      createLancamento({
         data: {
           tipo: form.tipo,
           status: form.status,
