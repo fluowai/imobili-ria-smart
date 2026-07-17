@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Filter, Plus, Search } from "lucide-react";
@@ -25,8 +25,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { leads as leadsMock } from "@/mocks/app";
 import type { LeadStatus } from "@/mocks/app";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { createLead, listLeads } from "@/lib/leads.functions";
 
@@ -58,6 +58,7 @@ function dbToUiStatus(s: string): LeadStatus {
 function CrmPage() {
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"todos" | LeadStatus>("todos");
+  const navigate = useNavigate({ from: "/app/crm" });
 
   const list = listLeads;
   const query = useQuery({
@@ -80,7 +81,7 @@ function CrmPage() {
         ultimoContato: new Date(l.createdAt).toLocaleDateString("pt-BR"),
       }));
     }
-    return leadsMock;
+    return [];
   }, [query.data]);
 
   const filtered = useMemo(
@@ -106,7 +107,7 @@ function CrmPage() {
         description="Todos os leads da imobiliária em um só lugar."
         actions={
           <>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => toast("Filtros avançados em breve.", { description: "Funcionalidade em desenvolvimento." })}>
               <Filter className="mr-1.5 size-4" /> Filtros
             </Button>
             <NovoLeadDialog />
@@ -150,7 +151,11 @@ function CrmPage() {
           </TableHeader>
           <TableBody>
             {filtered.map((l) => (
-              <TableRow key={l.id} className="cursor-pointer border-border">
+              <TableRow 
+                key={l.id} 
+                className="cursor-pointer border-border transition-colors hover:bg-muted/30"
+                onClick={() => navigate({ to: "/app/crm/$id", params: { id: l.id } })}
+              >
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <span className="grid size-9 place-items-center rounded-full bg-primary/15 text-xs font-semibold text-primary">

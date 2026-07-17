@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from "recharts";
 import { TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight, Filter } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
-import { lancamentos as lancamentosMock, fluxoMensal, distribuicaoDespesa, fmtBRLFull, type FluxoTipo, type FluxoStatus } from "@/mocks/gestao";
+import { fluxoMensal, distribuicaoDespesa, fmtBRLFull, type FluxoTipo, type FluxoStatus } from "@/mocks/gestao";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -52,19 +52,17 @@ function FinanceiroPage() {
     s === "pago" ? "pago" : s === "atrasado" ? "atrasado" : "aberto";
 
   const rows: Row[] = useMemo(() => {
-    if (query.data && query.data.length > 0) {
-      return query.data.map((l) => ({
-        id: l.id,
-        data: (l.vencimento ?? new Date(l.createdAt).toISOString()).slice(0, 10),
-        descricao: l.descricao,
-        categoria: l.categoria ?? "—",
-        contraparte: "—",
-        tipo: l.tipo as FluxoTipo,
-        status: dbStatusToUi(l.status),
-        valor: Number(l.valor),
-      }));
-    }
-    return lancamentosMock.map((l) => ({ ...l }));
+    if (!query.data) return [];
+    return query.data.map((l) => ({
+      id: l.id,
+      data: (l.vencimento ?? new Date(l.createdAt).toISOString()).slice(0, 10),
+      descricao: l.descricao,
+      categoria: l.categoria ?? "—",
+      contraparte: "—",
+      tipo: l.tipo as FluxoTipo,
+      status: dbStatusToUi(l.status),
+      valor: Number(l.valor),
+    }));
   }, [query.data]);
 
   const kpis = useMemo(() => {
@@ -198,6 +196,13 @@ function FinanceiroPage() {
                 </td>
               </tr>
             ))}
+            {filtrados.length === 0 && (
+              <tr>
+                <td colSpan={6} className="py-8 text-center text-sm text-muted-foreground">
+                  Nenhum lançamento encontrado. Cadastre um novo.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

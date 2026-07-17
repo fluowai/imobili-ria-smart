@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { FileSignature, Plus, Search, CheckCircle2, Clock, AlertTriangle, FileText } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
-import { contratosDocs, fmtBRLFull, type ContratoStatus, type ContratoTipo } from "@/mocks/gestao";
+import { fmtBRLFull, type ContratoStatus, type ContratoTipo } from "@/mocks/gestao";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { NovoContratoDialog } from "@/components/app/novo-contrato-dialog";
+import { listContratos } from "@/lib/contratos.functions";
 
 export const Route = createFileRoute("/app/contratos")({
   head: () => ({
@@ -47,22 +49,44 @@ function ContratosPage() {
   const [busca, setBusca] = useState("");
   const [statusSel, setStatusSel] = useState<ContratoStatus | "todos">("todos");
 
+  const query = useQuery({
+    queryKey: ["contratos"],
+    queryFn: () => listContratos({ data: {} }),
+  });
+
+  const contratos = useMemo(() => {
+    if (!query.data) return [];
+    return query.data.map(c => ({
+      id: c.id.slice(0, 8),
+      titulo: `Contrato de ${c.tipo}`,
+      tipo: c.tipo as ContratoTipo,
+      status: c.status as ContratoStatus,
+      partes: ["Cliente", "Imobiliária"], // TODO: Join com clientes
+      valor: Number(c.valor) || 0,
+      criadoEm: new Date(c.createdAt).toLocaleDateString("pt-BR"),
+      vencimento: c.fim ? new Date(c.fim).toLocaleDateString("pt-BR") : "—",
+      responsavel: "Corretor", // TODO: Join com users
+      totalAssinantes: 0,
+      assinadoPor: 0
+    }));
+  }, [query.data]);
+
   const filtrados = useMemo(
     () =>
-      contratosDocs.filter((c) => {
+      contratos.filter((c: any) => {
         if (statusSel !== "todos" && c.status !== statusSel) return false;
         if (busca && !`${c.titulo} ${c.id} ${c.partes.join(" ")}`.toLowerCase().includes(busca.toLowerCase())) return false;
         return true;
       }),
-    [busca, statusSel],
+    [busca, statusSel, contratos],
   );
 
   const kpis = useMemo(() => ({
-    ativos:   contratosDocs.filter((c) => c.status === "ativo").length,
-    assinar:  contratosDocs.filter((c) => c.status === "assinatura").length,
-    vencendo: contratosDocs.filter((c) => c.status === "vencendo").length,
-    valorAtivo: contratosDocs.filter((c) => c.status === "ativo").reduce((a, c) => a + c.valor, 0),
-  }), []);
+    ativos:   contratos.filter((c: any) => c.status === "ativo").length,
+    assinar:  contratos.filter((c: any) => c.status === "assinatura").length,
+    vencendo: contratos.filter((c: any) => c.status === "vencendo").length,
+    valorAtivo: contratos.filter((c: any) => c.status === "ativo").reduce((a: number, c: any) => a + c.valor, 0),
+  }), [contratos]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -143,6 +167,12 @@ function ContratosPage() {
                 </article>
               );
             })}
+            {filtrados.length === 0 && (
+              <div className="rounded-xl border border-dashed border-border p-12 text-center">
+                <FileSignature className="mx-auto h-10 w-10 text-muted-foreground" />
+                <p className="mt-2 text-sm text-muted-foreground">Nenhum contrato encontrado. Crie um novo.</p>
+              </div>
+            )}
           </div>
         </div>
 

@@ -1,12 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Sprout, Search, Plus, MapPin, Droplet, Trees, TrendingUp, FileText, Star } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
-import { imoveisRurais, fmtBRL, fmtHa, type RuralStatus, type RuralUso } from "@/mocks/rural";
+import { fmtBRL, fmtHa, type RuralStatus, type RuralUso } from "@/mocks/rural";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { NovoImovelDialog } from "@/components/app/novo-imovel-dialog";
+import { listImoveis } from "@/lib/imoveis.functions";
 
 export const Route = createFileRoute("/app/rural/imoveis")({
   head: () => ({
@@ -44,21 +47,46 @@ function RuralImoveisPage() {
   const [uso, setUso] = useState<RuralUso | "todos">("todos");
   const [statusSel, setStatusSel] = useState<RuralStatus | "todos">("todos");
 
+  const query = useQuery({
+    queryKey: ["imoveis", "rural", busca, uso, statusSel],
+    queryFn: () => listImoveis({ data: { tipo: "rural" } }),
+  });
+
+  const imoveis = useMemo(() => {
+    if (!query.data) return [];
+    return query.data.map((i: any) => ({
+      ...i,
+      cover: i.fotos?.[0] || "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
+      nome: i.titulo,
+      municipio: i.cidade || "",
+      areaHa: i.area_ha || 0,
+      valorTotal: i.valor_venda || 0,
+      produtivaHa: i.caracteristicas?.produtiva_ha || 0,
+      reservaLegalHa: i.caracteristicas?.reserva_legal_ha || 0,
+      aguas: i.caracteristicas?.aguas || "Não informado",
+      uso: i.caracteristicas?.uso || "misto",
+      itr: i.itr ? "regular" : "pendente",
+      car: i.car_numero || "Não informado",
+      destaque: false,
+      valorHectare: i.area_ha ? (i.valor_venda || 0) / i.area_ha : 0
+    }));
+  }, [query.data]);
+
   const filtrados = useMemo(() => {
-    return imoveisRurais.filter((i) => {
+    return imoveis.filter((i: any) => {
       if (uso !== "todos" && i.uso !== uso) return false;
       if (statusSel !== "todos" && i.status !== statusSel) return false;
       if (busca && !`${i.nome} ${i.codigo} ${i.municipio} ${i.uf}`.toLowerCase().includes(busca.toLowerCase())) return false;
       return true;
     });
-  }, [busca, uso, statusSel]);
+  }, [busca, uso, statusSel, imoveis]);
 
   const kpis = useMemo(() => {
-    const total = imoveisRurais.reduce((a, i) => a + i.areaHa, 0);
-    const vgv = imoveisRurais.reduce((a, i) => a + i.valorTotal, 0);
-    const disp = imoveisRurais.filter((i) => i.status === "disponivel").length;
+    const total = imoveis.reduce((a: number, i: any) => a + (i.areaHa || 0), 0);
+    const vgv = imoveis.reduce((a: number, i: any) => a + (i.valorTotal || 0), 0);
+    const disp = imoveis.filter((i: any) => i.status === "disponivel").length;
     return { total, vgv, disp };
-  }, []);
+  }, [imoveis]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -66,11 +94,11 @@ function RuralImoveisPage() {
         eyebrow="Carteira Rural"
         title="Imóveis Rurais"
         description="Fichas completas com CAR, matrícula, benfeitorias, recursos hídricos e georreferenciamento."
-        actions={<Button size="sm"><Plus className="mr-2 h-4 w-4" />Nova ficha rural</Button>}
+        actions={<NovoImovelDialog tipo="rural" />}
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <Kpi label="Imóveis" valor={imoveisRurais.length} />
+        <Kpi label="Imóveis" valor={imoveis.length} />
         <Kpi label="Disponíveis" valor={kpis.disp} />
         <Kpi label="Área total" valor={fmtHa(kpis.total)} />
         <Kpi label="VGV carteira" valor={fmtBRL(kpis.vgv)} />
@@ -99,7 +127,7 @@ function RuralImoveisPage() {
             <div className="relative aspect-[4/3] shrink-0 overflow-hidden bg-muted sm:aspect-auto sm:w-56">
               <img src={i.cover} alt={i.nome} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
               <div className="absolute left-2 top-2 flex flex-col gap-1">
-                <Badge className={cn("border-none", statusMap[i.status].className)}>{statusMap[i.status].label}</Badge>
+                <Badge className={cn("border-none", statusMap[i.status as RuralStatus]?.className || "")}>{statusMap[i.status as RuralStatus]?.label || i.status}</Badge>
                 {i.destaque && <Badge className="border-none bg-primary/90 text-primary-foreground"><Star className="mr-1 h-3 w-3" />Destaque</Badge>}
               </div>
             </div>
@@ -110,13 +138,13 @@ function RuralImoveisPage() {
                   <h3 className="truncate font-display text-lg font-semibold">{i.nome}</h3>
                   <p className="flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="h-3 w-3" />{i.municipio} · {i.uf}</p>
                 </div>
-                <Badge className={cn("border-none text-[10px]", itrMap[i.itr].className)}>{itrMap[i.itr].label}</Badge>
+                <Badge className={cn("border-none text-[10px]", itrMap[i.itr as keyof typeof itrMap]?.className || "")}>{itrMap[i.itr as keyof typeof itrMap]?.label || "ITR pendente"}</Badge>
               </div>
 
               <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
                 <Cell label="Área" valor={fmtHa(i.areaHa)} />
                 <Cell label="Produtiva" valor={fmtHa(i.produtivaHa)} />
-                <Cell label="Uso" valor={usoLabels[i.uso]} />
+                <Cell label="Uso" valor={usoLabels[i.uso as RuralUso] || "Misto"} />
               </div>
 
               <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-muted-foreground">

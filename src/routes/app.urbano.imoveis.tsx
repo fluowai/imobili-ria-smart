@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Building2, Search, Eye, Star, MapPin, BedDouble, Bath, Car, Ruler, Filter, Grid3x3, List } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
-import { imoveisUrbanos, fmtBRL, type ImovelStatus, type ImovelTipo, type ImovelFinalidade } from "@/mocks/urbano";
+import { fmtBRL, type ImovelStatus, type ImovelTipo, type ImovelFinalidade } from "@/mocks/urbano";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { NovoImovelDialog } from "@/components/app/novo-imovel-dialog";
+import { listImoveis } from "@/lib/imoveis.functions";
 
 export const Route = createFileRoute("/app/urbano/imoveis")({
   head: () => ({
@@ -50,23 +52,42 @@ function ImoveisUrbanosPage() {
   const [statusSel, setStatusSel] = useState<ImovelStatus | "todos">("todos");
   const [view, setView] = useState<"grid" | "list">("grid");
 
+  const query = useQuery({
+    queryKey: ["imoveis", "urbano", busca, tipo, finalidade, statusSel],
+    queryFn: () => listImoveis({ data: { tipo: "urbano" } }),
+  });
+
+  const imoveis = useMemo(() => {
+    if (!query.data) return [];
+    return query.data.map(i => ({
+      ...i,
+      cover: i.fotos?.[0] || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
+      valorVenda: i.valor_venda || 0,
+      valorLocacao: i.valor_locacao || 0,
+      areaUtil: i.area_util || 0,
+      captadoPor: "Eu",
+      visualizacoes: 0,
+      destaque: false,
+    }));
+  }, [query.data]);
+
   const filtrados = useMemo(() => {
-    return imoveisUrbanos.filter((i) => {
+    return imoveis.filter((i: any) => {
       if (tipo !== "todos" && i.tipo !== tipo) return false;
       if (finalidade !== "todos" && i.finalidade !== finalidade && i.finalidade !== "ambos") return false;
       if (statusSel !== "todos" && i.status !== statusSel) return false;
       if (busca && !`${i.titulo} ${i.codigo} ${i.bairro} ${i.cidade}`.toLowerCase().includes(busca.toLowerCase())) return false;
       return true;
     });
-  }, [busca, tipo, finalidade, statusSel]);
+  }, [busca, tipo, finalidade, statusSel, imoveis]);
 
   const totais = useMemo(() => {
-    const total = imoveisUrbanos.length;
-    const disponiveis = imoveisUrbanos.filter((i) => i.status === "disponivel").length;
-    const vgv = imoveisUrbanos.reduce((acc, i) => acc + i.valorVenda, 0);
-    const publicados = imoveisUrbanos.filter((i) => i.publicado).length;
+    const total = imoveis.length;
+    const disponiveis = imoveis.filter((i: any) => i.status === "disponivel").length;
+    const vgv = imoveis.reduce((acc: number, i: any) => acc + (i.valorVenda || 0), 0);
+    const publicados = imoveis.length;
     return { total, disponiveis, vgv, publicados };
-  }, []);
+  }, [imoveis]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -124,7 +145,7 @@ function ImoveisUrbanosPage() {
       </div>
 
       <p className="text-sm text-muted-foreground">
-        Mostrando <span className="font-medium text-foreground">{filtrados.length}</span> de {imoveisUrbanos.length} imóveis
+        Mostrando <span className="font-medium text-foreground">{filtrados.length}</span> de {imoveis.length} imóveis
       </p>
 
       {view === "grid" ? (
@@ -134,7 +155,7 @@ function ImoveisUrbanosPage() {
               <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                 <img src={i.cover} alt={i.titulo} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
                 <div className="absolute left-2 top-2 flex gap-1">
-                  <Badge className={cn("border-none", statusMap[i.status].className)}>{statusMap[i.status].label}</Badge>
+                  <Badge className={cn("border-none", statusMap[i.status as ImovelStatus]?.className || "")}>{statusMap[i.status as ImovelStatus]?.label || i.status}</Badge>
                   {i.destaque && <Badge className="border-none bg-primary/90 text-primary-foreground"><Star className="mr-1 h-3 w-3" />Destaque</Badge>}
                 </div>
                 <div className="absolute right-2 top-2 rounded bg-black/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white">
@@ -196,7 +217,7 @@ function ImoveisUrbanosPage() {
                   <td className="px-4 py-3">{i.titulo}</td>
                   <td className="px-4 py-3 capitalize">{i.tipo}</td>
                   <td className="px-4 py-3 text-muted-foreground">{i.bairro}</td>
-                  <td className="px-4 py-3"><Badge className={cn("border-none", statusMap[i.status].className)}>{statusMap[i.status].label}</Badge></td>
+                  <td className="px-4 py-3"><Badge className={cn("border-none", statusMap[i.status as ImovelStatus]?.className || "")}>{statusMap[i.status as ImovelStatus]?.label || i.status}</Badge></td>
                   <td className="px-4 py-3 text-right font-medium">{i.valorVenda > 0 ? fmtBRL(i.valorVenda) : "—"}</td>
                   <td className="px-4 py-3 text-right">{i.valorLocacao > 0 ? fmtBRL(i.valorLocacao) : "—"}</td>
                   <td className="px-4 py-3 text-muted-foreground">{i.captadoPor}</td>

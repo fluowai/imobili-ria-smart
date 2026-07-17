@@ -16,7 +16,7 @@ import { Building2, Handshake, TrendingUp, Users } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { Badge } from "@/components/ui/badge";
-import { funil, mensagens, tarefas as tarefasMock, vendasSerie } from "@/mocks/app";
+import { funil, mensagens, vendasSerie } from "@/mocks/app";
 import { cn } from "@/lib/utils";
 import { listTarefas, updateTarefa } from "@/lib/tarefas.functions";
 
@@ -75,7 +75,7 @@ function AppDashboard() {
         prioridade: "media" as const,
         status: t.status,
       }))
-    : (tarefasMock as unknown as UITarefa[]);
+    : [];
 
   return (
     <div className="space-y-8">

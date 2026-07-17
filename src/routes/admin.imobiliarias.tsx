@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Building2, Filter, Plus, Search } from "lucide-react";
 
 import { PageHeader } from "@/components/shared/page-header";
@@ -49,8 +51,28 @@ function ImobiliariasPage() {
     navigate({ to: "/app/dashboard" });
   }
 
+  const { data: imobiliarias } = useQuery({
+    queryKey: ["admin_imobiliarias"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("imobiliarias").select("*");
+      if (error) throw error;
+      return data;
+    }
+  });
+
   const filtered = useMemo(() => {
-    return imobiliarias.filter((i) => {
+    if (!imobiliarias) return [];
+    return imobiliarias.map((i: any) => ({
+      id: i.id,
+      nome: i.nome,
+      cidade: "São Paulo", // Fictício, precisaria de join com endereço
+      uf: "SP",
+      plano: "premium",
+      usuarios: 0,
+      imoveis: 0,
+      mrr: 0,
+      status: "ativa" as ImobStatus
+    })).filter((i: any) => {
       if (tab !== "todas" && i.status !== tab) return false;
       if (!q) return true;
       const t = q.toLowerCase();
@@ -60,7 +82,7 @@ function ImobiliariasPage() {
         i.id.toLowerCase().includes(t)
       );
     });
-  }, [q, tab]);
+  }, [q, tab, imobiliarias]);
 
   return (
     <div className="space-y-8">
@@ -94,7 +116,7 @@ function ImobiliariasPage() {
         </div>
         <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
           <TabsList>
-            <TabsTrigger value="todas">Todas ({imobiliarias.length})</TabsTrigger>
+            <TabsTrigger value="todas">Todas ({imobiliarias?.length || 0})</TabsTrigger>
             <TabsTrigger value="ativa">Ativas</TabsTrigger>
             <TabsTrigger value="trial">Trial</TabsTrigger>
             <TabsTrigger value="suspensa">Suspensas</TabsTrigger>

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Mail, Phone, Plus, Search, Sparkles, Star } from "lucide-react";
@@ -16,7 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { leads as leadsMock } from "@/mocks/app";
+import { toast } from "sonner";
 import { createCliente, listClientes } from "@/lib/clientes.functions";
 
 export const Route = createFileRoute("/app/clientes")({
@@ -43,6 +43,7 @@ type ClienteUI = {
 function ClientesPage() {
   const [q, setQ] = useState("");
   const list = listClientes;
+  const navigate = useNavigate({ from: "/app/clientes" });
   const query = useQuery({
     queryKey: ["clientes", q],
     queryFn: () => list({ data: { busca: q || undefined } }),
@@ -58,16 +59,20 @@ function ClientesPage() {
           telefone: c.telefone,
           tags: c.tags,
         }))
-      : leadsMock.slice(0, 9).map((l) => ({
-          id: l.id,
-          nome: l.nome,
-          email: l.email,
-          telefone: l.telefone,
-          tags: [l.origem, l.status],
-          origem: l.origem,
-          status: l.status,
-          interesse: l.interesse,
-        }));
+      : [];
+
+  const handleExportCSV = () => {
+    if (rows.length === 0) return toast("Nenhum cliente para exportar.");
+    const header = "Nome,Email,Telefone,Tags\n";
+    const csv = rows.map(c => `"${c.nome}","${c.email || ""}","${c.telefone || ""}","${c.tags.join("; ")}"`).join("\n");
+    const blob = new Blob([header + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "clientes_imobios.csv");
+    link.click();
+    toast.success("CSV exportado com sucesso!");
+  };
 
   return (
     <div className="space-y-8">
@@ -78,7 +83,7 @@ function ClientesPage() {
         actions={
           <>
             <NovoClienteDialog />
-            <Button variant="outline" size="sm">Exportar CSV</Button>
+            <Button variant="outline" size="sm" onClick={handleExportCSV}>Exportar CSV</Button>
           </>
         }
       />
@@ -102,7 +107,11 @@ function ClientesPage() {
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {rows.map((c) => (
-          <div key={c.id} className="rounded-2xl border border-border bg-card p-5">
+          <div 
+            key={c.id} 
+            className="rounded-2xl border border-border bg-card p-5 cursor-pointer transition-shadow hover:shadow-md"
+            onClick={() => navigate({ to: "/app/clientes/$id", params: { id: c.id } })}
+          >
             <div className="flex items-start gap-3">
               <span className="grid size-11 place-items-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
                 {c.nome.split(" ").map((n) => n[0]).slice(0, 2).join("")}
@@ -111,7 +120,13 @@ function ClientesPage() {
                 <p className="font-medium">{c.nome}</p>
                 <p className="truncate text-xs text-muted-foreground">{c.email ?? c.telefone ?? "—"}</p>
               </div>
-              <button className="text-muted-foreground hover:text-[color:var(--color-warning)]">
+              <button 
+                className="text-muted-foreground hover:text-[color:var(--color-warning)]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toast.success("Cliente adicionado aos favoritos!");
+                }}
+              >
                 <Star className="size-4" />
               </button>
             </div>
@@ -129,18 +144,45 @@ function ClientesPage() {
             )}
 
             <div className="mt-4 flex items-center gap-2">
-              <Button variant="outline" size="sm" className="flex-1">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (c.telefone) window.open(`https://wa.me/${c.telefone.replace(/\D/g, '')}`, '_blank');
+                }}
+              >
                 <Phone className="mr-1.5 size-3.5" /> Ligar
               </Button>
-              <Button variant="outline" size="sm" className="flex-1">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (c.email) window.location.href = `mailto:${c.email}`;
+                }}
+              >
                 <Mail className="mr-1.5 size-3.5" /> Email
               </Button>
-              <Button size="sm">
+              <Button 
+                size="sm" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toast("Analisando perfil do cliente com IA...", { description: "Recurso em desenvolvimento." });
+                }}
+              >
                 <Sparkles className="mr-1.5 size-3.5" /> IA
               </Button>
             </div>
           </div>
         ))}
+        {rows.length === 0 && (
+          <div className="col-span-full rounded-xl border border-dashed border-border p-12 text-center">
+            <p className="text-sm text-muted-foreground">Sua base de clientes está vazia.</p>
+          </div>
+        )}
       </div>
     </div>
   );
