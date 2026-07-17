@@ -1,86 +1,64 @@
-import { createServerFn } from "@tanstack/react-start";
-import { and, desc, eq } from "drizzle-orm";
-import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { getActiveImobiliariaId } from "./tenant";
 
-import { requireAuth } from "./auth-middleware";
-import { db, schema } from "./db.server";
-import { resolveImobiliariaId } from "./tenant.server";
+type TarefaInput = {
+  titulo: string;
+  descricao?: string;
+  status?: "aberta" | "em_andamento" | "concluida" | "cancelada";
+  vencimento?: string;
+  lead_id?: string;
+  cliente_id?: string;
+  imovel_id?: string;
+  responsavel_id?: string;
+};
 
-const statusEnum = z.enum(["aberta", "em_andamento", "concluida", "cancelada"]);
-
-const upsertSchema = z.object({
-  responsavelId: z.string().uuid().optional(),
-  leadId: z.string().uuid().optional(),
-  clienteId: z.string().uuid().optional(),
-  imovelId: z.string().uuid().optional(),
-  titulo: z.string().min(1).max(200),
-  descricao: z.string().max(4000).optional(),
-  status: statusEnum.default("aberta"),
-  vencimento: z.string().datetime().optional(),
-});
-
-function normalize(data: z.infer<typeof upsertSchema>) {
-  return {
-    ...data,
-    vencimento: data.vencimento ? new Date(data.vencimento) : undefined,
-  };
+export async function listTarefas({ data }: { data?: { status?: string } } = {}) {
+  const imob = await getActiveImobiliariaId();
+  let q = supabase
+    .from("tarefas")
+    .select("*")
+    .eq("imobiliaria_id", imob)
+    .order("created_at", { ascending: false })
+    .limit(200);
+  if (data?.status) q = q.eq("status", data.status);
+  const { data: rows, error } = await q;
+  if (error) throw error;
+  return rows ?? [];
 }
 
-export const listTarefas = createServerFn({ method: "GET" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) =>
-    z.object({ status: statusEnum.optional() }).default({}).parse(data ?? {}),
-  )
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const filters = [eq(schema.tarefas.imobiliariaId, imobiliariaId)];
-    if (data.status) filters.push(eq(schema.tarefas.status, data.status));
-    return db
-      .select()
-      .from(schema.tarefas)
-      .where(and(...filters))
-      .orderBy(desc(schema.tarefas.createdAt))
-      .limit(500);
-  });
+export async function createTarefa({ data }: { data: TarefaInput }) {
+  const imob = await getActiveImobiliariaId();
+  const { data: row, error } = await supabase
+    .from("tarefas")
+    .insert({ ...data, status: data.status ?? "aberta", imobiliaria_id: imob })
+    .select()
+    .single();
+  if (error) throw error;
+  return row;
+}
 
-export const createTarefa = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) => upsertSchema.parse(data))
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const [row] = await db
-      .insert(schema.tarefas)
-      .values({ ...normalize(data), imobiliariaId })
-      .returning();
-    return row;
-  });
+export async function updateTarefa({ data }: { data: { id: string; patch: Partial<TarefaInput> } }) {
+  const imob = await getActiveImobiliariaId();
+  const patch: Record<string, unknown> = { ...data.patch };
+  if (data.patch.status === "concluida") patch.concluida_em = new Date().toISOString();
+  const { data: row, error } = await supabase
+    .from("tarefas")
+    .update(patch)
+    .eq("id", data.id)
+    .eq("imobiliaria_id", imob)
+    .select()
+    .single();
+  if (error) throw error;
+  return row;
+}
 
-export const updateTarefa = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) =>
-    z.object({ id: z.string().uuid(), patch: upsertSchema.partial() }).parse(data),
-  )
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const patch: Record<string, unknown> = { ...data.patch };
-    if (typeof patch.vencimento === "string") patch.vencimento = new Date(patch.vencimento);
-    if (patch.status === "concluida" && !patch.concluidaEm) patch.concluidaEm = new Date();
-    const [row] = await db
-      .update(schema.tarefas)
-      .set(patch)
-      .where(and(eq(schema.tarefas.id, data.id), eq(schema.tarefas.imobiliariaId, imobiliariaId)))
-      .returning();
-    if (!row) throw new Response("Não encontrado", { status: 404 });
-    return row;
-  });
-
-export const deleteTarefa = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) => z.object({ id: z.string().uuid() }).parse(data))
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    await db
-      .delete(schema.tarefas)
-      .where(and(eq(schema.tarefas.id, data.id), eq(schema.tarefas.imobiliariaId, imobiliariaId)));
-    return { ok: true };
-  });
+export async function deleteTarefa({ data }: { data: { id: string } }) {
+  const imob = await getActiveImobiliariaId();
+  const { error } = await supabase
+    .from("tarefas")
+    .delete()
+    .eq("id", data.id)
+    .eq("imobiliaria_id", imob);
+  if (error) throw error;
+  return { ok: true };
+}

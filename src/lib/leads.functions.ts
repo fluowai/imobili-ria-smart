@@ -1,87 +1,76 @@
-import { createServerFn } from "@tanstack/react-start";
-import { and, desc, eq } from "drizzle-orm";
-import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { getActiveImobiliariaId } from "./tenant";
 
-import { requireAuth } from "./auth-middleware";
-import { db, schema } from "./db.server";
-import { resolveImobiliariaId } from "./tenant.server";
+type LeadInput = {
+  nome: string;
+  email?: string;
+  telefone?: string;
+  origem?: "site" | "whatsapp" | "instagram" | "portal" | "indicacao" | "outros";
+  status?: "novo" | "qualificando" | "visita" | "proposta" | "fechado" | "perdido";
+  score?: number;
+  interesse?: string;
+  observacoes?: string;
+  cliente_id?: string;
+  imovel_id?: string;
+  responsavel_id?: string;
+};
 
-const statusEnum = z.enum([
-  "novo",
-  "qualificando",
-  "visita",
-  "proposta",
-  "fechado",
-  "perdido",
-]);
-const origemEnum = z.enum(["site", "whatsapp", "instagram", "portal", "indicacao", "outros"]);
+export async function listLeads({ data }: { data?: { status?: string; busca?: string } } = {}) {
+  const imob = await getActiveImobiliariaId();
+  let q = supabase
+    .from("leads")
+    .select("*")
+    .eq("imobiliaria_id", imob)
+    .order("created_at", { ascending: false })
+    .limit(500);
+  if (data?.status) q = q.eq("status", data.status);
+  const { data: rows, error } = await q;
+  if (error) throw error;
+  const busca = data?.busca?.toLowerCase();
+  return busca
+    ? (rows ?? []).filter((r: any) =>
+        `${r.nome} ${r.email ?? ""} ${r.telefone ?? ""} ${r.interesse ?? ""}`.toLowerCase().includes(busca),
+      )
+    : rows ?? [];
+}
 
-const upsertSchema = z.object({
-  clienteId: z.string().uuid().optional(),
-  responsavelId: z.string().uuid().optional(),
-  imovelId: z.string().uuid().optional(),
-  nome: z.string().min(1).max(200),
-  email: z.string().email().optional(),
-  telefone: z.string().max(30).optional(),
-  origem: origemEnum.default("site"),
-  status: statusEnum.default("novo"),
-  score: z.number().int().min(0).max(100).default(0),
-  interesse: z.string().max(400).optional(),
-  observacoes: z.string().max(4000).optional(),
-});
+export async function createLead({ data }: { data: LeadInput }) {
+  const imob = await getActiveImobiliariaId();
+  const { data: row, error } = await supabase
+    .from("leads")
+    .insert({
+      ...data,
+      origem: data.origem ?? "site",
+      status: data.status ?? "novo",
+      score: data.score ?? 0,
+      imobiliaria_id: imob,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return row;
+}
 
-export const listLeads = createServerFn({ method: "GET" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) =>
-    z.object({ status: statusEnum.optional() }).default({}).parse(data ?? {}),
-  )
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const filters = [eq(schema.leads.imobiliariaId, imobiliariaId)];
-    if (data.status) filters.push(eq(schema.leads.status, data.status));
-    return db
-      .select()
-      .from(schema.leads)
-      .where(and(...filters))
-      .orderBy(desc(schema.leads.createdAt))
-      .limit(500);
-  });
+export async function updateLead({ data }: { data: { id: string; patch: Partial<LeadInput> } }) {
+  const imob = await getActiveImobiliariaId();
+  const { data: row, error } = await supabase
+    .from("leads")
+    .update(data.patch)
+    .eq("id", data.id)
+    .eq("imobiliaria_id", imob)
+    .select()
+    .single();
+  if (error) throw error;
+  return row;
+}
 
-export const createLead = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) => upsertSchema.parse(data))
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const [row] = await db
-      .insert(schema.leads)
-      .values({ ...data, imobiliariaId })
-      .returning();
-    return row;
-  });
-
-export const updateLead = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) =>
-    z.object({ id: z.string().uuid(), patch: upsertSchema.partial() }).parse(data),
-  )
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const [row] = await db
-      .update(schema.leads)
-      .set({ ...data.patch, updatedAt: new Date() })
-      .where(and(eq(schema.leads.id, data.id), eq(schema.leads.imobiliariaId, imobiliariaId)))
-      .returning();
-    if (!row) throw new Response("Não encontrado", { status: 404 });
-    return row;
-  });
-
-export const deleteLead = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) => z.object({ id: z.string().uuid() }).parse(data))
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    await db
-      .delete(schema.leads)
-      .where(and(eq(schema.leads.id, data.id), eq(schema.leads.imobiliariaId, imobiliariaId)));
-    return { ok: true };
-  });
+export async function deleteLead({ data }: { data: { id: string } }) {
+  const imob = await getActiveImobiliariaId();
+  const { error } = await supabase
+    .from("leads")
+    .delete()
+    .eq("id", data.id)
+    .eq("imobiliaria_id", imob);
+  if (error) throw error;
+  return { ok: true };
+}
