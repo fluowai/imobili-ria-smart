@@ -104,8 +104,12 @@ function ConexoesPage() {
 
       {isLoading && <p className="text-sm text-muted-foreground">Carregando instâncias…</p>}
       {error && (
-        <div className="rounded-xl border border-[color:var(--color-destructive)]/40 bg-[color:var(--color-destructive)]/5 p-4 text-sm">
-          Não foi possível falar com o serviço whatsmeow. Verifique se o container está de pé em <code>/wa</code>.
+        <div className="rounded-xl border border-[color:var(--color-warning)]/40 bg-[color:var(--color-warning)]/5 p-4 text-sm">
+          <p className="font-medium text-foreground">Serviço whatsmeow indisponível em <code>{(import.meta.env.VITE_WHATSMEOW_URL as string) || "/wa"}</code>.</p>
+          <p className="mt-1 text-muted-foreground">
+            Isso é normal no preview do Lovable — o whatsmeow (Go) só roda no seu VPS via <code>docker compose up -d whatsmeow caddy</code>.
+            Configure <code>VITE_WHATSMEOW_URL</code> no <code>.env</code> para apontar pro seu host, ou acesse a app pelo domínio do Caddy.
+          </p>
         </div>
       )}
 
