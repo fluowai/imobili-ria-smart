@@ -58,7 +58,7 @@ function Landing() {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <Link to="/auth/login">Acessar painel da imobiliária</Link>
+              <Link to="/app/dashboard">Acessar painel da imobiliária</Link>
             </Button>
           </div>
         </div>
