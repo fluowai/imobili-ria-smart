@@ -92,7 +92,7 @@ function FinanceiroPage() {
         actions={
           <>
             <Button variant="outline" size="sm"><Filter className="mr-2 h-4 w-4" />Período</Button>
-            <Button size="sm"><Plus className="mr-2 h-4 w-4" />Novo lançamento</Button>
+            <NovoLancamentoDialog />
           </>
         }
       />
