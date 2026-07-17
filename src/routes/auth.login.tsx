@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Building2, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +33,22 @@ function LoginPage() {
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!loading && user) navigate({ to: "/app/dashboard" });
+    if (!loading && user) {
+      // Verifica se é super_admin antes de navegar
+      supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("role", "super_admin")
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data) {
+            navigate({ to: "/admin/dashboard" });
+          } else {
+            navigate({ to: "/app/dashboard" });
+          }
+        });
+    }
   }, [user, loading, navigate]);
 
   async function onSubmit(e: React.FormEvent) {

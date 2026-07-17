@@ -46,11 +46,26 @@ function AppLayout() {
     await qc.cancelQueries();
     qc.clear();
     await signOut();
+    localStorage.removeItem("admin_imob_override");
     navigate({ to: "/auth/login", replace: true });
+  }
+
+  const isMasquerading = !!localStorage.getItem("admin_imob_override");
+  function exitMasquerade() {
+    localStorage.removeItem("admin_imob_override");
+    navigate({ to: "/admin/dashboard", replace: true });
   }
 
   return (
     <div className="theme-app min-h-screen bg-background text-foreground">
+      {isMasquerading && (
+        <div className="flex h-10 w-full items-center justify-between bg-destructive px-4 text-sm text-destructive-foreground shadow-md z-50 relative">
+          <p className="font-semibold">Modo Super Admin: Visualizando painel da imobiliária</p>
+          <Button variant="outline" size="sm" onClick={exitMasquerade} className="h-7 text-xs bg-transparent border-white text-white hover:bg-white/20">
+            Voltar pro Admin
+          </Button>
+        </div>
+      )}
       <SidebarProvider>
         <div className="flex min-h-screen w-full">
           <AppSidebar tipo={imob?.tipo ?? "urbana"} nomeImob={imob?.nome} />

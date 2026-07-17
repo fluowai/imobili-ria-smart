@@ -37,21 +37,28 @@ export function ImobiliariaProvider({ children }: { children: ReactNode }) {
       return;
     }
     setLoading(true);
-    const { data: mem } = await supabase
-      .from("memberships")
-      .select("imobiliaria_id")
-      .eq("user_id", user.id)
-      .limit(1)
-      .maybeSingle();
-    if (!mem) {
-      setImob(null);
-      setLoading(false);
-      return;
+
+    let targetImobId = localStorage.getItem("admin_imob_override");
+
+    if (!targetImobId) {
+      const { data: mem } = await supabase
+        .from("memberships")
+        .select("imobiliaria_id")
+        .eq("user_id", user.id)
+        .limit(1)
+        .maybeSingle();
+      if (!mem) {
+        setImob(null);
+        setLoading(false);
+        return;
+      }
+      targetImobId = mem.imobiliaria_id;
     }
+
     const { data } = await supabase
       .from("imobiliarias")
       .select("id, nome, slug, tipo, onboarding_completed, instancia_nome, llm_keys, responsavel_nome, whatsapp")
-      .eq("id", mem.imobiliaria_id)
+      .eq("id", targetImobId)
       .maybeSingle();
     setImob((data as Imobiliaria) ?? null);
     setLoading(false);

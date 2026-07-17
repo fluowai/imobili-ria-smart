@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Building2, Filter, Plus, Search } from "lucide-react";
 
@@ -40,8 +40,14 @@ const statusStyle: Record<ImobStatus, string> = {
 };
 
 function ImobiliariasPage() {
+  const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"todas" | ImobStatus>("todas");
+
+  function handleAcessarPainel(id: string) {
+    localStorage.setItem("admin_imob_override", id);
+    navigate({ to: "/app/dashboard" });
+  }
 
   const filtered = useMemo(() => {
     return imobiliarias.filter((i) => {
@@ -108,6 +114,7 @@ function ImobiliariasPage() {
               <TableHead className="text-right">Imóveis</TableHead>
               <TableHead className="text-right">MRR</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -149,11 +156,16 @@ function ImobiliariasPage() {
                     {im.status}
                   </span>
                 </TableCell>
+                <TableCell className="text-right">
+                  <Button variant="outline" size="sm" onClick={() => handleAcessarPainel(im.id)}>
+                    Acessar painel
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
             {filtered.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="py-12 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={8} className="py-12 text-center text-sm text-muted-foreground">
                   Nenhuma imobiliária encontrada com esses filtros.
                 </TableCell>
               </TableRow>
