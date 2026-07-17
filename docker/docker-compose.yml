@@ -12,6 +12,7 @@ services:
       S3_ACCESS_KEY: ${MINIO_ROOT_USER}
       S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
+      VITE_WHATSMEOW_URL: /wa
     depends_on:
       postgres:
         condition: service_healthy
@@ -21,6 +22,19 @@ services:
         condition: service_started
     ports:
       - "3000:3000"
+    restart: unless-stopped
+
+  whatsmeow:
+    build:
+      context: ./whatsmeow
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      # Aponta para o Postgres do Supabase (mesmo banco)
+      DATABASE_URL: ${SUPABASE_DB_URL}
+      SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET}
+    ports:
+      - "8080:8080"
     restart: unless-stopped
 
   postgres:
@@ -63,6 +77,7 @@ services:
     image: caddy:2-alpine
     depends_on:
       - app
+      - whatsmeow
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
