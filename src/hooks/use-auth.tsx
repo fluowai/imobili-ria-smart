@@ -48,11 +48,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         return { error: error?.message ?? null };
       },
-      async signUp(email, password, nome) {
+      async signUp({ email, password, nome, imobiliaria, tipo }) {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { nome }, emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined },
+          options: {
+            data: { nome, imobiliaria, tipo },
+            emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
+          },
         });
         return { error: error?.message ?? null };
       },
