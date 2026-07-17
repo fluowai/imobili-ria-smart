@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 
-export type ImobTipo = "urbana" | "rural" | "ambas";
+export type ImobTipo = "urbana" | "rural";
 
 export interface Imobiliaria {
   id: string;
@@ -12,6 +12,8 @@ export interface Imobiliaria {
   onboarding_completed: boolean;
   instancia_nome: string | null;
   llm_keys: Record<string, string>;
+  responsavel_nome: string | null;
+  whatsapp: string | null;
 }
 
 interface Ctx {
