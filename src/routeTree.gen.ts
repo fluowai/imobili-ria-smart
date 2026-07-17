@@ -18,6 +18,7 @@ import { Route as AdminStorageRouteImport } from './routes/admin.storage'
 import { Route as AdminPlanosRouteImport } from './routes/admin.planos'
 import { Route as AdminMonitoringRouteImport } from './routes/admin.monitoring'
 import { Route as AdminMigracaoRouteImport } from './routes/admin.migracao'
+import { Route as AdminMarketingRouteImport } from './routes/admin.marketing'
 import { Route as AdminImportadorIaRouteImport } from './routes/admin.importador-ia'
 import { Route as AdminImobiliariasRouteImport } from './routes/admin.imobiliarias'
 import { Route as AdminFeatureFlagsRouteImport } from './routes/admin.feature-flags'
@@ -72,6 +73,11 @@ const AdminMonitoringRoute = AdminMonitoringRouteImport.update({
 const AdminMigracaoRoute = AdminMigracaoRouteImport.update({
   id: '/migracao',
   path: '/migracao',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMarketingRoute = AdminMarketingRouteImport.update({
+  id: '/marketing',
+  path: '/marketing',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminImportadorIaRoute = AdminImportadorIaRouteImport.update({
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/admin/feature-flags': typeof AdminFeatureFlagsRoute
   '/admin/imobiliarias': typeof AdminImobiliariasRoute
   '/admin/importador-ia': typeof AdminImportadorIaRoute
+  '/admin/marketing': typeof AdminMarketingRoute
   '/admin/migracao': typeof AdminMigracaoRoute
   '/admin/monitoring': typeof AdminMonitoringRoute
   '/admin/planos': typeof AdminPlanosRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/admin/feature-flags': typeof AdminFeatureFlagsRoute
   '/admin/imobiliarias': typeof AdminImobiliariasRoute
   '/admin/importador-ia': typeof AdminImportadorIaRoute
+  '/admin/marketing': typeof AdminMarketingRoute
   '/admin/migracao': typeof AdminMigracaoRoute
   '/admin/monitoring': typeof AdminMonitoringRoute
   '/admin/planos': typeof AdminPlanosRoute
@@ -180,6 +188,7 @@ export interface FileRoutesById {
   '/admin/feature-flags': typeof AdminFeatureFlagsRoute
   '/admin/imobiliarias': typeof AdminImobiliariasRoute
   '/admin/importador-ia': typeof AdminImportadorIaRoute
+  '/admin/marketing': typeof AdminMarketingRoute
   '/admin/migracao': typeof AdminMigracaoRoute
   '/admin/monitoring': typeof AdminMonitoringRoute
   '/admin/planos': typeof AdminPlanosRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
     | '/admin/feature-flags'
     | '/admin/imobiliarias'
     | '/admin/importador-ia'
+    | '/admin/marketing'
     | '/admin/migracao'
     | '/admin/monitoring'
     | '/admin/planos'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/admin/feature-flags'
     | '/admin/imobiliarias'
     | '/admin/importador-ia'
+    | '/admin/marketing'
     | '/admin/migracao'
     | '/admin/monitoring'
     | '/admin/planos'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/admin/feature-flags'
     | '/admin/imobiliarias'
     | '/admin/importador-ia'
+    | '/admin/marketing'
     | '/admin/migracao'
     | '/admin/monitoring'
     | '/admin/planos'
@@ -321,6 +333,13 @@ declare module '@tanstack/react-router' {
       path: '/migracao'
       fullPath: '/admin/migracao'
       preLoaderRoute: typeof AdminMigracaoRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketing': {
+      id: '/admin/marketing'
+      path: '/marketing'
+      fullPath: '/admin/marketing'
+      preLoaderRoute: typeof AdminMarketingRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/importador-ia': {
@@ -407,6 +426,7 @@ interface AdminRouteChildren {
   AdminFeatureFlagsRoute: typeof AdminFeatureFlagsRoute
   AdminImobiliariasRoute: typeof AdminImobiliariasRoute
   AdminImportadorIaRoute: typeof AdminImportadorIaRoute
+  AdminMarketingRoute: typeof AdminMarketingRoute
   AdminMigracaoRoute: typeof AdminMigracaoRoute
   AdminMonitoringRoute: typeof AdminMonitoringRoute
   AdminPlanosRoute: typeof AdminPlanosRoute
@@ -427,6 +447,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminFeatureFlagsRoute: AdminFeatureFlagsRoute,
   AdminImobiliariasRoute: AdminImobiliariasRoute,
   AdminImportadorIaRoute: AdminImportadorIaRoute,
+  AdminMarketingRoute: AdminMarketingRoute,
   AdminMigracaoRoute: AdminMigracaoRoute,
   AdminMonitoringRoute: AdminMonitoringRoute,
   AdminPlanosRoute: AdminPlanosRoute,
