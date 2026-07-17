@@ -41,7 +41,7 @@ function LoginPage() {
             onSubmit={(e) => {
               e.preventDefault();
               setLoading(true);
-              setTimeout(() => navigate({ to: "/admin/dashboard" }), 500);
+              setTimeout(() => navigate({ to: "/app/dashboard" }), 500);
             }}
           >
             <div className="space-y-1.5">
@@ -70,7 +70,7 @@ function LoginPage() {
           </p>
 
           <p className="mt-8 rounded-lg border border-dashed border-border bg-muted/40 p-3 text-center text-xs text-muted-foreground">
-            Demo · qualquer email/senha entra direto no Super Admin.
+            Demo · qualquer email/senha entra direto no painel da imobiliária.
           </p>
         </div>
       </div>
