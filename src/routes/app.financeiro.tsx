@@ -1,12 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from "recharts";
-import { TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight, Plus, Filter } from "lucide-react";
+import { TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight, Filter } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
-import { lancamentos, fluxoMensal, distribuicaoDespesa, fmtBRLFull, type FluxoTipo, type FluxoStatus } from "@/mocks/gestao";
+import { lancamentos as lancamentosMock, fluxoMensal, distribuicaoDespesa, fmtBRLFull, type FluxoTipo, type FluxoStatus } from "@/mocks/gestao";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { NovoLancamentoDialog } from "@/components/app/novo-lancamento-dialog";
+import { listLancamentos } from "@/lib/lancamentos.functions";
 
 export const Route = createFileRoute("/app/financeiro")({
   head: () => ({
