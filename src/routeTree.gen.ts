@@ -26,6 +26,7 @@ import { Route as AdminEquipeRouteImport } from './routes/admin.equipe'
 import { Route as AdminDominiosRouteImport } from './routes/admin.dominios'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as AdminConsultoriaRouteImport } from './routes/admin.consultoria'
+import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configuracoes'
 import { Route as AdminBillingRouteImport } from './routes/admin.billing'
 import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
@@ -115,6 +116,11 @@ const AdminConsultoriaRoute = AdminConsultoriaRouteImport.update({
   path: '/consultoria',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminConfiguracoesRoute = AdminConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminBillingRoute = AdminBillingRouteImport.update({
   id: '/billing',
   path: '/billing',
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/billing': typeof AdminBillingRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/consultoria': typeof AdminConsultoriaRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/dominios': typeof AdminDominiosRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/billing': typeof AdminBillingRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/consultoria': typeof AdminConsultoriaRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/dominios': typeof AdminDominiosRoute
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/billing': typeof AdminBillingRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/consultoria': typeof AdminConsultoriaRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/dominios': typeof AdminDominiosRoute
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/audit-log'
     | '/admin/billing'
+    | '/admin/configuracoes'
     | '/admin/consultoria'
     | '/admin/dashboard'
     | '/admin/dominios'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/audit-log'
     | '/admin/billing'
+    | '/admin/configuracoes'
     | '/admin/consultoria'
     | '/admin/dashboard'
     | '/admin/dominios'
@@ -248,6 +259,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/audit-log'
     | '/admin/billing'
+    | '/admin/configuracoes'
     | '/admin/consultoria'
     | '/admin/dashboard'
     | '/admin/dominios'
@@ -391,6 +403,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminConsultoriaRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/configuracoes': {
+      id: '/admin/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/admin/configuracoes'
+      preLoaderRoute: typeof AdminConfiguracoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/billing': {
       id: '/admin/billing'
       path: '/billing'
@@ -419,6 +438,7 @@ interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminAuditLogRoute: typeof AdminAuditLogRoute
   AdminBillingRoute: typeof AdminBillingRoute
+  AdminConfiguracoesRoute: typeof AdminConfiguracoesRoute
   AdminConsultoriaRoute: typeof AdminConsultoriaRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminDominiosRoute: typeof AdminDominiosRoute
@@ -440,6 +460,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminAuditLogRoute: AdminAuditLogRoute,
   AdminBillingRoute: AdminBillingRoute,
+  AdminConfiguracoesRoute: AdminConfiguracoesRoute,
   AdminConsultoriaRoute: AdminConsultoriaRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminDominiosRoute: AdminDominiosRoute,
