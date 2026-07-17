@@ -49,9 +49,26 @@ create policy "profiles self write" on public.profiles for update to authenticat
 -- Trigger para criar profile ao registrar
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public as $$
+declare
+  v_nome text;
+  v_imob_nome text;
+  v_slug text;
+  v_imob_id uuid;
 begin
-  insert into public.profiles(id, nome) values (new.id, coalesce(new.raw_user_meta_data->>'nome',''))
+  v_nome := coalesce(new.raw_user_meta_data->>'nome','');
+  insert into public.profiles(id, nome) values (new.id, v_nome)
   on conflict (id) do nothing;
+
+  -- Auto-provisiona imobiliária + membership admin para novos signups
+  v_imob_nome := coalesce(nullif(new.raw_user_meta_data->>'imobiliaria',''), 'Imobiliária ' || coalesce(v_nome, split_part(new.email,'@',1)));
+  v_slug := lower(regexp_replace(v_imob_nome, '[^a-zA-Z0-9]+', '-', 'g')) || '-' || substr(new.id::text, 1, 8);
+
+  insert into public.imobiliarias(nome, slug) values (v_imob_nome, v_slug)
+  returning id into v_imob_id;
+
+  insert into public.memberships(user_id, imobiliaria_id, role)
+  values (new.id, v_imob_id, 'admin_imob');
+
   return new;
 end $$;
 

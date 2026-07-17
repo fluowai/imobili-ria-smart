@@ -1,93 +1,81 @@
-import { createServerFn } from "@tanstack/react-start";
-import { and, desc, eq } from "drizzle-orm";
-import { z } from "zod";
+// Camada de acesso Supabase (client-side, RLS por imobiliaria_id).
+// Assinatura mantida para compatibilidade: fn({ data: {...} }).
 
-import { requireAuth } from "./auth-middleware";
-import { db, schema } from "./db.server";
-import { resolveImobiliariaId } from "./tenant.server";
+import { supabase } from "@/integrations/supabase/client";
+import { getActiveImobiliariaId } from "./tenant";
 
-const upsertSchema = z.object({
-  tipo: z.enum(["pf", "pj"]).default("pf"),
-  nome: z.string().min(1).max(200),
-  documento: z.string().max(20).optional(),
-  email: z.string().email().optional(),
-  telefone: z.string().max(30).optional(),
-  endereco: z.string().max(200).optional(),
-  observacoes: z.string().max(4000).optional(),
-  tags: z.array(z.string().max(40)).default([]),
-});
+type ClienteInput = {
+  tipo?: "pf" | "pj";
+  nome: string;
+  documento?: string;
+  email?: string;
+  telefone?: string;
+  endereco?: string;
+  observacoes?: string;
+  tags?: string[];
+};
 
-export const listClientes = createServerFn({ method: "GET" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) =>
-    z.object({ busca: z.string().trim().max(120).optional() }).default({}).parse(data ?? {}),
-  )
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const rows = await db
-      .select()
-      .from(schema.clientes)
-      .where(eq(schema.clientes.imobiliariaId, imobiliariaId))
-      .orderBy(desc(schema.clientes.createdAt))
-      .limit(200);
-    const q = data.busca?.toLowerCase();
-    return q
-      ? rows.filter((r) =>
-          `${r.nome} ${r.email ?? ""} ${r.telefone ?? ""} ${r.documento ?? ""}`
-            .toLowerCase()
-            .includes(q),
-        )
-      : rows;
-  });
+export async function listClientes({ data }: { data?: { busca?: string } } = {}) {
+  const imob = await getActiveImobiliariaId();
+  const { data: rows, error } = await supabase
+    .from("clientes")
+    .select("*")
+    .eq("imobiliaria_id", imob)
+    .order("created_at", { ascending: false })
+    .limit(200);
+  if (error) throw error;
+  const q = data?.busca?.toLowerCase();
+  return q
+    ? (rows ?? []).filter((r: any) =>
+        `${r.nome} ${r.email ?? ""} ${r.telefone ?? ""} ${r.documento ?? ""}`.toLowerCase().includes(q),
+      )
+    : rows ?? [];
+}
 
-export const getCliente = createServerFn({ method: "GET" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) => z.object({ id: z.string().uuid() }).parse(data))
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const [row] = await db
-      .select()
-      .from(schema.clientes)
-      .where(and(eq(schema.clientes.id, data.id), eq(schema.clientes.imobiliariaId, imobiliariaId)));
-    if (!row) throw new Response("Não encontrado", { status: 404 });
-    return row;
-  });
+export async function getCliente({ data }: { data: { id: string } }) {
+  const imob = await getActiveImobiliariaId();
+  const { data: row, error } = await supabase
+    .from("clientes")
+    .select("*")
+    .eq("imobiliaria_id", imob)
+    .eq("id", data.id)
+    .maybeSingle();
+  if (error) throw error;
+  if (!row) throw new Error("Não encontrado");
+  return row;
+}
 
-export const createCliente = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) => upsertSchema.parse(data))
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const [row] = await db
-      .insert(schema.clientes)
-      .values({ ...data, imobiliariaId })
-      .returning();
-    return row;
-  });
+export async function createCliente({ data }: { data: ClienteInput }) {
+  const imob = await getActiveImobiliariaId();
+  const { data: row, error } = await supabase
+    .from("clientes")
+    .insert({ ...data, tags: data.tags ?? [], imobiliaria_id: imob })
+    .select()
+    .single();
+  if (error) throw error;
+  return row;
+}
 
-export const updateCliente = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) =>
-    z.object({ id: z.string().uuid(), patch: upsertSchema.partial() }).parse(data),
-  )
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const [row] = await db
-      .update(schema.clientes)
-      .set({ ...data.patch, updatedAt: new Date() })
-      .where(and(eq(schema.clientes.id, data.id), eq(schema.clientes.imobiliariaId, imobiliariaId)))
-      .returning();
-    if (!row) throw new Response("Não encontrado", { status: 404 });
-    return row;
-  });
+export async function updateCliente({ data }: { data: { id: string; patch: Partial<ClienteInput> } }) {
+  const imob = await getActiveImobiliariaId();
+  const { data: row, error } = await supabase
+    .from("clientes")
+    .update(data.patch)
+    .eq("id", data.id)
+    .eq("imobiliaria_id", imob)
+    .select()
+    .single();
+  if (error) throw error;
+  return row;
+}
 
-export const deleteCliente = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) => z.object({ id: z.string().uuid() }).parse(data))
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    await db
-      .delete(schema.clientes)
-      .where(and(eq(schema.clientes.id, data.id), eq(schema.clientes.imobiliariaId, imobiliariaId)));
-    return { ok: true };
-  });
+export async function deleteCliente({ data }: { data: { id: string } }) {
+  const imob = await getActiveImobiliariaId();
+  const { error } = await supabase
+    .from("clientes")
+    .delete()
+    .eq("id", data.id)
+    .eq("imobiliaria_id", imob);
+  if (error) throw error;
+  return { ok: true };
+}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
+
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -27,17 +27,15 @@ export function NovoContratoDialog() {
     fim: "",
   });
   const qc = useQueryClient();
-  const create = useServerFn(createContrato);
   const mutation = useMutation({
     mutationFn: () =>
-      create({
+      createContrato({
         data: {
           tipo: form.tipo,
           status: "rascunho",
           valor: form.valor ? Number(form.valor) : undefined,
           inicio: form.inicio || undefined,
           fim: form.fim || undefined,
-          metadados: {},
         },
       }),
     onSuccess: () => {

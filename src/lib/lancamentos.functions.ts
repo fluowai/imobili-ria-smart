@@ -1,103 +1,63 @@
-import { createServerFn } from "@tanstack/react-start";
-import { and, desc, eq } from "drizzle-orm";
-import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { getActiveImobiliariaId } from "./tenant";
 
-import { requireAuth } from "./auth-middleware";
-import { db, schema } from "./db.server";
-import { resolveImobiliariaId } from "./tenant.server";
+type LancamentoInput = {
+  tipo: "receita" | "despesa";
+  status?: "pendente" | "pago" | "atrasado" | "cancelado";
+  categoria?: string;
+  descricao: string;
+  valor: number;
+  vencimento?: string;
+  pago_em?: string;
+  contrato_id?: string;
+};
 
-const tipoEnum = z.enum(["receita", "despesa"]);
-const statusEnum = z.enum(["pendente", "pago", "atrasado", "cancelado"]);
+export async function listLancamentos({ data }: { data?: { status?: string; tipo?: string } } = {}) {
+  const imob = await getActiveImobiliariaId();
+  let q = supabase
+    .from("lancamentos")
+    .select("*")
+    .eq("imobiliaria_id", imob)
+    .order("created_at", { ascending: false })
+    .limit(500);
+  if (data?.status) q = q.eq("status", data.status);
+  if (data?.tipo) q = q.eq("tipo", data.tipo);
+  const { data: rows, error } = await q;
+  if (error) throw error;
+  return rows ?? [];
+}
 
-const upsertSchema = z.object({
-  contratoId: z.string().uuid().optional(),
-  tipo: tipoEnum,
-  status: statusEnum.default("pendente"),
-  categoria: z.string().max(80).optional(),
-  descricao: z.string().min(1).max(300),
-  valor: z.number().nonnegative(),
-  vencimento: z.string().optional(),
-  pagoEm: z.string().optional(),
-});
+export async function createLancamento({ data }: { data: LancamentoInput }) {
+  const imob = await getActiveImobiliariaId();
+  const { data: row, error } = await supabase
+    .from("lancamentos")
+    .insert({ ...data, status: data.status ?? "pendente", imobiliaria_id: imob })
+    .select()
+    .single();
+  if (error) throw error;
+  return row;
+}
 
-export const listLancamentos = createServerFn({ method: "GET" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) =>
-    z
-      .object({ status: statusEnum.optional(), tipo: tipoEnum.optional() })
-      .default({})
-      .parse(data ?? {}),
-  )
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const filters = [eq(schema.lancamentos.imobiliariaId, imobiliariaId)];
-    if (data.status) filters.push(eq(schema.lancamentos.status, data.status));
-    if (data.tipo) filters.push(eq(schema.lancamentos.tipo, data.tipo));
-    return db
-      .select()
-      .from(schema.lancamentos)
-      .where(and(...filters))
-      .orderBy(desc(schema.lancamentos.createdAt))
-      .limit(500);
-  });
+export async function updateLancamento({ data }: { data: { id: string; patch: Partial<LancamentoInput> } }) {
+  const imob = await getActiveImobiliariaId();
+  const { data: row, error } = await supabase
+    .from("lancamentos")
+    .update(data.patch)
+    .eq("id", data.id)
+    .eq("imobiliaria_id", imob)
+    .select()
+    .single();
+  if (error) throw error;
+  return row;
+}
 
-export const createLancamento = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) => upsertSchema.parse(data))
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const [row] = await db
-      .insert(schema.lancamentos)
-      .values({
-        imobiliariaId,
-        contratoId: data.contratoId,
-        tipo: data.tipo,
-        status: data.status,
-        categoria: data.categoria,
-        descricao: data.descricao,
-        valor: String(data.valor),
-        vencimento: data.vencimento,
-        pagoEm: data.pagoEm,
-      })
-      .returning();
-    return row;
-  });
-
-export const updateLancamento = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) =>
-    z.object({ id: z.string().uuid(), patch: upsertSchema.partial() }).parse(data),
-  )
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    const patch: Record<string, unknown> = { ...data.patch };
-    if (typeof patch.valor === "number") patch.valor = String(patch.valor);
-    const [row] = await db
-      .update(schema.lancamentos)
-      .set(patch)
-      .where(
-        and(
-          eq(schema.lancamentos.id, data.id),
-          eq(schema.lancamentos.imobiliariaId, imobiliariaId),
-        ),
-      )
-      .returning();
-    if (!row) throw new Response("Não encontrado", { status: 404 });
-    return row;
-  });
-
-export const deleteLancamento = createServerFn({ method: "POST" })
-  .middleware([requireAuth])
-  .inputValidator((data: unknown) => z.object({ id: z.string().uuid() }).parse(data))
-  .handler(async ({ data, context }) => {
-    const imobiliariaId = await resolveImobiliariaId(context.userId);
-    await db
-      .delete(schema.lancamentos)
-      .where(
-        and(
-          eq(schema.lancamentos.id, data.id),
-          eq(schema.lancamentos.imobiliariaId, imobiliariaId),
-        ),
-      );
-    return { ok: true };
-  });
+export async function deleteLancamento({ data }: { data: { id: string } }) {
+  const imob = await getActiveImobiliariaId();
+  const { error } = await supabase
+    .from("lancamentos")
+    .delete()
+    .eq("id", data.id)
+    .eq("imobiliaria_id", imob);
+  if (error) throw error;
+  return { ok: true };
+}

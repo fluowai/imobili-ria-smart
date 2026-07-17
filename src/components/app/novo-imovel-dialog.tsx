@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
+
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -31,10 +31,9 @@ export function NovoImovelDialog({ tipo = "urbano" as "urbano" | "rural" }: { ti
     areaUtil: "",
   });
   const qc = useQueryClient();
-  const create = useServerFn(createImovel);
   const mutation = useMutation({
     mutationFn: () =>
-      create({
+      createImovel({
         data: {
           codigo: form.codigo,
           tipo,
@@ -43,11 +42,9 @@ export function NovoImovelDialog({ tipo = "urbano" as "urbano" | "rural" }: { ti
           titulo: form.titulo,
           bairro: form.bairro || undefined,
           cidade: form.cidade || undefined,
-          valorVenda: form.valorVenda ? Number(form.valorVenda) : undefined,
-          valorLocacao: form.valorLocacao ? Number(form.valorLocacao) : undefined,
-          areaUtil: form.areaUtil ? Number(form.areaUtil) : undefined,
-          fotos: [],
-          caracteristicas: {},
+          valor_venda: form.valorVenda ? Number(form.valorVenda) : undefined,
+          valor_locacao: form.valorLocacao ? Number(form.valorLocacao) : undefined,
+          area_util: form.areaUtil ? Number(form.areaUtil) : undefined,
         },
       }),
     onSuccess: () => {

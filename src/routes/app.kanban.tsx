@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { Plus } from "lucide-react";
 
 import { PageHeader } from "@/components/shared/page-header";
@@ -26,7 +25,7 @@ function dbToUiStatus(s: string): LeadStatus {
 }
 
 function KanbanPage() {
-  const list = useServerFn(listLeads);
+  const list = listLeads;
   const query = useQuery({
     queryKey: ["leads"],
     queryFn: () => list({ data: {} }),

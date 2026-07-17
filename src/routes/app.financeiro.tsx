@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from "recharts";
 import { TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight, Filter } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
@@ -31,7 +30,7 @@ const statusMap: Record<FluxoStatus, { label: string; className: string }> = {
 function FinanceiroPage() {
   const [tipoFiltro, setTipoFiltro] = useState<FluxoTipo | "todos">("todos");
 
-  const list = useServerFn(listLancamentos);
+  const list = listLancamentos;
   const query = useQuery({
     queryKey: ["lancamentos"],
     queryFn: () => list({ data: {} }),

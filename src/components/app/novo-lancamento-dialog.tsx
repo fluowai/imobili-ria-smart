@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
+
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -30,10 +30,9 @@ export function NovoLancamentoDialog() {
     vencimento: "",
   });
   const qc = useQueryClient();
-  const create = useServerFn(createLancamento);
   const mutation = useMutation({
     mutationFn: () =>
-      create({
+      createLancamento({
         data: {
           tipo: form.tipo,
           status: form.status,
