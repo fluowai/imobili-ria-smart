@@ -1,12 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from "recharts";
-import { TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight, Plus, Filter } from "lucide-react";
+import { TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight, Filter } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
-import { lancamentos, fluxoMensal, distribuicaoDespesa, fmtBRLFull, type FluxoTipo, type FluxoStatus } from "@/mocks/gestao";
+import { lancamentos as lancamentosMock, fluxoMensal, distribuicaoDespesa, fmtBRLFull, type FluxoTipo, type FluxoStatus } from "@/mocks/gestao";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { NovoLancamentoDialog } from "@/components/app/novo-lancamento-dialog";
+import { listLancamentos } from "@/lib/lancamentos.functions";
 
 export const Route = createFileRoute("/app/financeiro")({
   head: () => ({
@@ -27,19 +31,56 @@ const statusMap: Record<FluxoStatus, { label: string; className: string }> = {
 function FinanceiroPage() {
   const [tipoFiltro, setTipoFiltro] = useState<FluxoTipo | "todos">("todos");
 
+  const list = useServerFn(listLancamentos);
+  const query = useQuery({
+    queryKey: ["lancamentos"],
+    queryFn: () => list({ data: {} }),
+    retry: false,
+  });
+
+  type Row = {
+    id: string;
+    data: string;
+    descricao: string;
+    categoria: string;
+    contraparte: string;
+    tipo: FluxoTipo;
+    status: FluxoStatus;
+    valor: number;
+  };
+
+  const dbStatusToUi = (s: string): FluxoStatus =>
+    s === "pago" ? "pago" : s === "atrasado" ? "atrasado" : "aberto";
+
+  const rows: Row[] = useMemo(() => {
+    if (query.data && query.data.length > 0) {
+      return query.data.map((l) => ({
+        id: l.id,
+        data: (l.vencimento ?? new Date(l.createdAt).toISOString()).slice(0, 10),
+        descricao: l.descricao,
+        categoria: l.categoria ?? "—",
+        contraparte: "—",
+        tipo: l.tipo as FluxoTipo,
+        status: dbStatusToUi(l.status),
+        valor: Number(l.valor),
+      }));
+    }
+    return lancamentosMock.map((l) => ({ ...l }));
+  }, [query.data]);
+
   const kpis = useMemo(() => {
-    const receitas = lancamentos.filter((l) => l.tipo === "receita");
-    const despesas = lancamentos.filter((l) => l.tipo === "despesa");
+    const receitas = rows.filter((l) => l.tipo === "receita");
+    const despesas = rows.filter((l) => l.tipo === "despesa");
     const totReceita = receitas.reduce((a, l) => a + l.valor, 0);
     const totDespesa = despesas.reduce((a, l) => a + l.valor, 0);
     const receber = receitas.filter((l) => l.status !== "pago").reduce((a, l) => a + l.valor, 0);
     const pagar = despesas.filter((l) => l.status !== "pago").reduce((a, l) => a + l.valor, 0);
     return { totReceita, totDespesa, receber, pagar, saldo: totReceita - totDespesa };
-  }, []);
+  }, [rows]);
 
   const filtrados = useMemo(
-    () => lancamentos.filter((l) => tipoFiltro === "todos" || l.tipo === tipoFiltro),
-    [tipoFiltro],
+    () => rows.filter((l) => tipoFiltro === "todos" || l.tipo === tipoFiltro),
+    [tipoFiltro, rows],
   );
 
   return (
@@ -51,7 +92,7 @@ function FinanceiroPage() {
         actions={
           <>
             <Button variant="outline" size="sm"><Filter className="mr-2 h-4 w-4" />Período</Button>
-            <Button size="sm"><Plus className="mr-2 h-4 w-4" />Novo lançamento</Button>
+            <NovoLancamentoDialog />
           </>
         }
       />
