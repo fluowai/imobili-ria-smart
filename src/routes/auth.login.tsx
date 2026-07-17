@@ -41,7 +41,7 @@ function LoginPage() {
             onSubmit={(e) => {
               e.preventDefault();
               setLoading(true);
-              setTimeout(() => navigate({ to: "/admin/dashboard" }), 500);
+              setTimeout(() => navigate({ to: "/app/dashboard" }), 500);
             }}
           >
             <div className="space-y-1.5">

@@ -15,12 +15,29 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
+import { Route as AppSuporteRouteImport } from './routes/app.suporte'
+import { Route as AppSiteRouteImport } from './routes/app.site'
+import { Route as AppSimuladorRouteImport } from './routes/app.simulador'
+import { Route as AppRelatoriosRouteImport } from './routes/app.relatorios'
+import { Route as AppQuizRouteImport } from './routes/app.quiz'
+import { Route as AppMetasRouteImport } from './routes/app.metas'
 import { Route as AppMensagensRouteImport } from './routes/app.mensagens'
+import { Route as AppMatchmakingRouteImport } from './routes/app.matchmaking'
+import { Route as AppLandingPagesRouteImport } from './routes/app.landing-pages'
 import { Route as AppKanbanRouteImport } from './routes/app.kanban'
+import { Route as AppIntegracoesRouteImport } from './routes/app.integracoes'
+import { Route as AppFinanceiroRouteImport } from './routes/app.financeiro'
 import { Route as AppEmailRouteImport } from './routes/app.email'
+import { Route as AppEditorRouteImport } from './routes/app.editor'
+import { Route as AppDocumentosRouteImport } from './routes/app.documentos'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppCrmRouteImport } from './routes/app.crm'
+import { Route as AppContratosRouteImport } from './routes/app.contratos'
+import { Route as AppConfigurarSiteRouteImport } from './routes/app.configurar-site'
+import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
+import { Route as AppConexoesRouteImport } from './routes/app.conexoes'
 import { Route as AppClientesRouteImport } from './routes/app.clientes'
+import { Route as AppAgentesIaRouteImport } from './routes/app.agentes-ia'
 import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
 import { Route as AdminSuporteRouteImport } from './routes/admin.suporte'
 import { Route as AdminStorageRouteImport } from './routes/admin.storage'
@@ -39,6 +56,14 @@ import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configura
 import { Route as AdminBillingRouteImport } from './routes/admin.billing'
 import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as AppUrbanoLoteamentosRouteImport } from './routes/app.urbano.loteamentos'
+import { Route as AppUrbanoLocacaoRouteImport } from './routes/app.urbano.locacao'
+import { Route as AppUrbanoImoveisRouteImport } from './routes/app.urbano.imoveis'
+import { Route as AppUrbanoCondominiosRouteImport } from './routes/app.urbano.condominios'
+import { Route as AppUrbanoChavesRouteImport } from './routes/app.urbano.chaves'
+import { Route as AppRuralValuationRouteImport } from './routes/app.rural.valuation'
+import { Route as AppRuralTerritorioRouteImport } from './routes/app.rural.territorio'
+import { Route as AppRuralImoveisRouteImport } from './routes/app.rural.imoveis'
 
 const AppRoute = AppRouteImport.update({
   id: '/app',
@@ -70,9 +95,49 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppSuporteRoute = AppSuporteRouteImport.update({
+  id: '/suporte',
+  path: '/suporte',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSiteRoute = AppSiteRouteImport.update({
+  id: '/site',
+  path: '/site',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSimuladorRoute = AppSimuladorRouteImport.update({
+  id: '/simulador',
+  path: '/simulador',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRelatoriosRoute = AppRelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuizRoute = AppQuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMetasRoute = AppMetasRouteImport.update({
+  id: '/metas',
+  path: '/metas',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppMensagensRoute = AppMensagensRouteImport.update({
   id: '/mensagens',
   path: '/mensagens',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMatchmakingRoute = AppMatchmakingRouteImport.update({
+  id: '/matchmaking',
+  path: '/matchmaking',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLandingPagesRoute = AppLandingPagesRouteImport.update({
+  id: '/landing-pages',
+  path: '/landing-pages',
   getParentRoute: () => AppRoute,
 } as any)
 const AppKanbanRoute = AppKanbanRouteImport.update({
@@ -80,9 +145,29 @@ const AppKanbanRoute = AppKanbanRouteImport.update({
   path: '/kanban',
   getParentRoute: () => AppRoute,
 } as any)
+const AppIntegracoesRoute = AppIntegracoesRouteImport.update({
+  id: '/integracoes',
+  path: '/integracoes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanceiroRoute = AppFinanceiroRouteImport.update({
+  id: '/financeiro',
+  path: '/financeiro',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppEmailRoute = AppEmailRouteImport.update({
   id: '/email',
   path: '/email',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEditorRoute = AppEditorRouteImport.update({
+  id: '/editor',
+  path: '/editor',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDocumentosRoute = AppDocumentosRouteImport.update({
+  id: '/documentos',
+  path: '/documentos',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
@@ -95,9 +180,34 @@ const AppCrmRoute = AppCrmRouteImport.update({
   path: '/crm',
   getParentRoute: () => AppRoute,
 } as any)
+const AppContratosRoute = AppContratosRouteImport.update({
+  id: '/contratos',
+  path: '/contratos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConfigurarSiteRoute = AppConfigurarSiteRouteImport.update({
+  id: '/configurar-site',
+  path: '/configurar-site',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConexoesRoute = AppConexoesRouteImport.update({
+  id: '/conexoes',
+  path: '/conexoes',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppClientesRoute = AppClientesRouteImport.update({
   id: '/clientes',
   path: '/clientes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAgentesIaRoute = AppAgentesIaRouteImport.update({
+  id: '/agentes-ia',
+  path: '/agentes-ia',
   getParentRoute: () => AppRoute,
 } as any)
 const AdminTemplatesRoute = AdminTemplatesRouteImport.update({
@@ -190,6 +300,46 @@ const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => AdminRoute,
 } as any)
+const AppUrbanoLoteamentosRoute = AppUrbanoLoteamentosRouteImport.update({
+  id: '/urbano/loteamentos',
+  path: '/urbano/loteamentos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUrbanoLocacaoRoute = AppUrbanoLocacaoRouteImport.update({
+  id: '/urbano/locacao',
+  path: '/urbano/locacao',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUrbanoImoveisRoute = AppUrbanoImoveisRouteImport.update({
+  id: '/urbano/imoveis',
+  path: '/urbano/imoveis',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUrbanoCondominiosRoute = AppUrbanoCondominiosRouteImport.update({
+  id: '/urbano/condominios',
+  path: '/urbano/condominios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUrbanoChavesRoute = AppUrbanoChavesRouteImport.update({
+  id: '/urbano/chaves',
+  path: '/urbano/chaves',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRuralValuationRoute = AppRuralValuationRouteImport.update({
+  id: '/rural/valuation',
+  path: '/rural/valuation',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRuralTerritorioRoute = AppRuralTerritorioRouteImport.update({
+  id: '/rural/territorio',
+  path: '/rural/territorio',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRuralImoveisRoute = AppRuralImoveisRouteImport.update({
+  id: '/rural/imoveis',
+  path: '/rural/imoveis',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -213,15 +363,40 @@ export interface FileRoutesByFullPath {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
+  '/app/agentes-ia': typeof AppAgentesIaRoute
   '/app/clientes': typeof AppClientesRoute
+  '/app/conexoes': typeof AppConexoesRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/configurar-site': typeof AppConfigurarSiteRoute
+  '/app/contratos': typeof AppContratosRoute
   '/app/crm': typeof AppCrmRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/documentos': typeof AppDocumentosRoute
+  '/app/editor': typeof AppEditorRoute
   '/app/email': typeof AppEmailRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/integracoes': typeof AppIntegracoesRoute
   '/app/kanban': typeof AppKanbanRoute
+  '/app/landing-pages': typeof AppLandingPagesRoute
+  '/app/matchmaking': typeof AppMatchmakingRoute
   '/app/mensagens': typeof AppMensagensRoute
+  '/app/metas': typeof AppMetasRoute
+  '/app/quiz': typeof AppQuizRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app/simulador': typeof AppSimuladorRoute
+  '/app/site': typeof AppSiteRoute
+  '/app/suporte': typeof AppSuporteRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/app/rural/imoveis': typeof AppRuralImoveisRoute
+  '/app/rural/territorio': typeof AppRuralTerritorioRoute
+  '/app/rural/valuation': typeof AppRuralValuationRoute
+  '/app/urbano/chaves': typeof AppUrbanoChavesRoute
+  '/app/urbano/condominios': typeof AppUrbanoCondominiosRoute
+  '/app/urbano/imoveis': typeof AppUrbanoImoveisRoute
+  '/app/urbano/locacao': typeof AppUrbanoLocacaoRoute
+  '/app/urbano/loteamentos': typeof AppUrbanoLoteamentosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -243,15 +418,40 @@ export interface FileRoutesByTo {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
+  '/app/agentes-ia': typeof AppAgentesIaRoute
   '/app/clientes': typeof AppClientesRoute
+  '/app/conexoes': typeof AppConexoesRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/configurar-site': typeof AppConfigurarSiteRoute
+  '/app/contratos': typeof AppContratosRoute
   '/app/crm': typeof AppCrmRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/documentos': typeof AppDocumentosRoute
+  '/app/editor': typeof AppEditorRoute
   '/app/email': typeof AppEmailRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/integracoes': typeof AppIntegracoesRoute
   '/app/kanban': typeof AppKanbanRoute
+  '/app/landing-pages': typeof AppLandingPagesRoute
+  '/app/matchmaking': typeof AppMatchmakingRoute
   '/app/mensagens': typeof AppMensagensRoute
+  '/app/metas': typeof AppMetasRoute
+  '/app/quiz': typeof AppQuizRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app/simulador': typeof AppSimuladorRoute
+  '/app/site': typeof AppSiteRoute
+  '/app/suporte': typeof AppSuporteRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
+  '/app/rural/imoveis': typeof AppRuralImoveisRoute
+  '/app/rural/territorio': typeof AppRuralTerritorioRoute
+  '/app/rural/valuation': typeof AppRuralValuationRoute
+  '/app/urbano/chaves': typeof AppUrbanoChavesRoute
+  '/app/urbano/condominios': typeof AppUrbanoCondominiosRoute
+  '/app/urbano/imoveis': typeof AppUrbanoImoveisRoute
+  '/app/urbano/locacao': typeof AppUrbanoLocacaoRoute
+  '/app/urbano/loteamentos': typeof AppUrbanoLoteamentosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -276,15 +476,40 @@ export interface FileRoutesById {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
+  '/app/agentes-ia': typeof AppAgentesIaRoute
   '/app/clientes': typeof AppClientesRoute
+  '/app/conexoes': typeof AppConexoesRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/configurar-site': typeof AppConfigurarSiteRoute
+  '/app/contratos': typeof AppContratosRoute
   '/app/crm': typeof AppCrmRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/documentos': typeof AppDocumentosRoute
+  '/app/editor': typeof AppEditorRoute
   '/app/email': typeof AppEmailRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/integracoes': typeof AppIntegracoesRoute
   '/app/kanban': typeof AppKanbanRoute
+  '/app/landing-pages': typeof AppLandingPagesRoute
+  '/app/matchmaking': typeof AppMatchmakingRoute
   '/app/mensagens': typeof AppMensagensRoute
+  '/app/metas': typeof AppMetasRoute
+  '/app/quiz': typeof AppQuizRoute
+  '/app/relatorios': typeof AppRelatoriosRoute
+  '/app/simulador': typeof AppSimuladorRoute
+  '/app/site': typeof AppSiteRoute
+  '/app/suporte': typeof AppSuporteRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/app/rural/imoveis': typeof AppRuralImoveisRoute
+  '/app/rural/territorio': typeof AppRuralTerritorioRoute
+  '/app/rural/valuation': typeof AppRuralValuationRoute
+  '/app/urbano/chaves': typeof AppUrbanoChavesRoute
+  '/app/urbano/condominios': typeof AppUrbanoCondominiosRoute
+  '/app/urbano/imoveis': typeof AppUrbanoImoveisRoute
+  '/app/urbano/locacao': typeof AppUrbanoLocacaoRoute
+  '/app/urbano/loteamentos': typeof AppUrbanoLoteamentosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -310,15 +535,40 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/suporte'
     | '/admin/templates'
+    | '/app/agentes-ia'
     | '/app/clientes'
+    | '/app/conexoes'
+    | '/app/configuracoes'
+    | '/app/configurar-site'
+    | '/app/contratos'
     | '/app/crm'
     | '/app/dashboard'
+    | '/app/documentos'
+    | '/app/editor'
     | '/app/email'
+    | '/app/financeiro'
+    | '/app/integracoes'
     | '/app/kanban'
+    | '/app/landing-pages'
+    | '/app/matchmaking'
     | '/app/mensagens'
+    | '/app/metas'
+    | '/app/quiz'
+    | '/app/relatorios'
+    | '/app/simulador'
+    | '/app/site'
+    | '/app/suporte'
     | '/auth/login'
     | '/admin/'
     | '/app/'
+    | '/app/rural/imoveis'
+    | '/app/rural/territorio'
+    | '/app/rural/valuation'
+    | '/app/urbano/chaves'
+    | '/app/urbano/condominios'
+    | '/app/urbano/imoveis'
+    | '/app/urbano/locacao'
+    | '/app/urbano/loteamentos'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -340,15 +590,40 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/suporte'
     | '/admin/templates'
+    | '/app/agentes-ia'
     | '/app/clientes'
+    | '/app/conexoes'
+    | '/app/configuracoes'
+    | '/app/configurar-site'
+    | '/app/contratos'
     | '/app/crm'
     | '/app/dashboard'
+    | '/app/documentos'
+    | '/app/editor'
     | '/app/email'
+    | '/app/financeiro'
+    | '/app/integracoes'
     | '/app/kanban'
+    | '/app/landing-pages'
+    | '/app/matchmaking'
     | '/app/mensagens'
+    | '/app/metas'
+    | '/app/quiz'
+    | '/app/relatorios'
+    | '/app/simulador'
+    | '/app/site'
+    | '/app/suporte'
     | '/auth/login'
     | '/admin'
     | '/app'
+    | '/app/rural/imoveis'
+    | '/app/rural/territorio'
+    | '/app/rural/valuation'
+    | '/app/urbano/chaves'
+    | '/app/urbano/condominios'
+    | '/app/urbano/imoveis'
+    | '/app/urbano/locacao'
+    | '/app/urbano/loteamentos'
   id:
     | '__root__'
     | '/'
@@ -372,15 +647,40 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/suporte'
     | '/admin/templates'
+    | '/app/agentes-ia'
     | '/app/clientes'
+    | '/app/conexoes'
+    | '/app/configuracoes'
+    | '/app/configurar-site'
+    | '/app/contratos'
     | '/app/crm'
     | '/app/dashboard'
+    | '/app/documentos'
+    | '/app/editor'
     | '/app/email'
+    | '/app/financeiro'
+    | '/app/integracoes'
     | '/app/kanban'
+    | '/app/landing-pages'
+    | '/app/matchmaking'
     | '/app/mensagens'
+    | '/app/metas'
+    | '/app/quiz'
+    | '/app/relatorios'
+    | '/app/simulador'
+    | '/app/site'
+    | '/app/suporte'
     | '/auth/login'
     | '/admin/'
     | '/app/'
+    | '/app/rural/imoveis'
+    | '/app/rural/territorio'
+    | '/app/rural/valuation'
+    | '/app/urbano/chaves'
+    | '/app/urbano/condominios'
+    | '/app/urbano/imoveis'
+    | '/app/urbano/locacao'
+    | '/app/urbano/loteamentos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -434,11 +734,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/suporte': {
+      id: '/app/suporte'
+      path: '/suporte'
+      fullPath: '/app/suporte'
+      preLoaderRoute: typeof AppSuporteRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/site': {
+      id: '/app/site'
+      path: '/site'
+      fullPath: '/app/site'
+      preLoaderRoute: typeof AppSiteRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/simulador': {
+      id: '/app/simulador'
+      path: '/simulador'
+      fullPath: '/app/simulador'
+      preLoaderRoute: typeof AppSimuladorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/relatorios': {
+      id: '/app/relatorios'
+      path: '/relatorios'
+      fullPath: '/app/relatorios'
+      preLoaderRoute: typeof AppRelatoriosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/quiz': {
+      id: '/app/quiz'
+      path: '/quiz'
+      fullPath: '/app/quiz'
+      preLoaderRoute: typeof AppQuizRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/metas': {
+      id: '/app/metas'
+      path: '/metas'
+      fullPath: '/app/metas'
+      preLoaderRoute: typeof AppMetasRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/mensagens': {
       id: '/app/mensagens'
       path: '/mensagens'
       fullPath: '/app/mensagens'
       preLoaderRoute: typeof AppMensagensRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/matchmaking': {
+      id: '/app/matchmaking'
+      path: '/matchmaking'
+      fullPath: '/app/matchmaking'
+      preLoaderRoute: typeof AppMatchmakingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/landing-pages': {
+      id: '/app/landing-pages'
+      path: '/landing-pages'
+      fullPath: '/app/landing-pages'
+      preLoaderRoute: typeof AppLandingPagesRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/kanban': {
@@ -448,11 +804,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppKanbanRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/integracoes': {
+      id: '/app/integracoes'
+      path: '/integracoes'
+      fullPath: '/app/integracoes'
+      preLoaderRoute: typeof AppIntegracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/financeiro': {
+      id: '/app/financeiro'
+      path: '/financeiro'
+      fullPath: '/app/financeiro'
+      preLoaderRoute: typeof AppFinanceiroRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/email': {
       id: '/app/email'
       path: '/email'
       fullPath: '/app/email'
       preLoaderRoute: typeof AppEmailRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/editor': {
+      id: '/app/editor'
+      path: '/editor'
+      fullPath: '/app/editor'
+      preLoaderRoute: typeof AppEditorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/documentos': {
+      id: '/app/documentos'
+      path: '/documentos'
+      fullPath: '/app/documentos'
+      preLoaderRoute: typeof AppDocumentosRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/dashboard': {
@@ -469,11 +853,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCrmRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/contratos': {
+      id: '/app/contratos'
+      path: '/contratos'
+      fullPath: '/app/contratos'
+      preLoaderRoute: typeof AppContratosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/configurar-site': {
+      id: '/app/configurar-site'
+      path: '/configurar-site'
+      fullPath: '/app/configurar-site'
+      preLoaderRoute: typeof AppConfigurarSiteRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/configuracoes': {
+      id: '/app/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/app/configuracoes'
+      preLoaderRoute: typeof AppConfiguracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/conexoes': {
+      id: '/app/conexoes'
+      path: '/conexoes'
+      fullPath: '/app/conexoes'
+      preLoaderRoute: typeof AppConexoesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/clientes': {
       id: '/app/clientes'
       path: '/clientes'
       fullPath: '/app/clientes'
       preLoaderRoute: typeof AppClientesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/agentes-ia': {
+      id: '/app/agentes-ia'
+      path: '/agentes-ia'
+      fullPath: '/app/agentes-ia'
+      preLoaderRoute: typeof AppAgentesIaRouteImport
       parentRoute: typeof AppRoute
     }
     '/admin/templates': {
@@ -602,6 +1021,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/app/urbano/loteamentos': {
+      id: '/app/urbano/loteamentos'
+      path: '/urbano/loteamentos'
+      fullPath: '/app/urbano/loteamentos'
+      preLoaderRoute: typeof AppUrbanoLoteamentosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/urbano/locacao': {
+      id: '/app/urbano/locacao'
+      path: '/urbano/locacao'
+      fullPath: '/app/urbano/locacao'
+      preLoaderRoute: typeof AppUrbanoLocacaoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/urbano/imoveis': {
+      id: '/app/urbano/imoveis'
+      path: '/urbano/imoveis'
+      fullPath: '/app/urbano/imoveis'
+      preLoaderRoute: typeof AppUrbanoImoveisRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/urbano/condominios': {
+      id: '/app/urbano/condominios'
+      path: '/urbano/condominios'
+      fullPath: '/app/urbano/condominios'
+      preLoaderRoute: typeof AppUrbanoCondominiosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/urbano/chaves': {
+      id: '/app/urbano/chaves'
+      path: '/urbano/chaves'
+      fullPath: '/app/urbano/chaves'
+      preLoaderRoute: typeof AppUrbanoChavesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/rural/valuation': {
+      id: '/app/rural/valuation'
+      path: '/rural/valuation'
+      fullPath: '/app/rural/valuation'
+      preLoaderRoute: typeof AppRuralValuationRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/rural/territorio': {
+      id: '/app/rural/territorio'
+      path: '/rural/territorio'
+      fullPath: '/app/rural/territorio'
+      preLoaderRoute: typeof AppRuralTerritorioRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/rural/imoveis': {
+      id: '/app/rural/imoveis'
+      path: '/rural/imoveis'
+      fullPath: '/app/rural/imoveis'
+      preLoaderRoute: typeof AppRuralImoveisRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -652,23 +1127,73 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AppRouteChildren {
+  AppAgentesIaRoute: typeof AppAgentesIaRoute
   AppClientesRoute: typeof AppClientesRoute
+  AppConexoesRoute: typeof AppConexoesRoute
+  AppConfiguracoesRoute: typeof AppConfiguracoesRoute
+  AppConfigurarSiteRoute: typeof AppConfigurarSiteRoute
+  AppContratosRoute: typeof AppContratosRoute
   AppCrmRoute: typeof AppCrmRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppDocumentosRoute: typeof AppDocumentosRoute
+  AppEditorRoute: typeof AppEditorRoute
   AppEmailRoute: typeof AppEmailRoute
+  AppFinanceiroRoute: typeof AppFinanceiroRoute
+  AppIntegracoesRoute: typeof AppIntegracoesRoute
   AppKanbanRoute: typeof AppKanbanRoute
+  AppLandingPagesRoute: typeof AppLandingPagesRoute
+  AppMatchmakingRoute: typeof AppMatchmakingRoute
   AppMensagensRoute: typeof AppMensagensRoute
+  AppMetasRoute: typeof AppMetasRoute
+  AppQuizRoute: typeof AppQuizRoute
+  AppRelatoriosRoute: typeof AppRelatoriosRoute
+  AppSimuladorRoute: typeof AppSimuladorRoute
+  AppSiteRoute: typeof AppSiteRoute
+  AppSuporteRoute: typeof AppSuporteRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppRuralImoveisRoute: typeof AppRuralImoveisRoute
+  AppRuralTerritorioRoute: typeof AppRuralTerritorioRoute
+  AppRuralValuationRoute: typeof AppRuralValuationRoute
+  AppUrbanoChavesRoute: typeof AppUrbanoChavesRoute
+  AppUrbanoCondominiosRoute: typeof AppUrbanoCondominiosRoute
+  AppUrbanoImoveisRoute: typeof AppUrbanoImoveisRoute
+  AppUrbanoLocacaoRoute: typeof AppUrbanoLocacaoRoute
+  AppUrbanoLoteamentosRoute: typeof AppUrbanoLoteamentosRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAgentesIaRoute: AppAgentesIaRoute,
   AppClientesRoute: AppClientesRoute,
+  AppConexoesRoute: AppConexoesRoute,
+  AppConfiguracoesRoute: AppConfiguracoesRoute,
+  AppConfigurarSiteRoute: AppConfigurarSiteRoute,
+  AppContratosRoute: AppContratosRoute,
   AppCrmRoute: AppCrmRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppDocumentosRoute: AppDocumentosRoute,
+  AppEditorRoute: AppEditorRoute,
   AppEmailRoute: AppEmailRoute,
+  AppFinanceiroRoute: AppFinanceiroRoute,
+  AppIntegracoesRoute: AppIntegracoesRoute,
   AppKanbanRoute: AppKanbanRoute,
+  AppLandingPagesRoute: AppLandingPagesRoute,
+  AppMatchmakingRoute: AppMatchmakingRoute,
   AppMensagensRoute: AppMensagensRoute,
+  AppMetasRoute: AppMetasRoute,
+  AppQuizRoute: AppQuizRoute,
+  AppRelatoriosRoute: AppRelatoriosRoute,
+  AppSimuladorRoute: AppSimuladorRoute,
+  AppSiteRoute: AppSiteRoute,
+  AppSuporteRoute: AppSuporteRoute,
   AppIndexRoute: AppIndexRoute,
+  AppRuralImoveisRoute: AppRuralImoveisRoute,
+  AppRuralTerritorioRoute: AppRuralTerritorioRoute,
+  AppRuralValuationRoute: AppRuralValuationRoute,
+  AppUrbanoChavesRoute: AppUrbanoChavesRoute,
+  AppUrbanoCondominiosRoute: AppUrbanoCondominiosRoute,
+  AppUrbanoImoveisRoute: AppUrbanoImoveisRoute,
+  AppUrbanoLocacaoRoute: AppUrbanoLocacaoRoute,
+  AppUrbanoLoteamentosRoute: AppUrbanoLoteamentosRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
