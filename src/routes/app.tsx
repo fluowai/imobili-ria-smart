@@ -1,17 +1,48 @@
-import { Outlet, createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, Plus, Search } from "lucide-react";
+import { Outlet, createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
+import { Bell, Loader2, Plus, Search } from "lucide-react";
 
 import { AppSidebar } from "@/components/app/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/use-auth";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/app")({
   component: AppLayout,
 });
 
 function AppLayout() {
+  const { user, loading, configured, signOut } = useAuth();
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+
+  if (configured && loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+  if (configured && !user) {
+    return <Navigate to="/auth/login" />;
+  }
+
+  const initials = (user?.user_metadata?.nome || user?.email || "?")
+    .split(" ")
+    .map((n: string) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+  async function handleSignOut() {
+    await qc.cancelQueries();
+    qc.clear();
+    await signOut();
+    navigate({ to: "/auth/login", replace: true });
+  }
+
   return (
     <div className="theme-app min-h-screen bg-background text-foreground">
       <SidebarProvider>
@@ -32,15 +63,17 @@ function AppLayout() {
                   <Plus className="mr-1.5 size-4" />
                   Novo lead
                 </Button>
-                <Button asChild variant="ghost" size="sm">
-                  <Link to="/">Sair</Link>
+                <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  Sair
                 </Button>
                 <Button variant="ghost" size="icon" className="relative">
                   <Bell className="size-4" />
                   <span className="absolute right-2 top-2 size-1.5 rounded-full bg-primary" />
                 </Button>
                 <Avatar className="size-8">
-                  <AvatarFallback className="bg-primary text-primary-foreground">CM</AvatarFallback>
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                    {initials}
+                  </AvatarFallback>
                 </Avatar>
               </div>
             </header>
@@ -53,3 +86,4 @@ function AppLayout() {
     </div>
   );
 }
+
