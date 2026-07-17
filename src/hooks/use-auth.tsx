@@ -14,7 +14,9 @@ interface AuthState {
     password: string;
     nome: string;
     imobiliaria: string;
-    tipo: "urbana" | "rural" | "ambas";
+    tipo: "urbana" | "rural";
+    whatsapp: string;
+    responsavel: string;
   }) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
