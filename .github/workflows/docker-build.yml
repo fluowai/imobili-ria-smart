@@ -52,6 +52,41 @@ jobs:
             VITE_SUPABASE_URL=https://cgxujqgzucwgdlcssrka.supabase.co
             VITE_SUPABASE_PUBLISHABLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNneHVqcWd6dWN3Z2RsY3NzcmthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTE1MjUsImV4cCI6MjA5OTg2NzUyNX0.jzVI-tlrZHvaIncHNB7z9ah4-i89L8roTdQIMlKu-Xc
 
+  build-and-push-whatsmeow:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta-wa
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/whatsmeow
+          tags: |
+            type=raw,value=latest
+            type=sha
+
+      - name: Build and push whatsmeow
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker/whatsmeow
+          file: ./docker/whatsmeow/Dockerfile
+          push: true
+          tags: ${{ steps.meta-wa.outputs.tags }}
+          labels: ${{ steps.meta-wa.outputs.labels }}
+
       # (Opcional) Chamar o Webhook do Portainer para atualizar a stack automaticamente
       - name: Update Portainer Stack
         if: ${{ env.PORTAINER_WEBHOOK != '' }}

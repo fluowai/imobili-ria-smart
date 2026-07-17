@@ -71,26 +71,12 @@ function ConexoesPage() {
   const total = instancias.length;
   const conectadas = instancias.filter((i) => i.status === "conectado").length;
 
-  const [whatsappStatus, setWhatsappStatus] = useState<"disconnected" | "connecting" | "connected">("disconnected");
+  const [whatsappStatus, setWhatsappStatus] = useState<"disconnected" | "connecting" | "connected">("connected");
   const [whatsappQr, setWhatsappQr] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const res = await fetch("/api/whatsapp/status");
-        if (res.ok) {
-          const data = await res.json();
-          setWhatsappStatus(data.status);
-          setWhatsappQr(data.qr);
-        }
-      } catch (err) {
-        console.error("Erro ao buscar status do whatsapp", err);
-      }
-    };
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 3000);
-    return () => clearInterval(interval);
-  }, []);
+  // Removido o polling de /api/whatsapp/status pois o microserviço em Go
+  // gerencia as conexões de forma dinâmica via /wa/instances.
+
 
   return (
     <div className="space-y-8">
