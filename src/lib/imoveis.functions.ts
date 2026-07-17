@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { requireAuth } from "./auth-middleware";
 import { db, schema } from "./db.server";
+import type { JsonValue } from "../../db/schema";
 import { resolveImobiliariaId } from "./tenant.server";
 
 const listSchema = z
@@ -83,7 +84,7 @@ const upsertSchema = z.object({
   carNumero: z.string().max(80).optional(),
   itr: z.string().max(80).optional(),
   fotos: z.array(z.string().url()).default([]),
-  caracteristicas: z.record(z.unknown()).default({}),
+  caracteristicas: z.record(z.any()).default({}) as z.ZodType<Record<string, JsonValue>>,
 });
 
 const numToStr = (v: number | undefined) => (v === undefined ? undefined : String(v));
