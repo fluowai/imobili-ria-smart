@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Bar,
   BarChart,
@@ -15,8 +16,9 @@ import { Building2, Handshake, TrendingUp, Users } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { Badge } from "@/components/ui/badge";
-import { funil, mensagens, tarefas, vendasSerie } from "@/mocks/app";
+import { funil, mensagens, tarefas as tarefasMock, vendasSerie } from "@/mocks/app";
 import { cn } from "@/lib/utils";
+import { listTarefas, updateTarefa } from "@/lib/tarefas.functions";
 
 export const Route = createFileRoute("/app/dashboard")({
   head: () => ({
@@ -27,6 +29,23 @@ export const Route = createFileRoute("/app/dashboard")({
   }),
   component: AppDashboard,
 });
+
+type UITarefa = {
+  id: string;
+  titulo: string;
+  responsavel: string;
+  vencimento: string;
+  prioridade: "alta" | "media" | "baixa";
+  status?: string;
+};
+
+function formatVencimento(d: unknown): string {
+  if (!d) return "sem prazo";
+  const date = new Date(d as string);
+  if (Number.isNaN(date.getTime())) return "sem prazo";
+  return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });
+}
+
 
 const prioridadeStyle = {
   alta: "bg-destructive/15 text-destructive border-destructive/30",
