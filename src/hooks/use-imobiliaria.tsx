@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 
-export type ImobTipo = "urbana" | "rural" | "ambas";
+export type ImobTipo = "urbana" | "rural";
 
 export interface Imobiliaria {
   id: string;
@@ -12,6 +12,8 @@ export interface Imobiliaria {
   onboarding_completed: boolean;
   instancia_nome: string | null;
   llm_keys: Record<string, string>;
+  responsavel_nome: string | null;
+  whatsapp: string | null;
 }
 
 interface Ctx {
@@ -48,7 +50,7 @@ export function ImobiliariaProvider({ children }: { children: ReactNode }) {
     }
     const { data } = await supabase
       .from("imobiliarias")
-      .select("id, nome, slug, tipo, onboarding_completed, instancia_nome, llm_keys")
+      .select("id, nome, slug, tipo, onboarding_completed, instancia_nome, llm_keys, responsavel_nome, whatsapp")
       .eq("id", mem.imobiliaria_id)
       .maybeSingle();
     setImob((data as Imobiliaria) ?? null);
@@ -71,7 +73,7 @@ export function ImobiliariaProvider({ children }: { children: ReactNode }) {
           .from("imobiliarias")
           .update(patch)
           .eq("id", imob.id)
-          .select("id, nome, slug, tipo, onboarding_completed, instancia_nome, llm_keys")
+          .select("id, nome, slug, tipo, onboarding_completed, instancia_nome, llm_keys, responsavel_nome, whatsapp")
           .maybeSingle();
         if (error) return { error: error.message };
         if (data) setImob(data as Imobiliaria);

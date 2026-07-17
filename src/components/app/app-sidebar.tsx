@@ -124,14 +124,14 @@ const groups: NavGroup[] = [
   },
 ];
 
-export function AppSidebar({ tipo = "ambas", nomeImob }: { tipo?: "urbana" | "rural" | "ambas"; nomeImob?: string }) {
+export function AppSidebar({ tipo = "urbana", nomeImob }: { tipo?: "urbana" | "rural"; nomeImob?: string }) {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const pathname = useRouterState({ select: (r) => r.location.pathname });
 
   const visibleGroups = groups.filter((g) => {
-    if (g.label === "Carteira Rural") return tipo === "rural" || tipo === "ambas";
-    if (g.label === "Carteira Urbana") return tipo === "urbana" || tipo === "ambas";
+    if (g.label === "Carteira Rural") return tipo === "rural";
+    if (g.label === "Carteira Urbana") return tipo === "urbana";
     return true;
   });
 

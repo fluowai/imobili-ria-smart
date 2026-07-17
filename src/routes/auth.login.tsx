@@ -25,7 +25,9 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [nome, setNome] = useState("");
   const [imobiliaria, setImobiliaria] = useState("");
-  const [tipo, setTipo] = useState<"urbana" | "rural" | "ambas">("urbana");
+  const [responsavel, setResponsavel] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [tipo, setTipo] = useState<"urbana" | "rural">("urbana");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -40,7 +42,7 @@ function LoginPage() {
     const { error } =
       mode === "login"
         ? await signInWithPassword(email, password)
-        : await signUp({ email, password, nome, imobiliaria, tipo });
+        : await signUp({ email, password, nome, imobiliaria, tipo, whatsapp, responsavel });
     setBusy(false);
     if (error) setErr(error);
     else if (mode === "signup") setErr("Conta criada! Verifique seu email para confirmar (se exigido) e entre.");
@@ -82,10 +84,34 @@ function LoginPage() {
                   <Label htmlFor="imobiliaria">Nome da imobiliária</Label>
                   <Input id="imobiliaria" value={imobiliaria} onChange={(e) => setImobiliaria(e.target.value)} required />
                 </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="responsavel">Nome do responsável</Label>
+                    <Input
+                      id="responsavel"
+                      value={responsavel}
+                      onChange={(e) => setResponsavel(e.target.value)}
+                      placeholder="Ex: João Silva"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="whatsapp">WhatsApp</Label>
+                    <Input
+                      id="whatsapp"
+                      type="tel"
+                      inputMode="tel"
+                      value={whatsapp}
+                      onChange={(e) => setWhatsapp(e.target.value)}
+                      placeholder="(11) 99999-9999"
+                      required
+                    />
+                  </div>
+                </div>
                 <div className="space-y-1.5">
                   <Label>Tipo de carteira</Label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {(["urbana", "rural", "ambas"] as const).map((t) => (
+                  <div className="grid grid-cols-2 gap-2">
+                    {(["urbana", "rural"] as const).map((t) => (
                       <button
                         key={t}
                         type="button"
@@ -101,7 +127,7 @@ function LoginPage() {
                     ))}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Você poderá gerenciar apenas o que selecionar. "Ambas" habilita rural + urbana.
+                    Escolha o segmento. Você verá no menu apenas o que selecionar.
                   </p>
                 </div>
               </>

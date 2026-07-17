@@ -18,7 +18,7 @@ export const Route = createFileRoute("/onboarding")({
   component: OnboardingPage,
 });
 
-type Tipo = "urbana" | "rural" | "ambas";
+type Tipo = "urbana" | "rural";
 
 function OnboardingPage() {
   const { user, loading, configured } = useAuth();
@@ -93,8 +93,8 @@ function OnboardingPage() {
                 Escolha o segmento que sua imobiliária opera. Você verá no menu apenas o que
                 selecionar. Pode alterar depois em Configurações.
               </p>
-              <div className="grid grid-cols-3 gap-2">
-                {(["urbana", "rural", "ambas"] as const).map((t) => (
+              <div className="grid grid-cols-2 gap-2">
+                {(["urbana", "rural"] as const).map((t) => (
                   <button
                     key={t}
                     type="button"
@@ -109,7 +109,6 @@ function OnboardingPage() {
                     <div className="mt-1 text-xs text-muted-foreground">
                       {t === "urbana" && "Imóveis, locação, condomínios"}
                       {t === "rural" && "Fazendas, CAR, valuation"}
-                      {t === "ambas" && "Habilita rural + urbana"}
                     </div>
                   </button>
                 ))}
