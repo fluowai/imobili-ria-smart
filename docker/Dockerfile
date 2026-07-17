@@ -22,8 +22,5 @@ ENV HOST=0.0.0.0
 COPY --from=build /app/.output ./.output
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/drizzle.config.ts ./drizzle.config.ts
-COPY --from=build /app/db ./db
 EXPOSE 3000
-# Aplica migrações antes de iniciar o servidor
-CMD ["sh", "-c", "npx --yes drizzle-kit migrate && node .output/server/index.mjs"]
+CMD ["node", ".output/server/index.mjs"]
