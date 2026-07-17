@@ -33,6 +33,7 @@ import { Route as AppEditorRouteImport } from './routes/app.editor'
 import { Route as AppDocumentosRouteImport } from './routes/app.documentos'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppCrmRouteImport } from './routes/app.crm'
+import { Route as AppCriativosRouteImport } from './routes/app.criativos'
 import { Route as AppContratosRouteImport } from './routes/app.contratos'
 import { Route as AppConfigurarSiteRouteImport } from './routes/app.configurar-site'
 import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
@@ -184,6 +185,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
 const AppCrmRoute = AppCrmRouteImport.update({
   id: '/crm',
   path: '/crm',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCriativosRoute = AppCriativosRouteImport.update({
+  id: '/criativos',
+  path: '/criativos',
   getParentRoute: () => AppRoute,
 } as any)
 const AppContratosRoute = AppContratosRouteImport.update({
@@ -376,6 +382,7 @@ export interface FileRoutesByFullPath {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/configurar-site': typeof AppConfigurarSiteRoute
   '/app/contratos': typeof AppContratosRoute
+  '/app/criativos': typeof AppCriativosRoute
   '/app/crm': typeof AppCrmRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/documentos': typeof AppDocumentosRoute
@@ -432,6 +439,7 @@ export interface FileRoutesByTo {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/configurar-site': typeof AppConfigurarSiteRoute
   '/app/contratos': typeof AppContratosRoute
+  '/app/criativos': typeof AppCriativosRoute
   '/app/crm': typeof AppCrmRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/documentos': typeof AppDocumentosRoute
@@ -491,6 +499,7 @@ export interface FileRoutesById {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/configurar-site': typeof AppConfigurarSiteRoute
   '/app/contratos': typeof AppContratosRoute
+  '/app/criativos': typeof AppCriativosRoute
   '/app/crm': typeof AppCrmRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/documentos': typeof AppDocumentosRoute
@@ -551,6 +560,7 @@ export interface FileRouteTypes {
     | '/app/configuracoes'
     | '/app/configurar-site'
     | '/app/contratos'
+    | '/app/criativos'
     | '/app/crm'
     | '/app/dashboard'
     | '/app/documentos'
@@ -607,6 +617,7 @@ export interface FileRouteTypes {
     | '/app/configuracoes'
     | '/app/configurar-site'
     | '/app/contratos'
+    | '/app/criativos'
     | '/app/crm'
     | '/app/dashboard'
     | '/app/documentos'
@@ -665,6 +676,7 @@ export interface FileRouteTypes {
     | '/app/configuracoes'
     | '/app/configurar-site'
     | '/app/contratos'
+    | '/app/criativos'
     | '/app/crm'
     | '/app/dashboard'
     | '/app/documentos'
@@ -871,6 +883,13 @@ declare module '@tanstack/react-router' {
       path: '/crm'
       fullPath: '/app/crm'
       preLoaderRoute: typeof AppCrmRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/criativos': {
+      id: '/app/criativos'
+      path: '/criativos'
+      fullPath: '/app/criativos'
+      preLoaderRoute: typeof AppCriativosRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/contratos': {
@@ -1153,6 +1172,7 @@ interface AppRouteChildren {
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppConfigurarSiteRoute: typeof AppConfigurarSiteRoute
   AppContratosRoute: typeof AppContratosRoute
+  AppCriativosRoute: typeof AppCriativosRoute
   AppCrmRoute: typeof AppCrmRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDocumentosRoute: typeof AppDocumentosRoute
@@ -1188,6 +1208,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppConfigurarSiteRoute: AppConfigurarSiteRoute,
   AppContratosRoute: AppContratosRoute,
+  AppCriativosRoute: AppCriativosRoute,
   AppCrmRoute: AppCrmRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDocumentosRoute: AppDocumentosRoute,

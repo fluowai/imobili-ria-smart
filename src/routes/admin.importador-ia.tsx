@@ -144,7 +144,6 @@ function ImportadorPage() {
         eyebrow="Ferramentas"
         title="Importador IA"
         description="Cole a URL do site de uma imobiliária. A IA descobre e migra todos os imóveis."
-        icon={Sparkles}
       />
 
       {/* 1. Imobiliária destino */}

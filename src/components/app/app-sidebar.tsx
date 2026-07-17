@@ -27,6 +27,7 @@ import {
   HelpCircle,
   PieChart,
   Zap,
+  Sparkles,
   Link2,
   Plug,
   Settings,
