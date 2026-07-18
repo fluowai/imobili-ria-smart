@@ -27,9 +27,11 @@ export async function listClientes({ data }: { data?: { busca?: string } } = {})
   const q = data?.busca?.toLowerCase();
   return q
     ? (rows ?? []).filter((r: any) =>
-        `${r.nome} ${r.email ?? ""} ${r.telefone ?? ""} ${r.documento ?? ""}`.toLowerCase().includes(q),
+        `${r.nome} ${r.email ?? ""} ${r.telefone ?? ""} ${r.documento ?? ""}`
+          .toLowerCase()
+          .includes(q),
       )
-    : rows ?? [];
+    : (rows ?? []);
 }
 
 export async function getCliente({ data }: { data: { id: string } }) {
@@ -56,7 +58,11 @@ export async function createCliente({ data }: { data: ClienteInput }) {
   return row;
 }
 
-export async function updateCliente({ data }: { data: { id: string; patch: Partial<ClienteInput> } }) {
+export async function updateCliente({
+  data,
+}: {
+  data: { id: string; patch: Partial<ClienteInput> };
+}) {
   const imob = await getActiveImobiliariaId();
   const { data: row, error } = await supabase
     .from("clientes")

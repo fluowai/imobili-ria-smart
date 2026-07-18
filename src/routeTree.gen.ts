@@ -66,6 +66,8 @@ import { Route as AppUrbanoChavesRouteImport } from './routes/app.urbano.chaves'
 import { Route as AppRuralValuationRouteImport } from './routes/app.rural.valuation'
 import { Route as AppRuralTerritorioRouteImport } from './routes/app.rural.territorio'
 import { Route as AppRuralImoveisRouteImport } from './routes/app.rural.imoveis'
+import { Route as AppCrmIdRouteImport } from './routes/app.crm.$id'
+import { Route as AppClientesIdRouteImport } from './routes/app.clientes.$id'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -352,6 +354,16 @@ const AppRuralImoveisRoute = AppRuralImoveisRouteImport.update({
   path: '/rural/imoveis',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCrmIdRoute = AppCrmIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppCrmRoute,
+} as any)
+const AppClientesIdRoute = AppClientesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppClientesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -377,13 +389,13 @@ export interface FileRoutesByFullPath {
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/app/agentes-ia': typeof AppAgentesIaRoute
-  '/app/clientes': typeof AppClientesRoute
+  '/app/clientes': typeof AppClientesRouteWithChildren
   '/app/conexoes': typeof AppConexoesRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/configurar-site': typeof AppConfigurarSiteRoute
   '/app/contratos': typeof AppContratosRoute
   '/app/criativos': typeof AppCriativosRoute
-  '/app/crm': typeof AppCrmRoute
+  '/app/crm': typeof AppCrmRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
   '/app/documentos': typeof AppDocumentosRoute
   '/app/editor': typeof AppEditorRoute
@@ -403,6 +415,8 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/app/clientes/$id': typeof AppClientesIdRoute
+  '/app/crm/$id': typeof AppCrmIdRoute
   '/app/rural/imoveis': typeof AppRuralImoveisRoute
   '/app/rural/territorio': typeof AppRuralTerritorioRoute
   '/app/rural/valuation': typeof AppRuralValuationRoute
@@ -434,13 +448,13 @@ export interface FileRoutesByTo {
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/app/agentes-ia': typeof AppAgentesIaRoute
-  '/app/clientes': typeof AppClientesRoute
+  '/app/clientes': typeof AppClientesRouteWithChildren
   '/app/conexoes': typeof AppConexoesRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/configurar-site': typeof AppConfigurarSiteRoute
   '/app/contratos': typeof AppContratosRoute
   '/app/criativos': typeof AppCriativosRoute
-  '/app/crm': typeof AppCrmRoute
+  '/app/crm': typeof AppCrmRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
   '/app/documentos': typeof AppDocumentosRoute
   '/app/editor': typeof AppEditorRoute
@@ -460,6 +474,8 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
+  '/app/clientes/$id': typeof AppClientesIdRoute
+  '/app/crm/$id': typeof AppCrmIdRoute
   '/app/rural/imoveis': typeof AppRuralImoveisRoute
   '/app/rural/territorio': typeof AppRuralTerritorioRoute
   '/app/rural/valuation': typeof AppRuralValuationRoute
@@ -494,13 +510,13 @@ export interface FileRoutesById {
   '/admin/suporte': typeof AdminSuporteRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/app/agentes-ia': typeof AppAgentesIaRoute
-  '/app/clientes': typeof AppClientesRoute
+  '/app/clientes': typeof AppClientesRouteWithChildren
   '/app/conexoes': typeof AppConexoesRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/configurar-site': typeof AppConfigurarSiteRoute
   '/app/contratos': typeof AppContratosRoute
   '/app/criativos': typeof AppCriativosRoute
-  '/app/crm': typeof AppCrmRoute
+  '/app/crm': typeof AppCrmRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
   '/app/documentos': typeof AppDocumentosRoute
   '/app/editor': typeof AppEditorRoute
@@ -520,6 +536,8 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/app/clientes/$id': typeof AppClientesIdRoute
+  '/app/crm/$id': typeof AppCrmIdRoute
   '/app/rural/imoveis': typeof AppRuralImoveisRoute
   '/app/rural/territorio': typeof AppRuralTerritorioRoute
   '/app/rural/valuation': typeof AppRuralValuationRoute
@@ -581,6 +599,8 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/admin/'
     | '/app/'
+    | '/app/clientes/$id'
+    | '/app/crm/$id'
     | '/app/rural/imoveis'
     | '/app/rural/territorio'
     | '/app/rural/valuation'
@@ -638,6 +658,8 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/admin'
     | '/app'
+    | '/app/clientes/$id'
+    | '/app/crm/$id'
     | '/app/rural/imoveis'
     | '/app/rural/territorio'
     | '/app/rural/valuation'
@@ -697,6 +719,8 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/admin/'
     | '/app/'
+    | '/app/clientes/$id'
+    | '/app/crm/$id'
     | '/app/rural/imoveis'
     | '/app/rural/territorio'
     | '/app/rural/valuation'
@@ -1116,6 +1140,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRuralImoveisRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/crm/$id': {
+      id: '/app/crm/$id'
+      path: '/$id'
+      fullPath: '/app/crm/$id'
+      preLoaderRoute: typeof AppCrmIdRouteImport
+      parentRoute: typeof AppCrmRoute
+    }
+    '/app/clientes/$id': {
+      id: '/app/clientes/$id'
+      path: '/$id'
+      fullPath: '/app/clientes/$id'
+      preLoaderRoute: typeof AppClientesIdRouteImport
+      parentRoute: typeof AppClientesRoute
+    }
   }
 }
 
@@ -1165,15 +1203,38 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface AppClientesRouteChildren {
+  AppClientesIdRoute: typeof AppClientesIdRoute
+}
+
+const AppClientesRouteChildren: AppClientesRouteChildren = {
+  AppClientesIdRoute: AppClientesIdRoute,
+}
+
+const AppClientesRouteWithChildren = AppClientesRoute._addFileChildren(
+  AppClientesRouteChildren,
+)
+
+interface AppCrmRouteChildren {
+  AppCrmIdRoute: typeof AppCrmIdRoute
+}
+
+const AppCrmRouteChildren: AppCrmRouteChildren = {
+  AppCrmIdRoute: AppCrmIdRoute,
+}
+
+const AppCrmRouteWithChildren =
+  AppCrmRoute._addFileChildren(AppCrmRouteChildren)
+
 interface AppRouteChildren {
   AppAgentesIaRoute: typeof AppAgentesIaRoute
-  AppClientesRoute: typeof AppClientesRoute
+  AppClientesRoute: typeof AppClientesRouteWithChildren
   AppConexoesRoute: typeof AppConexoesRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppConfigurarSiteRoute: typeof AppConfigurarSiteRoute
   AppContratosRoute: typeof AppContratosRoute
   AppCriativosRoute: typeof AppCriativosRoute
-  AppCrmRoute: typeof AppCrmRoute
+  AppCrmRoute: typeof AppCrmRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
   AppDocumentosRoute: typeof AppDocumentosRoute
   AppEditorRoute: typeof AppEditorRoute
@@ -1203,13 +1264,13 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAgentesIaRoute: AppAgentesIaRoute,
-  AppClientesRoute: AppClientesRoute,
+  AppClientesRoute: AppClientesRouteWithChildren,
   AppConexoesRoute: AppConexoesRoute,
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppConfigurarSiteRoute: AppConfigurarSiteRoute,
   AppContratosRoute: AppContratosRoute,
   AppCriativosRoute: AppCriativosRoute,
-  AppCrmRoute: AppCrmRoute,
+  AppCrmRoute: AppCrmRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
   AppDocumentosRoute: AppDocumentosRoute,
   AppEditorRoute: AppEditorRoute,
@@ -1249,3 +1310,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

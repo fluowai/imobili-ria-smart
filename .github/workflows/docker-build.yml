@@ -14,7 +14,7 @@ env:
 jobs:
   build-and-push-app:
     runs-on: ubuntu-latest
-    
+
     # Necessário para fazer o push no GHCR usando o GITHUB_TOKEN automático
     permissions:
       contents: read

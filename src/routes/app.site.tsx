@@ -1,5 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import {
+  AreaChart,
+  Area,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from "recharts";
 import { Globe, ExternalLink, Eye, MousePointerClick, TrendingUp, Plus } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { paginasSite, traficoDiario, type PaginaSite } from "@/mocks/crescimento";
@@ -18,9 +26,12 @@ export const Route = createFileRoute("/app/site")({
 });
 
 const statusMap: Record<PaginaSite["status"], { label: string; className: string }> = {
-  publicada: { label: "Publicada", className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300" },
-  rascunho:  { label: "Rascunho",  className: "bg-muted text-muted-foreground" },
-  revisao:   { label: "Revisão",   className: "bg-amber-500/15 text-amber-700 dark:text-amber-300" },
+  publicada: {
+    label: "Publicada",
+    className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+  },
+  rascunho: { label: "Rascunho", className: "bg-muted text-muted-foreground" },
+  revisao: { label: "Revisão", className: "bg-amber-500/15 text-amber-700 dark:text-amber-300" },
 };
 
 function SitePage() {
@@ -36,8 +47,14 @@ function SitePage() {
         description="Portal público de imóveis: páginas, SEO, tráfego e leads gerados."
         actions={
           <>
-            <Button variant="outline" size="sm"><ExternalLink className="mr-2 h-4 w-4" />Abrir site</Button>
-            <Button size="sm"><Plus className="mr-2 h-4 w-4" />Nova página</Button>
+            <Button variant="outline" size="sm">
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Abrir site
+            </Button>
+            <Button size="sm">
+              <Plus className="mr-2 h-4 w-4" />
+              Nova página
+            </Button>
           </>
         }
       />
@@ -46,7 +63,11 @@ function SitePage() {
         <Kpi label="Visitas · 7d" valor={visitas.toLocaleString("pt-BR")} icon={Eye} />
         <Kpi label="Leads · 7d" valor={leads} icon={MousePointerClick} />
         <Kpi label="Conversão" valor={`${conv}%`} icon={TrendingUp} />
-        <Kpi label="Páginas publicadas" valor={paginasSite.filter((p) => p.status === "publicada").length} icon={Globe} />
+        <Kpi
+          label="Páginas publicadas"
+          valor={paginasSite.filter((p) => p.status === "publicada").length}
+          icon={Globe}
+        />
       </div>
 
       <div className="rounded-xl border border-border bg-card p-5">
@@ -63,8 +84,20 @@ function SitePage() {
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
               <XAxis dataKey="dia" stroke="var(--color-muted-foreground)" fontSize={12} />
               <YAxis stroke="var(--color-muted-foreground)" fontSize={12} />
-              <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8 }} />
-              <Area type="monotone" dataKey="visitas" stroke="var(--color-primary)" fill="url(#vis)" strokeWidth={2} />
+              <Tooltip
+                contentStyle={{
+                  background: "var(--color-card)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: 8,
+                }}
+              />
+              <Area
+                type="monotone"
+                dataKey="visitas"
+                stroke="var(--color-primary)"
+                fill="url(#vis)"
+                strokeWidth={2}
+              />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -92,7 +125,11 @@ function SitePage() {
                 <td className="px-4 py-2 font-medium">{p.titulo}</td>
                 <td className="px-4 py-2 font-mono text-xs text-muted-foreground">{p.slug}</td>
                 <td className="px-4 py-2 capitalize text-muted-foreground">{p.tipo}</td>
-                <td className="px-4 py-2"><Badge className={cn("border-none", statusMap[p.status].className)}>{statusMap[p.status].label}</Badge></td>
+                <td className="px-4 py-2">
+                  <Badge className={cn("border-none", statusMap[p.status].className)}>
+                    {statusMap[p.status].label}
+                  </Badge>
+                </td>
                 <td className="px-4 py-2 text-right">{p.visualizacoes.toLocaleString("pt-BR")}</td>
                 <td className="px-4 py-2 text-right">{p.cliques.toLocaleString("pt-BR")}</td>
                 <td className="px-4 py-2 text-xs text-muted-foreground">{p.atualizado}</td>
@@ -105,7 +142,15 @@ function SitePage() {
   );
 }
 
-function Kpi({ label, valor, icon: Icon }: { label: string; valor: string | number; icon: typeof Eye }) {
+function Kpi({
+  label,
+  valor,
+  icon: Icon,
+}: {
+  label: string;
+  valor: string | number;
+  icon: typeof Eye;
+}) {
   return (
     <div className="rounded-xl border border-border bg-card p-4">
       <div className="flex items-center justify-between">

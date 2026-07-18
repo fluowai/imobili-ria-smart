@@ -33,7 +33,7 @@ type ImovelResumo = {
 };
 
 export const analisarMatchesFn = createServerFn({ method: "POST" })
-  .inputValidator((d: unknown) => {
+  .validator((d: unknown) => {
     const v = d as { lead?: LeadPerfil; imoveis?: ImovelResumo[] };
     if (!v?.lead) throw new Error("lead obrigatório");
     if (!Array.isArray(v.imoveis)) throw new Error("imoveis obrigatório");

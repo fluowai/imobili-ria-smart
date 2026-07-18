@@ -9,7 +9,10 @@ export const Route = createFileRoute("/app/relatorios")({
   head: () => ({
     meta: [
       { title: "Relatórios — ImobiOS" },
-      { name: "description", content: "Biblioteca de relatórios agendados e sob demanda para toda a operação." },
+      {
+        name: "description",
+        content: "Biblioteca de relatórios agendados e sob demanda para toda a operação.",
+      },
     ],
   }),
   component: RelatoriosPage,
@@ -24,7 +27,12 @@ function RelatoriosPage() {
         eyebrow="Crescimento"
         title="Relatórios"
         description="Biblioteca de relatórios agendados e sob demanda para toda a operação."
-        actions={<Button size="sm"><Plus className="mr-2 h-4 w-4" />Novo relatório</Button>}
+        actions={
+          <Button size="sm">
+            <Plus className="mr-2 h-4 w-4" />
+            Novo relatório
+          </Button>
+        }
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -43,12 +51,17 @@ function RelatoriosPage() {
               </div>
               <div className="min-w-0">
                 <h3 className="truncate font-medium">{r.nome}</h3>
-                <Badge variant="outline" className="mt-0.5 text-[10px]">{r.categoria}</Badge>
+                <Badge variant="outline" className="mt-0.5 text-[10px]">
+                  {r.categoria}
+                </Badge>
               </div>
             </div>
 
             <div className="mt-4 space-y-2 text-xs text-muted-foreground">
-              <p className="flex items-center gap-1"><Calendar className="h-3 w-3" />Última execução: <span className="text-foreground">{r.ultimo}</span></p>
+              <p className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                Última execução: <span className="text-foreground">{r.ultimo}</span>
+              </p>
               <p className="flex items-center gap-1">
                 {r.scheduled ? (
                   <>
@@ -65,8 +78,13 @@ function RelatoriosPage() {
             </div>
 
             <div className="mt-4 flex gap-2">
-              <Button size="sm" variant="outline" className="flex-1"><Play className="mr-1 h-3.5 w-3.5" />Executar</Button>
-              <Button size="sm" variant="ghost" className="w-9 p-0"><Download className="h-4 w-4" /></Button>
+              <Button size="sm" variant="outline" className="flex-1">
+                <Play className="mr-1 h-3.5 w-3.5" />
+                Executar
+              </Button>
+              <Button size="sm" variant="ghost" className="w-9 p-0">
+                <Download className="h-4 w-4" />
+              </Button>
             </div>
           </article>
         ))}

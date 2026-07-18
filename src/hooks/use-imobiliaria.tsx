@@ -57,7 +57,9 @@ export function ImobiliariaProvider({ children }: { children: ReactNode }) {
 
     const { data } = await supabase
       .from("imobiliarias")
-      .select("id, nome, slug, tipo, onboarding_completed, instancia_nome, llm_keys, responsavel_nome, whatsapp")
+      .select(
+        "id, nome, slug, tipo, onboarding_completed, instancia_nome, llm_keys, responsavel_nome, whatsapp",
+      )
       .eq("id", targetImobId)
       .maybeSingle();
     setImob((data as Imobiliaria) ?? null);
@@ -80,7 +82,9 @@ export function ImobiliariaProvider({ children }: { children: ReactNode }) {
           .from("imobiliarias")
           .update(patch)
           .eq("id", imob.id)
-          .select("id, nome, slug, tipo, onboarding_completed, instancia_nome, llm_keys, responsavel_nome, whatsapp")
+          .select(
+            "id, nome, slug, tipo, onboarding_completed, instancia_nome, llm_keys, responsavel_nome, whatsapp",
+          )
           .maybeSingle();
         if (error) return { error: error.message };
         if (data) setImob(data as Imobiliaria);

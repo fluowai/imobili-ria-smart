@@ -155,16 +155,11 @@ function OnboardingPage() {
               </div>
               <p className="text-sm text-muted-foreground">
                 Cole as chaves dos provedores que você deseja usar nos agentes IA. Você pode pular
-                agora e cadastrar depois em Configurações → Conexões. As chaves são armazenadas
-                com criptografia no seu banco.
+                agora e cadastrar depois em Configurações → Conexões. As chaves são armazenadas com
+                criptografia no seu banco.
               </p>
 
-              <KeyField
-                label="OpenAI API Key"
-                hint="sk-…"
-                value={openai}
-                onChange={setOpenai}
-              />
+              <KeyField label="OpenAI API Key" hint="sk-…" value={openai} onChange={setOpenai} />
               <KeyField
                 label="Anthropic (Claude) API Key"
                 hint="sk-ant-…"

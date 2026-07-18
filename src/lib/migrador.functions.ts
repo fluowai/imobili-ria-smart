@@ -9,8 +9,7 @@ async function fetchHTML(url: string, timeoutMs = 20_000): Promise<string> {
     const res = await fetch(url, {
       signal: ctrl.signal,
       headers: {
-        "User-Agent":
-          "Mozilla/5.0 (compatible; ImobiOSBot/1.0; +https://imobios.app)",
+        "User-Agent": "Mozilla/5.0 (compatible; ImobiOSBot/1.0; +https://imobios.app)",
         Accept: "text/html,application/xhtml+xml",
       },
       redirect: "follow",
@@ -83,7 +82,7 @@ export type ImovelExtraido = {
 
 /** Descobre URLs de imóveis a partir da home do site. */
 export const descobrirImoveisFn = createServerFn({ method: "POST" })
-  .inputValidator((d: unknown) => {
+  .validator((d: unknown) => {
     const v = d as { url?: string };
     if (!v?.url) throw new Error("URL obrigatória");
     return { url: v.url };
@@ -118,7 +117,7 @@ export const descobrirImoveisFn = createServerFn({ method: "POST" })
 
 /** Extrai UM imóvel de uma URL usando Groq. */
 export const extrairImovelFn = createServerFn({ method: "POST" })
-  .inputValidator((d: unknown) => {
+  .validator((d: unknown) => {
     const v = d as { url?: string };
     if (!v?.url) throw new Error("URL obrigatória");
     return { url: v.url };

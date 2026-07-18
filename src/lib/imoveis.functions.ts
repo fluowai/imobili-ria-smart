@@ -26,7 +26,9 @@ type ImovelInput = {
   itr?: string;
 };
 
-export async function listImoveis({ data }: { data?: { tipo?: "urbano" | "rural"; status?: string; busca?: string } } = {}) {
+export async function listImoveis({
+  data,
+}: { data?: { tipo?: "urbano" | "rural"; status?: string; busca?: string } } = {}) {
   const imob = await getActiveImobiliariaId();
   let q = supabase
     .from("imoveis")
@@ -43,7 +45,7 @@ export async function listImoveis({ data }: { data?: { tipo?: "urbano" | "rural"
     ? (rows ?? []).filter((r: any) =>
         `${r.codigo} ${r.titulo} ${r.bairro ?? ""} ${r.cidade ?? ""}`.toLowerCase().includes(busca),
       )
-    : rows ?? [];
+    : (rows ?? []);
 }
 
 export async function getImovel({ data }: { data: { id: string } }) {
@@ -75,7 +77,11 @@ export async function createImovel({ data }: { data: ImovelInput }) {
   return row;
 }
 
-export async function updateImovel({ data }: { data: { id: string; patch: Partial<ImovelInput> } }) {
+export async function updateImovel({
+  data,
+}: {
+  data: { id: string; patch: Partial<ImovelInput> };
+}) {
   const imob = await getActiveImobiliariaId();
   const { data: row, error } = await supabase
     .from("imoveis")

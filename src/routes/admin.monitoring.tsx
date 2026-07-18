@@ -49,7 +49,13 @@ function MonitoringPage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Uptime 30d" value="99,982%" delta="+0,004%" trend="up" icon={CheckCircle2} />
+        <StatCard
+          label="Uptime 30d"
+          value="99,982%"
+          delta="+0,004%"
+          trend="up"
+          icon={CheckCircle2}
+        />
         <StatCard label="Latência p95" value="128ms" delta="-12ms" trend="up" icon={Activity} />
         <StatCard label="Serviços online" value="5/6" icon={Server} hint="1 degradado" />
         <StatCard label="Alertas ativos" value="2" delta="+1" trend="down" icon={AlertTriangle} />
@@ -76,8 +82,20 @@ function MonitoringPage() {
                   borderRadius: 12,
                 }}
               />
-              <Area type="monotone" dataKey="p95" stroke="var(--color-chart-2)" strokeWidth={2} fill="url(#p95)" />
-              <Area type="monotone" dataKey="p99" stroke="var(--color-primary)" strokeWidth={2} fill="transparent" />
+              <Area
+                type="monotone"
+                dataKey="p95"
+                stroke="var(--color-chart-2)"
+                strokeWidth={2}
+                fill="url(#p95)"
+              />
+              <Area
+                type="monotone"
+                dataKey="p99"
+                stroke="var(--color-primary)"
+                strokeWidth={2}
+                fill="transparent"
+              />
             </AreaChart>
           </ResponsiveContainer>
         </div>

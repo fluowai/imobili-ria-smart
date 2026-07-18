@@ -40,7 +40,11 @@ export async function createContrato({ data }: { data: ContratoInput }) {
   return row;
 }
 
-export async function updateContrato({ data }: { data: { id: string; patch: Partial<ContratoInput> } }) {
+export async function updateContrato({
+  data,
+}: {
+  data: { id: string; patch: Partial<ContratoInput> };
+}) {
   const imob = await getActiveImobiliariaId();
   const { data: row, error } = await supabase
     .from("contratos")

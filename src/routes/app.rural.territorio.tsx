@@ -10,14 +10,17 @@ export const Route = createFileRoute("/app/rural/territorio")({
   head: () => ({
     meta: [
       { title: "Território Rural — ImobiOS" },
-      { name: "description", content: "Visão territorial da carteira: cobertura de solo, camadas ambientais e passivos." },
+      {
+        name: "description",
+        content: "Visão territorial da carteira: cobertura de solo, camadas ambientais e passivos.",
+      },
     ],
   }),
   component: TerritorioPage,
 });
 
 const severidadeMap = {
-  alta:  "bg-red-500/15 text-red-700 dark:text-red-300",
+  alta: "bg-red-500/15 text-red-700 dark:text-red-300",
   media: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
   baixa: "bg-muted text-muted-foreground",
 } as const;
@@ -45,8 +48,14 @@ function TerritorioPage() {
         description="Visão territorial consolidada: cobertura de solo, camadas ambientais e passivos por imóvel."
         actions={
           <>
-            <Button variant="outline" size="sm"><Layers className="mr-2 h-4 w-4" />Camadas</Button>
-            <Button size="sm"><MapIcon className="mr-2 h-4 w-4" />Abrir mapa cheio</Button>
+            <Button variant="outline" size="sm">
+              <Layers className="mr-2 h-4 w-4" />
+              Camadas
+            </Button>
+            <Button size="sm">
+              <MapIcon className="mr-2 h-4 w-4" />
+              Abrir mapa cheio
+            </Button>
           </>
         }
       />
@@ -58,7 +67,10 @@ function TerritorioPage() {
               <h2 className="font-medium">Mapa da carteira · MT</h2>
               <div className="flex gap-1 text-[10px]">
                 {coberturaSolo.map((c) => (
-                  <span key={c.classe} className="flex items-center gap-1 rounded-full border border-border px-2 py-0.5">
+                  <span
+                    key={c.classe}
+                    className="flex items-center gap-1 rounded-full border border-border px-2 py-0.5"
+                  >
                     <span className="h-2 w-2 rounded-full" style={{ background: c.cor }} />
                     {c.classe}
                   </span>
@@ -73,10 +85,18 @@ function TerritorioPage() {
               }}
             >
               {/* Malha de fundo */}
-              <svg className="absolute inset-0 h-full w-full opacity-30" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                className="absolute inset-0 h-full w-full opacity-30"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <defs>
                   <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                    <path
+                      d="M 40 0 L 0 0 0 40"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="0.5"
+                    />
                   </pattern>
                 </defs>
                 <rect width="100%" height="100%" fill="url(#grid)" />
@@ -108,10 +128,16 @@ function TerritorioPage() {
 
           <div className="mt-4 rounded-xl border border-border bg-card p-5">
             <h2 className="font-medium">Cobertura de solo · carteira</h2>
-            <p className="text-sm text-muted-foreground">{fmtHa(totalHa)} distribuídos entre as classes abaixo.</p>
+            <p className="text-sm text-muted-foreground">
+              {fmtHa(totalHa)} distribuídos entre as classes abaixo.
+            </p>
             <div className="mt-4 flex h-3 overflow-hidden rounded-full">
               {coberturaSolo.map((c) => (
-                <div key={c.classe} style={{ width: `${(c.ha / totalHa) * 100}%`, background: c.cor }} title={c.classe} />
+                <div
+                  key={c.classe}
+                  style={{ width: `${(c.ha / totalHa) * 100}%`, background: c.cor }}
+                  title={c.classe}
+                />
               ))}
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -122,7 +148,9 @@ function TerritorioPage() {
                     <span className="text-xs font-medium">{c.classe}</span>
                   </div>
                   <p className="mt-1 font-display text-lg font-semibold">{fmtHa(c.ha)}</p>
-                  <p className="text-[11px] text-muted-foreground">{((c.ha / totalHa) * 100).toFixed(1)}%</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {((c.ha / totalHa) * 100).toFixed(1)}%
+                  </p>
                 </div>
               ))}
             </div>
@@ -143,7 +171,9 @@ function TerritorioPage() {
                       <p className="truncate text-xs font-mono text-muted-foreground">{p.imovel}</p>
                       <p className="text-sm font-medium">{p.tipo}</p>
                     </div>
-                    <Badge className={cn("border-none text-[10px]", severidadeMap[p.severidade])}>{p.severidade}</Badge>
+                    <Badge className={cn("border-none text-[10px]", severidadeMap[p.severidade])}>
+                      {p.severidade}
+                    </Badge>
                   </div>
                   <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
                     <span>{p.areaHa > 0 ? fmtHa(p.areaHa) : "—"}</span>
@@ -158,15 +188,26 @@ function TerritorioPage() {
             <h2 className="font-medium">Camadas disponíveis</h2>
             <ul className="mt-3 space-y-2 text-sm">
               {[
-                { icon: Trees,   label: "Reserva legal averbada", ativa: true },
-                { icon: Droplet, label: "APP · hidrografia",       ativa: true },
-                { icon: Sprout,  label: "Vegetação nativa",        ativa: true },
-                { icon: Layers,  label: "Zoneamento ecológico",    ativa: false },
-                { icon: MapIcon, label: "Uso e ocupação (SICAR)",  ativa: false },
+                { icon: Trees, label: "Reserva legal averbada", ativa: true },
+                { icon: Droplet, label: "APP · hidrografia", ativa: true },
+                { icon: Sprout, label: "Vegetação nativa", ativa: true },
+                { icon: Layers, label: "Zoneamento ecológico", ativa: false },
+                { icon: MapIcon, label: "Uso e ocupação (SICAR)", ativa: false },
               ].map(({ icon: Icon, label, ativa }) => (
-                <li key={label} className="flex items-center justify-between rounded-lg border border-border p-2">
-                  <span className="flex items-center gap-2"><Icon className="h-4 w-4 text-muted-foreground" />{label}</span>
-                  <span className={cn("text-[11px] font-medium", ativa ? "text-primary" : "text-muted-foreground")}>
+                <li
+                  key={label}
+                  className="flex items-center justify-between rounded-lg border border-border p-2"
+                >
+                  <span className="flex items-center gap-2">
+                    <Icon className="h-4 w-4 text-muted-foreground" />
+                    {label}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-[11px] font-medium",
+                      ativa ? "text-primary" : "text-muted-foreground",
+                    )}
+                  >
                     {ativa ? "Ativa" : "Ocultar"}
                   </span>
                 </li>

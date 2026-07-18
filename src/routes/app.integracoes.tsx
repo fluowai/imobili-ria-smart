@@ -15,12 +15,12 @@ export const Route = createFileRoute("/app/integracoes")({
 });
 
 const categorias: { id: "todas" | IntegracaoCategoria; label: string }[] = [
-  { id: "todas",         label: "Todas" },
-  { id: "comunicacao",   label: "Comunicação" },
-  { id: "marketing",     label: "Marketing" },
-  { id: "crm",           label: "CRM" },
-  { id: "financeiro",    label: "Financeiro" },
-  { id: "documentos",    label: "Documentos" },
+  { id: "todas", label: "Todas" },
+  { id: "comunicacao", label: "Comunicação" },
+  { id: "marketing", label: "Marketing" },
+  { id: "crm", label: "CRM" },
+  { id: "financeiro", label: "Financeiro" },
+  { id: "documentos", label: "Documentos" },
   { id: "produtividade", label: "Produtividade" },
 ];
 
@@ -80,10 +80,14 @@ function IntegracoesPage() {
           <div key={i.id} className="flex flex-col rounded-2xl border border-border bg-card p-5">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <span className="grid size-11 place-items-center rounded-xl bg-muted text-2xl">{i.logo}</span>
+                <span className="grid size-11 place-items-center rounded-xl bg-muted text-2xl">
+                  {i.logo}
+                </span>
                 <div>
                   <p className="font-semibold text-foreground">{i.nome}</p>
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground">{i.categoria}</p>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                    {i.categoria}
+                  </p>
                 </div>
               </div>
               {i.conectado ? (

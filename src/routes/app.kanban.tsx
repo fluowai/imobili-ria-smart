@@ -21,7 +21,9 @@ export const Route = createFileRoute("/app/kanban")({
 
 function dbToUiStatus(s: string): LeadStatus {
   if (s === "qualificando") return "contato";
-  return (["novo", "visita", "proposta", "fechado", "perdido"].includes(s) ? s : "novo") as LeadStatus;
+  return (
+    ["novo", "visita", "proposta", "fechado", "perdido"].includes(s) ? s : "novo"
+  ) as LeadStatus;
 }
 
 function KanbanPage() {

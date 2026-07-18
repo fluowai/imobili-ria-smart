@@ -49,17 +49,47 @@ function DashboardPage() {
         description="Panorama executivo do ImobiOS — receita, adoção e saúde operacional."
         actions={
           <>
-            <Button variant="outline" size="sm">Exportar</Button>
+            <Button variant="outline" size="sm">
+              Exportar
+            </Button>
             <Button size="sm">Novo cliente</Button>
           </>
         }
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="MRR" value={`R$ ${(mrrAtual / 1000).toFixed(1)}k`} delta="+12,4%" trend="up" icon={DollarSign} hint="vs. mês anterior" />
-        <StatCard label="Imobiliárias ativas" value={String(ativas)} delta="+3" trend="up" icon={Building2} hint={`${trials} em trial`} />
-        <StatCard label="Usuários totais" value={String(usuariosTotal)} delta="+48" trend="up" icon={Users} hint="últimos 30 dias" />
-        <StatCard label="Uptime 30d" value="99,982%" delta="0,004%" trend="up" icon={TrendingUp} hint="SLA 99,9%" />
+        <StatCard
+          label="MRR"
+          value={`R$ ${(mrrAtual / 1000).toFixed(1)}k`}
+          delta="+12,4%"
+          trend="up"
+          icon={DollarSign}
+          hint="vs. mês anterior"
+        />
+        <StatCard
+          label="Imobiliárias ativas"
+          value={String(ativas)}
+          delta="+3"
+          trend="up"
+          icon={Building2}
+          hint={`${trials} em trial`}
+        />
+        <StatCard
+          label="Usuários totais"
+          value={String(usuariosTotal)}
+          delta="+48"
+          trend="up"
+          icon={Users}
+          hint="últimos 30 dias"
+        />
+        <StatCard
+          label="Uptime 30d"
+          value="99,982%"
+          delta="0,004%"
+          trend="up"
+          icon={TrendingUp}
+          hint="SLA 99,9%"
+        />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-3">
@@ -80,7 +110,11 @@ function DashboardPage() {
                     <stop offset="95%" stopColor="var(--color-primary)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
                 <XAxis dataKey="mes" stroke="var(--color-muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--color-muted-foreground)" fontSize={12} />
                 <Tooltip
@@ -91,7 +125,13 @@ function DashboardPage() {
                     color: "var(--color-popover-foreground)",
                   }}
                 />
-                <Area type="monotone" dataKey="mrr" stroke="var(--color-primary)" strokeWidth={2} fill="url(#mrr)" />
+                <Area
+                  type="monotone"
+                  dataKey="mrr"
+                  stroke="var(--color-primary)"
+                  strokeWidth={2}
+                  fill="url(#mrr)"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -133,7 +173,11 @@ function DashboardPage() {
           <div className="mt-6 h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={mrrSerie}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
                 <XAxis dataKey="mes" stroke="var(--color-muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--color-muted-foreground)" fontSize={12} />
                 <Tooltip

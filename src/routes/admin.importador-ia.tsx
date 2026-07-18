@@ -34,12 +34,17 @@ function ImportadorPage() {
   const [urls, setUrls] = useState<string[]>([]);
   const [processando, setProcessando] = useState(false);
   const [progresso, setProgresso] = useState({ ok: 0, err: 0, done: 0, total: 0 });
-  const [log, setLog] = useState<{ url: string; status: "ok" | "err"; msg?: string; titulo?: string }[]>([]);
+  const [log, setLog] = useState<
+    { url: string; status: "ok" | "err"; msg?: string; titulo?: string }[]
+  >([]);
 
   const { data: imobs, refetch: refetchImobs } = useQuery({
     queryKey: ["admin-imobs"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("imobiliarias").select("id, nome, tipo").order("nome");
+      const { data, error } = await supabase
+        .from("imobiliarias")
+        .select("id, nome, tipo")
+        .order("nome");
       if (error) throw error;
       return (data ?? []) as Imob[];
     },
@@ -48,7 +53,13 @@ function ImportadorPage() {
   const criarImobMut = useMutation({
     mutationFn: async () => {
       if (!novaImob.nome.trim()) throw new Error("Informe o nome");
-      const slug = novaImob.nome.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40) + "-" + Date.now().toString(36);
+      const slug =
+        novaImob.nome
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .slice(0, 40) +
+        "-" +
+        Date.now().toString(36);
       const { data, error } = await supabase
         .from("imobiliarias")
         .insert({ nome: novaImob.nome, slug, tipo: novaImob.tipo })
@@ -98,7 +109,8 @@ function ImportadorPage() {
         batch.map(async (u) => {
           try {
             const dado = (await extrairImovelFn({ data: { url: u } })) as ImovelExtraido;
-            const codigo = dado.codigo || "IMP-" + Math.random().toString(36).slice(2, 8).toUpperCase();
+            const codigo =
+              dado.codigo || "IMP-" + Math.random().toString(36).slice(2, 8).toUpperCase();
             const { error } = await supabase.from("imoveis").insert({
               imobiliaria_id: imobId,
               codigo,
@@ -136,7 +148,9 @@ function ImportadorPage() {
     qc.invalidateQueries({ queryKey: ["imoveis"] });
   }
 
-  useEffect(() => { document.title = "Importador IA — Super Admin"; }, []);
+  useEffect(() => {
+    document.title = "Importador IA — Super Admin";
+  }, []);
 
   return (
     <div className="flex flex-col gap-6">
@@ -160,7 +174,9 @@ function ImportadorPage() {
               >
                 <option value="">— escolher —</option>
                 {imobs?.map((i) => (
-                  <option key={i.id} value={i.id}>{i.nome} ({i.tipo})</option>
+                  <option key={i.id} value={i.id}>
+                    {i.nome} ({i.tipo})
+                  </option>
                 ))}
               </select>
             </div>
@@ -172,13 +188,18 @@ function ImportadorPage() {
           <div className="grid gap-3 md:grid-cols-3">
             <div>
               <Label>Nome</Label>
-              <Input value={novaImob.nome} onChange={(e) => setNovaImob({ ...novaImob, nome: e.target.value })} />
+              <Input
+                value={novaImob.nome}
+                onChange={(e) => setNovaImob({ ...novaImob, nome: e.target.value })}
+              />
             </div>
             <div>
               <Label>Tipo</Label>
               <select
                 value={novaImob.tipo}
-                onChange={(e) => setNovaImob({ ...novaImob, tipo: e.target.value as "urbana" | "rural" })}
+                onChange={(e) =>
+                  setNovaImob({ ...novaImob, tipo: e.target.value as "urbana" | "rural" })
+                }
                 className="mt-1 h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
               >
                 <option value="urbana">Urbana</option>
@@ -189,7 +210,9 @@ function ImportadorPage() {
               <Button onClick={() => criarImobMut.mutate()} disabled={criarImobMut.isPending}>
                 {criarImobMut.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Criar
               </Button>
-              <Button variant="ghost" onClick={() => setCriandoNova(false)}>Cancelar</Button>
+              <Button variant="ghost" onClick={() => setCriandoNova(false)}>
+                Cancelar
+              </Button>
             </div>
           </div>
         )}
@@ -229,7 +252,11 @@ function ImportadorPage() {
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-medium">3. Migrar imóveis</h3>
             <Button onClick={importarLote} disabled={processando || !imobId}>
-              {processando ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
+              {processando ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Play className="mr-2 h-4 w-4" />
+              )}
               {processando ? "Importando..." : "Iniciar migração"}
             </Button>
           </div>

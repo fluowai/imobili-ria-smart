@@ -1,10 +1,34 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from "recharts";
-import { TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight, Filter } from "lucide-react";
+import {
+  AreaChart,
+  Area,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import {
+  TrendingUp,
+  TrendingDown,
+  Wallet,
+  ArrowUpRight,
+  ArrowDownRight,
+  Filter,
+} from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
-import { fluxoMensal, distribuicaoDespesa, fmtBRLFull, type FluxoTipo, type FluxoStatus } from "@/mocks/gestao";
+import {
+  fluxoMensal,
+  distribuicaoDespesa,
+  fmtBRLFull,
+  type FluxoTipo,
+  type FluxoStatus,
+} from "@/mocks/gestao";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -15,15 +39,18 @@ export const Route = createFileRoute("/app/financeiro")({
   head: () => ({
     meta: [
       { title: "Financeiro & ERP — ImobiOS" },
-      { name: "description", content: "Contas a pagar, a receber, fluxo de caixa e DRE gerencial." },
+      {
+        name: "description",
+        content: "Contas a pagar, a receber, fluxo de caixa e DRE gerencial.",
+      },
     ],
   }),
   component: FinanceiroPage,
 });
 
 const statusMap: Record<FluxoStatus, { label: string; className: string }> = {
-  pago:     { label: "Pago",     className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300" },
-  aberto:   { label: "Aberto",   className: "bg-blue-500/15 text-blue-700 dark:text-blue-300" },
+  pago: { label: "Pago", className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300" },
+  aberto: { label: "Aberto", className: "bg-blue-500/15 text-blue-700 dark:text-blue-300" },
   atrasado: { label: "Atrasado", className: "bg-red-500/15 text-red-700 dark:text-red-300" },
 };
 
@@ -88,15 +115,28 @@ function FinanceiroPage() {
         description="Contas a pagar, a receber, fluxo de caixa projetado e DRE gerencial."
         actions={
           <>
-            <Button variant="outline" size="sm"><Filter className="mr-2 h-4 w-4" />Período</Button>
+            <Button variant="outline" size="sm">
+              <Filter className="mr-2 h-4 w-4" />
+              Período
+            </Button>
             <NovoLancamentoDialog />
           </>
         }
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <Kpi label="Receitas · mês" valor={fmtBRLFull(kpis.totReceita)} icon={ArrowUpRight} tone="emerald" />
-        <Kpi label="Despesas · mês" valor={fmtBRLFull(kpis.totDespesa)} icon={ArrowDownRight} tone="red" />
+        <Kpi
+          label="Receitas · mês"
+          valor={fmtBRLFull(kpis.totReceita)}
+          icon={ArrowUpRight}
+          tone="emerald"
+        />
+        <Kpi
+          label="Despesas · mês"
+          valor={fmtBRLFull(kpis.totDespesa)}
+          icon={ArrowDownRight}
+          tone="red"
+        />
         <Kpi label="Saldo líquido" valor={fmtBRLFull(kpis.saldo)} icon={Wallet} tone="default" />
         <Kpi label="A receber" valor={fmtBRLFull(kpis.receber)} icon={TrendingUp} tone="blue" />
       </div>
@@ -109,8 +149,14 @@ function FinanceiroPage() {
               <p className="text-xs text-muted-foreground">Valores em milhares de R$</p>
             </div>
             <div className="flex gap-3 text-xs">
-              <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-primary" />Receitas</span>
-              <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full" style={{ background: "hsl(0 70% 55%)" }} />Despesas</span>
+              <span className="flex items-center gap-1">
+                <span className="h-2 w-2 rounded-full bg-primary" />
+                Receitas
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="h-2 w-2 rounded-full" style={{ background: "hsl(0 70% 55%)" }} />
+                Despesas
+              </span>
             </div>
           </div>
           <div className="mt-4 h-64">
@@ -129,9 +175,27 @@ function FinanceiroPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis dataKey="mes" stroke="var(--color-muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--color-muted-foreground)" fontSize={12} />
-                <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8 }} />
-                <Area type="monotone" dataKey="receitas" stroke="var(--color-primary)" fill="url(#rec)" strokeWidth={2} />
-                <Area type="monotone" dataKey="despesas" stroke="hsl(0 70% 55%)" fill="url(#des)" strokeWidth={2} />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--color-card)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: 8,
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="receitas"
+                  stroke="var(--color-primary)"
+                  fill="url(#rec)"
+                  strokeWidth={2}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="despesas"
+                  stroke="hsl(0 70% 55%)"
+                  fill="url(#des)"
+                  strokeWidth={2}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -143,17 +207,36 @@ function FinanceiroPage() {
           <div className="mt-2 h-40">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={distribuicaoDespesa} dataKey="valor" nameKey="categoria" innerRadius={38} outerRadius={62} paddingAngle={2}>
-                  {distribuicaoDespesa.map((d) => <Cell key={d.categoria} fill={d.cor} />)}
+                <Pie
+                  data={distribuicaoDespesa}
+                  dataKey="valor"
+                  nameKey="categoria"
+                  innerRadius={38}
+                  outerRadius={62}
+                  paddingAngle={2}
+                >
+                  {distribuicaoDespesa.map((d) => (
+                    <Cell key={d.categoria} fill={d.cor} />
+                  ))}
                 </Pie>
-                <Tooltip formatter={(v: number) => fmtBRLFull(v)} contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8 }} />
+                <Tooltip
+                  formatter={(v: number) => fmtBRLFull(v)}
+                  contentStyle={{
+                    background: "var(--color-card)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: 8,
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
           <ul className="mt-2 space-y-1.5 text-xs">
             {distribuicaoDespesa.map((d) => (
               <li key={d.categoria} className="flex items-center justify-between">
-                <span className="flex items-center gap-2"><span className="h-2 w-2 rounded-full" style={{ background: d.cor }} />{d.categoria}</span>
+                <span className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full" style={{ background: d.cor }} />
+                  {d.categoria}
+                </span>
                 <span className="font-medium">{fmtBRLFull(d.valor)}</span>
               </li>
             ))}
@@ -166,7 +249,16 @@ function FinanceiroPage() {
           <h2 className="font-medium">Lançamentos</h2>
           <div className="flex gap-1 rounded-md border border-input p-0.5">
             {(["todos", "receita", "despesa"] as const).map((t) => (
-              <button key={t} onClick={() => setTipoFiltro(t)} className={cn("rounded px-3 py-1 text-xs font-medium capitalize", tipoFiltro === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground")}>
+              <button
+                key={t}
+                onClick={() => setTipoFiltro(t)}
+                className={cn(
+                  "rounded px-3 py-1 text-xs font-medium capitalize",
+                  tipoFiltro === t
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
                 {t === "todos" ? "Todos" : `${t}s`}
               </button>
             ))}
@@ -190,8 +282,19 @@ function FinanceiroPage() {
                 <td className="px-4 py-2 font-medium">{l.descricao}</td>
                 <td className="px-4 py-2 capitalize text-muted-foreground">{l.categoria}</td>
                 <td className="px-4 py-2 text-muted-foreground">{l.contraparte}</td>
-                <td className="px-4 py-2"><Badge className={cn("border-none", statusMap[l.status].className)}>{statusMap[l.status].label}</Badge></td>
-                <td className={cn("px-4 py-2 text-right font-medium", l.tipo === "receita" ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400")}>
+                <td className="px-4 py-2">
+                  <Badge className={cn("border-none", statusMap[l.status].className)}>
+                    {statusMap[l.status].label}
+                  </Badge>
+                </td>
+                <td
+                  className={cn(
+                    "px-4 py-2 text-right font-medium",
+                    l.tipo === "receita"
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-red-600 dark:text-red-400",
+                  )}
+                >
                   {l.tipo === "receita" ? "+" : "−"} {fmtBRLFull(l.valor)}
                 </td>
               </tr>
@@ -210,8 +313,23 @@ function FinanceiroPage() {
   );
 }
 
-function Kpi({ label, valor, icon: Icon, tone }: { label: string; valor: string; icon: typeof TrendingUp; tone: "emerald" | "red" | "blue" | "default" }) {
-  const cls = { emerald: "text-emerald-600 dark:text-emerald-400", red: "text-red-600 dark:text-red-400", blue: "text-blue-600 dark:text-blue-400", default: "text-foreground" }[tone];
+function Kpi({
+  label,
+  valor,
+  icon: Icon,
+  tone,
+}: {
+  label: string;
+  valor: string;
+  icon: typeof TrendingUp;
+  tone: "emerald" | "red" | "blue" | "default";
+}) {
+  const cls = {
+    emerald: "text-emerald-600 dark:text-emerald-400",
+    red: "text-red-600 dark:text-red-400",
+    blue: "text-blue-600 dark:text-blue-400",
+    default: "text-foreground",
+  }[tone];
   return (
     <div className="rounded-xl border border-border bg-card p-4">
       <div className="flex items-center justify-between">

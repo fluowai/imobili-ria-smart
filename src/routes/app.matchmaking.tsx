@@ -70,7 +70,9 @@ function MatchmakingPage() {
       const imob = await getActiveImobiliariaId();
       const { data, error } = await supabase
         .from("imoveis")
-        .select("id, titulo, tipo, finalidade, bairro, cidade, valor_venda, valor_locacao, quartos, area_util, area_ha, descricao")
+        .select(
+          "id, titulo, tipo, finalidade, bairro, cidade, valor_venda, valor_locacao, quartos, area_util, area_ha, descricao",
+        )
         .eq("imobiliaria_id", imob)
         .eq("status", "disponivel")
         .limit(40);
@@ -115,7 +117,11 @@ function MatchmakingPage() {
         description="Selecione um cliente. A IA analisa o perfil e sugere os melhores imóveis da carteira."
         actions={
           <Button size="sm" onClick={() => mut.mutate()} disabled={!leadSel || mut.isPending}>
-            {mut.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+            {mut.isPending ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Sparkles className="mr-2 h-4 w-4" />
+            )}
             Rodar matching
           </Button>
         }
@@ -125,7 +131,10 @@ function MatchmakingPage() {
         <label className="text-sm font-medium">Cliente / Lead</label>
         <select
           value={leadSel}
-          onChange={(e) => { setLeadSel(e.target.value); setResultados([]); }}
+          onChange={(e) => {
+            setLeadSel(e.target.value);
+            setResultados([]);
+          }}
           className="mt-1 h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
         >
           <option value="">— selecionar —</option>
@@ -137,13 +146,22 @@ function MatchmakingPage() {
         </select>
         {leadAtivo && (
           <div className="mt-3 text-xs text-muted-foreground space-y-1">
-            {leadAtivo.interesse && <p><b>Interesse:</b> {leadAtivo.interesse}</p>}
-            {leadAtivo.observacoes && <p><b>Notas:</b> {leadAtivo.observacoes}</p>}
+            {leadAtivo.interesse && (
+              <p>
+                <b>Interesse:</b> {leadAtivo.interesse}
+              </p>
+            )}
+            {leadAtivo.observacoes && (
+              <p>
+                <b>Notas:</b> {leadAtivo.observacoes}
+              </p>
+            )}
           </div>
         )}
         {imoveis && (
           <p className="mt-3 text-xs text-muted-foreground">
-            <Badge variant="outline">{imoveis.length}</Badge> imóveis disponíveis na carteira serão analisados.
+            <Badge variant="outline">{imoveis.length}</Badge> imóveis disponíveis na carteira serão
+            analisados.
           </p>
         )}
       </section>
@@ -160,8 +178,16 @@ function MatchmakingPage() {
           const im = imMap[m.imovel_id];
           if (!im) return null;
           const tone = m.score >= 85 ? "emerald" : m.score >= 70 ? "amber" : "muted";
-          const cls = { emerald: "text-emerald-600", amber: "text-amber-600", muted: "text-muted-foreground" }[tone];
-          const ring = { emerald: "stroke-emerald-500", amber: "stroke-amber-500", muted: "stroke-muted-foreground" }[tone];
+          const cls = {
+            emerald: "text-emerald-600",
+            amber: "text-amber-600",
+            muted: "text-muted-foreground",
+          }[tone];
+          const ring = {
+            emerald: "stroke-emerald-500",
+            amber: "stroke-amber-500",
+            muted: "stroke-muted-foreground",
+          }[tone];
           const c = 2 * Math.PI * 22;
           const off = c - (m.score / 100) * c;
           return (
@@ -169,27 +195,60 @@ function MatchmakingPage() {
               <div className="flex flex-col gap-4 md:flex-row md:items-center">
                 <div className="relative flex h-14 w-14 shrink-0 items-center justify-center">
                   <svg width="56" height="56" className="-rotate-90">
-                    <circle cx="28" cy="28" r="22" strokeWidth="4" className="stroke-muted" fill="none" />
-                    <circle cx="28" cy="28" r="22" strokeWidth="4" className={cn("transition-all", ring)} fill="none" strokeDasharray={c} strokeDashoffset={off} strokeLinecap="round" />
+                    <circle
+                      cx="28"
+                      cy="28"
+                      r="22"
+                      strokeWidth="4"
+                      className="stroke-muted"
+                      fill="none"
+                    />
+                    <circle
+                      cx="28"
+                      cy="28"
+                      r="22"
+                      strokeWidth="4"
+                      className={cn("transition-all", ring)}
+                      fill="none"
+                      strokeDasharray={c}
+                      strokeDashoffset={off}
+                      strokeLinecap="round"
+                    />
                   </svg>
-                  <span className={cn("absolute font-display text-sm font-bold", cls)}>{m.score}</span>
+                  <span className={cn("absolute font-display text-sm font-bold", cls)}>
+                    {m.score}
+                  </span>
                 </div>
                 <div className="grid flex-1 gap-3 md:grid-cols-[1fr_auto_1fr]">
                   <div>
-                    <p className="flex items-center gap-1 text-xs uppercase tracking-wide text-muted-foreground"><User className="h-3 w-3" />Cliente</p>
+                    <p className="flex items-center gap-1 text-xs uppercase tracking-wide text-muted-foreground">
+                      <User className="h-3 w-3" />
+                      Cliente
+                    </p>
                     <p className="mt-0.5 font-medium">{leadAtivo?.nome}</p>
                   </div>
                   <ArrowRight className="hidden h-5 w-5 self-center text-muted-foreground md:block" />
                   <div>
-                    <p className="flex items-center gap-1 text-xs uppercase tracking-wide text-muted-foreground"><Home className="h-3 w-3" />Imóvel sugerido</p>
+                    <p className="flex items-center gap-1 text-xs uppercase tracking-wide text-muted-foreground">
+                      <Home className="h-3 w-3" />
+                      Imóvel sugerido
+                    </p>
                     <p className="mt-0.5 font-medium">{im.titulo}</p>
-                    <p className="text-xs text-muted-foreground">{im.bairro}{im.cidade ? ` · ${im.cidade}` : ""}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {im.bairro}
+                      {im.cidade ? ` · ${im.cidade}` : ""}
+                    </p>
                     <div className="mt-1 flex flex-wrap gap-1">
-                      {m.razoes.map((r, i) => <Badge key={i} variant="outline" className="text-[10px]">{r}</Badge>)}
+                      {m.razoes.map((r, i) => (
+                        <Badge key={i} variant="outline" className="text-[10px]">
+                          {r}
+                        </Badge>
+                      ))}
                     </div>
                     {m.alerta && (
                       <p className="mt-2 flex items-center gap-1 text-[11px] text-amber-600">
-                        <AlertCircle className="h-3 w-3" />{m.alerta}
+                        <AlertCircle className="h-3 w-3" />
+                        {m.alerta}
                       </p>
                     )}
                   </div>

@@ -11,7 +11,14 @@ interface StatCardProps {
   hint?: string;
 }
 
-export function StatCard({ label, value, delta, trend = "neutral", icon: Icon, hint }: StatCardProps) {
+export function StatCard({
+  label,
+  value,
+  delta,
+  trend = "neutral",
+  icon: Icon,
+  hint,
+}: StatCardProps) {
   const trendColor =
     trend === "up"
       ? "text-[color:var(--color-success)]"

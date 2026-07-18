@@ -61,7 +61,8 @@ function LoginPage() {
         : await signUp({ email, password, nome, imobiliaria, tipo, whatsapp, responsavel });
     setBusy(false);
     if (error) setErr(error);
-    else if (mode === "signup") setErr("Conta criada! Verifique seu email para confirmar (se exigido) e entre.");
+    else if (mode === "signup")
+      setErr("Conta criada! Verifique seu email para confirmar (se exigido) e entre.");
   }
 
   return (
@@ -94,11 +95,21 @@ function LoginPage() {
               <>
                 <div className="space-y-1.5">
                   <Label htmlFor="nome">Seu nome</Label>
-                  <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
+                  <Input
+                    id="nome"
+                    value={nome}
+                    onChange={(e) => setNome(e.target.value)}
+                    required
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="imobiliaria">Nome da imobiliária</Label>
-                  <Input id="imobiliaria" value={imobiliaria} onChange={(e) => setImobiliaria(e.target.value)} required />
+                  <Input
+                    id="imobiliaria"
+                    value={imobiliaria}
+                    onChange={(e) => setImobiliaria(e.target.value)}
+                    required
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">

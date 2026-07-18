@@ -43,12 +43,11 @@ function Landing() {
             ERP completo · Urbano + Rural + IA
           </span>
           <h1 className="mt-6 max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-6xl">
-            O sistema operacional das{" "}
-            <span className="text-primary">imobiliárias modernas</span>.
+            O sistema operacional das <span className="text-primary">imobiliárias modernas</span>.
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
-            CRM, financeiro, contratos, sites, agentes de IA e carteira dupla —
-            urbana e rural — em uma única plataforma pensada para escala.
+            CRM, financeiro, contratos, sites, agentes de IA e carteira dupla — urbana e rural — em
+            uma única plataforma pensada para escala.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
@@ -102,9 +101,21 @@ function Landing() {
         </div>
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
-          <Feature icon={BarChart3} title="Analytics em tempo real" text="MRR, adoção por módulo, retenção e engajamento." />
-          <Feature icon={Users} title="CRM 360" text="Leads, clientes unificados, kanban e automações." />
-          <Feature icon={Sparkles} title="Agentes de IA" text="Valuation, atendimento e geração de conteúdo." />
+          <Feature
+            icon={BarChart3}
+            title="Analytics em tempo real"
+            text="MRR, adoção por módulo, retenção e engajamento."
+          />
+          <Feature
+            icon={Users}
+            title="CRM 360"
+            text="Leads, clientes unificados, kanban e automações."
+          />
+          <Feature
+            icon={Sparkles}
+            title="Agentes de IA"
+            text="Valuation, atendimento e geração de conteúdo."
+          />
         </div>
       </section>
 

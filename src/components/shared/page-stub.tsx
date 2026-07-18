@@ -15,7 +15,14 @@ interface PageStubProps {
  * Placeholder rico para rotas ainda não construídas em detalhe.
  * Mostra contexto suficiente para navegar e apresentar a proposta da tela.
  */
-export function PageStub({ title, description, eyebrow, icon: Icon, bullets, actions }: PageStubProps) {
+export function PageStub({
+  title,
+  description,
+  eyebrow,
+  icon: Icon,
+  bullets,
+  actions,
+}: PageStubProps) {
   return (
     <div className="space-y-8">
       <PageHeader title={title} description={description} eyebrow={eyebrow} actions={actions} />
@@ -32,8 +39,8 @@ export function PageStub({ title, description, eyebrow, icon: Icon, bullets, act
       </div>
       <div className="rounded-2xl border border-border bg-card p-8 text-center">
         <p className="text-sm text-muted-foreground">
-          Este módulo está no roadmap. A estrutura de navegação já está pronta —
-          o conteúdo completo será entregue nas próximas fases.
+          Este módulo está no roadmap. A estrutura de navegação já está pronta — o conteúdo completo
+          será entregue nas próximas fases.
         </p>
       </div>
     </div>

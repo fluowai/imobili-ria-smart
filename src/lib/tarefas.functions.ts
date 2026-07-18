@@ -37,7 +37,11 @@ export async function createTarefa({ data }: { data: TarefaInput }) {
   return row;
 }
 
-export async function updateTarefa({ data }: { data: { id: string; patch: Partial<TarefaInput> } }) {
+export async function updateTarefa({
+  data,
+}: {
+  data: { id: string; patch: Partial<TarefaInput> };
+}) {
   const imob = await getActiveImobiliariaId();
   const patch: Record<string, unknown> = { ...data.patch };
   if (data.patch.status === "concluida") patch.concluida_em = new Date().toISOString();

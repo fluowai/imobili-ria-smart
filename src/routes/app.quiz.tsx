@@ -10,7 +10,10 @@ export const Route = createFileRoute("/app/quiz")({
   head: () => ({
     meta: [
       { title: "Quiz de qualificação — ImobiOS" },
-      { name: "description", content: "Quizzes interativos que capturam perfis e geram leads qualificados." },
+      {
+        name: "description",
+        content: "Quizzes interativos que capturam perfis e geram leads qualificados.",
+      },
     ],
   }),
   component: QuizPage,
@@ -27,12 +30,21 @@ function QuizPage() {
         eyebrow="Crescimento"
         title="Quiz de qualificação"
         description="Quizzes interativos que capturam perfil, geram lead qualificado e sugerem imóveis."
-        actions={<Button size="sm"><Plus className="mr-2 h-4 w-4" />Novo quiz</Button>}
+        actions={
+          <Button size="sm">
+            <Plus className="mr-2 h-4 w-4" />
+            Novo quiz
+          </Button>
+        }
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi label="Quizzes ativos" valor={quizzes.filter((q) => q.ativo).length} />
-        <Kpi label="Respostas totais" valor={respostas.toLocaleString("pt-BR")} icon={MousePointerClick} />
+        <Kpi
+          label="Respostas totais"
+          valor={respostas.toLocaleString("pt-BR")}
+          icon={MousePointerClick}
+        />
         <Kpi label="Leads gerados" valor={leads.toLocaleString("pt-BR")} icon={Users} />
         <Kpi label="Conversão média" valor={`${conv}%`} />
       </div>
@@ -49,11 +61,15 @@ function QuizPage() {
                   </div>
                   <div>
                     <h3 className="font-display text-lg font-semibold">{q.nome}</h3>
-                    <p className="text-xs text-muted-foreground">{q.publico} · {q.perguntas} perguntas</p>
+                    <p className="text-xs text-muted-foreground">
+                      {q.publico} · {q.perguntas} perguntas
+                    </p>
                   </div>
                 </div>
                 {q.ativo ? (
-                  <Badge className="border-none bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">Ativo</Badge>
+                  <Badge className="border-none bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                    Ativo
+                  </Badge>
                 ) : (
                   <Badge variant="outline">Pausado</Badge>
                 )}
@@ -72,8 +88,12 @@ function QuizPage() {
               </div>
 
               <div className="mt-4 flex gap-2">
-                <Button size="sm" variant="outline" className="flex-1">Editar</Button>
-                <Button size="sm" className="flex-1">Ver respostas</Button>
+                <Button size="sm" variant="outline" className="flex-1">
+                  Editar
+                </Button>
+                <Button size="sm" className="flex-1">
+                  Ver respostas
+                </Button>
               </div>
             </article>
           );
@@ -83,7 +103,15 @@ function QuizPage() {
   );
 }
 
-function Kpi({ label, valor, icon: Icon }: { label: string; valor: string | number; icon?: typeof Users }) {
+function Kpi({
+  label,
+  valor,
+  icon: Icon,
+}: {
+  label: string;
+  valor: string | number;
+  icon?: typeof Users;
+}) {
   return (
     <div className="rounded-xl border border-border bg-card p-4">
       <div className="flex items-center justify-between">
@@ -95,10 +123,25 @@ function Kpi({ label, valor, icon: Icon }: { label: string; valor: string | numb
   );
 }
 
-function Cell({ label, valor, destaque }: { label: string; valor: string | number; destaque?: boolean }) {
+function Cell({
+  label,
+  valor,
+  destaque,
+}: {
+  label: string;
+  valor: string | number;
+  destaque?: boolean;
+}) {
   return (
-    <div className={cn("rounded-lg border p-2", destaque ? "border-primary/40 bg-primary/5" : "border-border bg-muted/30")}>
-      <p className={cn("font-display text-base font-semibold", destaque && "text-primary")}>{valor}</p>
+    <div
+      className={cn(
+        "rounded-lg border p-2",
+        destaque ? "border-primary/40 bg-primary/5" : "border-border bg-muted/30",
+      )}
+    >
+      <p className={cn("font-display text-base font-semibold", destaque && "text-primary")}>
+        {valor}
+      </p>
       <p className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</p>
     </div>
   );

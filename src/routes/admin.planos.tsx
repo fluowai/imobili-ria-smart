@@ -28,13 +28,8 @@ function PlanosPage() {
 
       <div className="grid gap-6 md:grid-cols-3">
         {planos.map((p, i) => (
-          <div
-            key={p.tier}
-            className="relative rounded-2xl border border-border bg-card p-6"
-          >
-            {i === 1 && (
-              <Badge className="absolute right-4 top-4">Mais popular</Badge>
-            )}
+          <div key={p.tier} className="relative rounded-2xl border border-border bg-card p-6">
+            {i === 1 && <Badge className="absolute right-4 top-4">Mais popular</Badge>}
             <p className="font-display text-lg font-semibold">{p.nome}</p>
             <div className="mt-2 flex items-baseline gap-1">
               <span className="font-display text-3xl font-semibold">
@@ -70,8 +65,12 @@ function PlanosPage() {
             </ul>
 
             <div className="mt-6 flex gap-2">
-              <Button variant="outline" size="sm" className="flex-1">Editar</Button>
-              <Button size="sm" className="flex-1">Ver clientes</Button>
+              <Button variant="outline" size="sm" className="flex-1">
+                Editar
+              </Button>
+              <Button size="sm" className="flex-1">
+                Ver clientes
+              </Button>
             </div>
           </div>
         ))}

@@ -47,9 +47,15 @@ function MensagensPage() {
             </div>
             <Tabs defaultValue="todas" className="mt-3">
               <TabsList className="w-full">
-                <TabsTrigger value="todas" className="flex-1">Todas</TabsTrigger>
-                <TabsTrigger value="nao-lidas" className="flex-1">Não lidas</TabsTrigger>
-                <TabsTrigger value="minhas" className="flex-1">Minhas</TabsTrigger>
+                <TabsTrigger value="todas" className="flex-1">
+                  Todas
+                </TabsTrigger>
+                <TabsTrigger value="nao-lidas" className="flex-1">
+                  Não lidas
+                </TabsTrigger>
+                <TabsTrigger value="minhas" className="flex-1">
+                  Minhas
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -109,22 +115,32 @@ function MensagensPage() {
                 <p className="text-xs text-muted-foreground">via {selecionada.canal}</p>
               </div>
             </div>
-            <Button size="sm" variant="outline">Ver ficha do lead</Button>
+            <Button size="sm" variant="outline">
+              Ver ficha do lead
+            </Button>
           </div>
 
           <div className="flex-1 space-y-3 overflow-y-auto bg-muted/20 p-6">
             <MsgBubble mine={false}>Oi, tudo bem? Vi o apartamento no site 👋</MsgBubble>
-            <MsgBubble mine>Olá {selecionada.nome.split(" ")[0]}! Tudo ótimo, obrigado. Posso agendar uma visita?</MsgBubble>
+            <MsgBubble mine>
+              Olá {selecionada.nome.split(" ")[0]}! Tudo ótimo, obrigado. Posso agendar uma visita?
+            </MsgBubble>
             <MsgBubble mine={false}>{selecionada.previa}</MsgBubble>
             <MsgBubble mine>Claro! Que tal amanhã de manhã, 10h?</MsgBubble>
           </div>
 
           <div className="border-t border-border p-3">
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon"><Paperclip className="size-4" /></Button>
-              <Button variant="ghost" size="icon"><Smile className="size-4" /></Button>
+              <Button variant="ghost" size="icon">
+                <Paperclip className="size-4" />
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Smile className="size-4" />
+              </Button>
               <Input placeholder="Escreva uma mensagem..." className="flex-1" />
-              <Button size="icon"><Send className="size-4" /></Button>
+              <Button size="icon">
+                <Send className="size-4" />
+              </Button>
             </div>
           </div>
         </div>

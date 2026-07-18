@@ -18,7 +18,11 @@ import { createImovel } from "@/lib/imoveis.functions";
 
 type Finalidade = "venda" | "locacao" | "ambos";
 
-export function NovoImovelDialog({ tipo = "urbano" as "urbano" | "rural" }: { tipo?: "urbano" | "rural" }) {
+export function NovoImovelDialog({
+  tipo = "urbano" as "urbano" | "rural",
+}: {
+  tipo?: "urbano" | "rural";
+}) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     codigo: "",

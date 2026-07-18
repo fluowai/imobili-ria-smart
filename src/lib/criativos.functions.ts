@@ -25,7 +25,7 @@ type ImovelParaCopy = {
 };
 
 export const gerarCopyFn = createServerFn({ method: "POST" })
-  .inputValidator((d: unknown) => {
+  .validator((d: unknown) => {
     const v = d as { imovel?: ImovelParaCopy; tom?: string };
     if (!v?.imovel?.titulo) throw new Error("imovel.titulo obrigatório");
     return {

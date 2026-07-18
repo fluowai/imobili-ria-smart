@@ -48,7 +48,13 @@ function AnalyticsPage() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="DAU" value="1.284" delta="+8,2%" trend="up" icon={Users} />
         <StatCard label="Sessões / dia" value="4.630" delta="+3,1%" trend="up" icon={Eye} />
-        <StatCard label="Ações / sessão" value="14,8" delta="-0,6" trend="down" icon={MousePointerClick} />
+        <StatCard
+          label="Ações / sessão"
+          value="14,8"
+          delta="-0,6"
+          trend="down"
+          icon={MousePointerClick}
+        />
         <StatCard label="Tempo médio" value="18min 42s" delta="+1min" trend="up" icon={Timer} />
       </div>
 
@@ -59,7 +65,11 @@ function AnalyticsPage() {
           <div className="mt-6 h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={engajamento}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
                 <XAxis dataKey="dia" stroke="var(--color-muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--color-muted-foreground)" fontSize={12} />
                 <Tooltip
@@ -82,7 +92,11 @@ function AnalyticsPage() {
           <div className="mt-6 h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={mrrSerie}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
                 <XAxis dataKey="mes" stroke="var(--color-muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--color-muted-foreground)" fontSize={12} />
                 <Tooltip

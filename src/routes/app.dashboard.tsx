@@ -24,7 +24,10 @@ export const Route = createFileRoute("/app/dashboard")({
   head: () => ({
     meta: [
       { title: "Dashboard — Terra & Lar | ImobiOS" },
-      { name: "description", content: "Painel operacional da imobiliária: leads, tarefas, vendas e agenda." },
+      {
+        name: "description",
+        content: "Painel operacional da imobiliária: leads, tarefas, vendas e agenda.",
+      },
     ],
   }),
   component: AppDashboard,
@@ -46,10 +49,10 @@ function formatVencimento(d: unknown): string {
   return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });
 }
 
-
 const prioridadeStyle = {
   alta: "bg-destructive/15 text-destructive border-destructive/30",
-  media: "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)] border-[color:var(--color-warning)]/30",
+  media:
+    "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)] border-[color:var(--color-warning)]/30",
   baixa: "bg-muted text-muted-foreground border-border",
 } as const;
 
@@ -66,16 +69,17 @@ function AppDashboard() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["tarefas"] }),
   });
 
-  const tarefas: UITarefa[] = tarefasQuery.data && tarefasQuery.data.length > 0
-    ? tarefasQuery.data.slice(0, 6).map((t: any) => ({
-        id: t.id,
-        titulo: t.titulo,
-        responsavel: t.responsavelId ? "Responsável" : "Sem responsável",
-        vencimento: formatVencimento(t.vencimento),
-        prioridade: "media" as const,
-        status: t.status,
-      }))
-    : [];
+  const tarefas: UITarefa[] =
+    tarefasQuery.data && tarefasQuery.data.length > 0
+      ? tarefasQuery.data.slice(0, 6).map((t: any) => ({
+          id: t.id,
+          titulo: t.titulo,
+          responsavel: t.responsavelId ? "Responsável" : "Sem responsável",
+          vencimento: formatVencimento(t.vencimento),
+          prioridade: "media" as const,
+          status: t.status,
+        }))
+      : [];
 
   return (
     <div className="space-y-8">
@@ -86,9 +90,30 @@ function AppDashboard() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Leads ativos" value="69" delta="+12" trend="up" icon={Users} hint="últimos 30 dias" />
-        <StatCard label="Visitas agendadas" value="14" delta="+3" trend="up" icon={Handshake} hint="esta semana" />
-        <StatCard label="VGV do mês" value="R$ 9,6M" delta="+16%" trend="up" icon={TrendingUp} hint="vs. mês passado" />
+        <StatCard
+          label="Leads ativos"
+          value="69"
+          delta="+12"
+          trend="up"
+          icon={Users}
+          hint="últimos 30 dias"
+        />
+        <StatCard
+          label="Visitas agendadas"
+          value="14"
+          delta="+3"
+          trend="up"
+          icon={Handshake}
+          hint="esta semana"
+        />
+        <StatCard
+          label="VGV do mês"
+          value="R$ 9,6M"
+          delta="+16%"
+          trend="up"
+          icon={TrendingUp}
+          hint="vs. mês passado"
+        />
         <StatCard label="Imóveis ativos" value="1.284" icon={Building2} hint="212 exclusivos" />
       </div>
 
@@ -104,7 +129,11 @@ function AppDashboard() {
           <div className="mt-6 h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={vendasSerie}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
                 <XAxis dataKey="mes" stroke="var(--color-muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--color-muted-foreground)" fontSize={12} />
                 <Tooltip
@@ -114,8 +143,18 @@ function AppDashboard() {
                     borderRadius: 12,
                   }}
                 />
-                <Line dataKey="vgv" stroke="var(--color-primary)" strokeWidth={2.5} dot={{ r: 4 }} />
-                <Line dataKey="fechamentos" stroke="var(--color-chart-2)" strokeWidth={2} dot={{ r: 3 }} />
+                <Line
+                  dataKey="vgv"
+                  stroke="var(--color-primary)"
+                  strokeWidth={2.5}
+                  dot={{ r: 4 }}
+                />
+                <Line
+                  dataKey="fechamentos"
+                  stroke="var(--color-chart-2)"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -150,7 +189,11 @@ function AppDashboard() {
           <div className="mt-6 h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={vendasSerie}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
                 <XAxis dataKey="mes" stroke="var(--color-muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--color-muted-foreground)" fontSize={12} />
                 <Tooltip

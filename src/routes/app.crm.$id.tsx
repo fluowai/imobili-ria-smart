@@ -7,9 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/app/crm/$id")({
   head: () => ({
-    meta: [
-      { title: "Detalhes do Lead — ImobiOS" },
-    ],
+    meta: [{ title: "Detalhes do Lead — ImobiOS" }],
   }),
   component: LeadDetailsPage,
 });
@@ -20,17 +18,14 @@ function LeadDetailsPage() {
   const { data: lead, isLoading } = useQuery({
     queryKey: ["lead", id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("leads")
-        .select("*")
-        .eq("id", id)
-        .single();
+      const { data, error } = await supabase.from("leads").select("*").eq("id", id).single();
       if (error) throw error;
       return data;
     },
   });
 
-  if (isLoading) return <div className="p-8 text-center text-muted-foreground">Carregando lead...</div>;
+  if (isLoading)
+    return <div className="p-8 text-center text-muted-foreground">Carregando lead...</div>;
   if (!lead) return <div className="p-8 text-center text-destructive">Lead não encontrado.</div>;
 
   return (
@@ -69,7 +64,7 @@ function LeadDetailsPage() {
               <span>Interesse: {lead.interesse || "Não informado"}</span>
             </div>
           </div>
-          
+
           <h3 className="font-semibold mt-8 mb-4">Anotações</h3>
           <p className="text-sm text-muted-foreground whitespace-pre-wrap">
             {lead.observacoes || "Nenhuma anotação registrada."}
@@ -80,10 +75,22 @@ function LeadDetailsPage() {
           <div className="rounded-xl border border-border bg-card p-6">
             <h3 className="font-semibold mb-4">Ações Rápidas</h3>
             <div className="flex flex-col gap-2">
-              <Button className="w-full" variant="outline" onClick={() => window.open(`https://wa.me/${lead.telefone?.replace(/\D/g, '')}`, '_blank')} disabled={!lead.telefone}>
+              <Button
+                className="w-full"
+                variant="outline"
+                onClick={() =>
+                  window.open(`https://wa.me/${lead.telefone?.replace(/\D/g, "")}`, "_blank")
+                }
+                disabled={!lead.telefone}
+              >
                 <Phone className="mr-2 h-4 w-4" /> WhatsApp
               </Button>
-              <Button className="w-full" variant="outline" onClick={() => window.location.href = `mailto:${lead.email}`} disabled={!lead.email}>
+              <Button
+                className="w-full"
+                variant="outline"
+                onClick={() => (window.location.href = `mailto:${lead.email}`)}
+                disabled={!lead.email}
+              >
                 <Mail className="mr-2 h-4 w-4" /> Enviar Email
               </Button>
             </div>

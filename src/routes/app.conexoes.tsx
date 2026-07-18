@@ -31,22 +31,48 @@ export const Route = createFileRoute("/app/conexoes")({
   head: () => ({
     meta: [
       { title: "Conexões WhatsApp — ImobiOS" },
-      { name: "description", content: "Conexões WhatsApp reais via whatsmeow — QR Code de verdade." },
+      {
+        name: "description",
+        content: "Conexões WhatsApp reais via whatsmeow — QR Code de verdade.",
+      },
     ],
   }),
   component: ConexoesPage,
 });
 
-const statusMeta: Record<WaInstance["status"], { label: string; className: string; Icon: typeof CheckCircle2 }> = {
-  conectado:    { label: "Conectado",    className: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",       Icon: CheckCircle2 },
-  pareando:     { label: "Pareando",     className: "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)]",       Icon: QrCode },
-  desconectado: { label: "Desconectado", className: "bg-muted text-muted-foreground",                                              Icon: PauseCircle },
-  erro:         { label: "Erro",         className: "bg-[color:var(--color-destructive)]/15 text-[color:var(--color-destructive)]", Icon: AlertCircle },
+const statusMeta: Record<
+  WaInstance["status"],
+  { label: string; className: string; Icon: typeof CheckCircle2 }
+> = {
+  conectado: {
+    label: "Conectado",
+    className: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",
+    Icon: CheckCircle2,
+  },
+  pareando: {
+    label: "Pareando",
+    className: "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)]",
+    Icon: QrCode,
+  },
+  desconectado: {
+    label: "Desconectado",
+    className: "bg-muted text-muted-foreground",
+    Icon: PauseCircle,
+  },
+  erro: {
+    label: "Erro",
+    className: "bg-[color:var(--color-destructive)]/15 text-[color:var(--color-destructive)]",
+    Icon: AlertCircle,
+  },
 };
 
 function ConexoesPage() {
   const qc = useQueryClient();
-  const { data: instancias = [], isLoading, error } = useQuery({
+  const {
+    data: instancias = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["wa-instances"],
     queryFn: listInstances,
     refetchInterval: 5000,
@@ -71,12 +97,13 @@ function ConexoesPage() {
   const total = instancias.length;
   const conectadas = instancias.filter((i) => i.status === "conectado").length;
 
-  const [whatsappStatus, setWhatsappStatus] = useState<"disconnected" | "connecting" | "connected">("connected");
+  const [whatsappStatus, setWhatsappStatus] = useState<"disconnected" | "connecting" | "connected">(
+    "connected",
+  );
   const [whatsappQr, setWhatsappQr] = useState<string | null>(null);
 
   // Removido o polling de /api/whatsapp/status pois o microserviço em Go
   // gerencia as conexões de forma dinâmica via /wa/instances.
-
 
   return (
     <div className="space-y-8">
@@ -101,14 +128,27 @@ function ConexoesPage() {
           onClick={() => create.mutate(novoNome.trim())}
           className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
         >
-          {create.isPending ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
+          {create.isPending ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Plus className="size-4" />
+          )}
           Criar instância
         </button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <StatCard label="Instâncias" value={`${conectadas}/${total}`} icon={Smartphone} hint="conectadas" />
-        <StatCard label="Serviço whatsmeow" value={error ? "offline" : "online"} icon={MessageSquare} />
+        <StatCard
+          label="Instâncias"
+          value={`${conectadas}/${total}`}
+          icon={Smartphone}
+          hint="conectadas"
+        />
+        <StatCard
+          label="Serviço whatsmeow"
+          value={error ? "offline" : "online"}
+          icon={MessageSquare}
+        />
         <StatCard label="Reconexão" value="automática" hint="sessões persistidas" />
         <StatCard label="QR" value="real" hint="gerado pelo whatsmeow" />
       </div>
@@ -116,10 +156,15 @@ function ConexoesPage() {
       {isLoading && <p className="text-sm text-muted-foreground">Carregando instâncias…</p>}
       {error && (
         <div className="rounded-xl border border-[color:var(--color-warning)]/40 bg-[color:var(--color-warning)]/5 p-4 text-sm">
-          <p className="font-medium text-foreground">Serviço whatsmeow indisponível em <code>{(import.meta.env.VITE_WHATSMEOW_URL as string) || "/wa"}</code>.</p>
+          <p className="font-medium text-foreground">
+            Serviço whatsmeow indisponível em{" "}
+            <code>{(import.meta.env.VITE_WHATSMEOW_URL as string) || "/wa"}</code>.
+          </p>
           <p className="mt-1 text-muted-foreground">
-            Isso é normal no preview do Lovable — o whatsmeow (Go) só roda no seu VPS via <code>docker compose up -d whatsmeow caddy</code>.
-            Configure <code>VITE_WHATSMEOW_URL</code> no <code>.env</code> para apontar pro seu host, ou acesse a app pelo domínio do Caddy.
+            Isso é normal no preview do Lovable — o whatsmeow (Go) só roda no seu VPS via{" "}
+            <code>docker compose up -d whatsmeow caddy</code>. Configure{" "}
+            <code>VITE_WHATSMEOW_URL</code> no <code>.env</code> para apontar pro seu host, ou
+            acesse a app pelo domínio do Caddy.
           </p>
         </div>
       )}
@@ -137,9 +182,15 @@ function ConexoesPage() {
                 <p className="text-xs text-muted-foreground">Bot e Atendimento</p>
               </div>
             </div>
-            <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${whatsappStatus === 'connected' ? 'bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]' : 'bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)]'}`}>
-              {whatsappStatus === 'connected' ? <CheckCircle2 className="size-3.5" /> : <Clock className="size-3.5" />}
-              {whatsappStatus === 'connected' ? 'Conectado' : 'Aguardando'}
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${whatsappStatus === "connected" ? "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]" : "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)]"}`}
+            >
+              {whatsappStatus === "connected" ? (
+                <CheckCircle2 className="size-3.5" />
+              ) : (
+                <Clock className="size-3.5" />
+              )}
+              {whatsappStatus === "connected" ? "Conectado" : "Aguardando"}
             </span>
           </div>
 
@@ -163,7 +214,7 @@ function ConexoesPage() {
               </div>
             )}
           </div>
-          
+
           <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
             <span>Canal principal do Agente IA</span>
             <button className="rounded-lg border border-border px-2.5 py-1 hover:border-primary/50 hover:text-foreground">
@@ -186,7 +237,9 @@ function ConexoesPage() {
                     <p className="text-xs text-muted-foreground">{i.jid || "—"}</p>
                   </div>
                 </div>
-                <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${meta.className}`}>
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${meta.className}`}
+                >
                   <meta.Icon className="size-3.5" />
                   {meta.label}
                 </span>
@@ -214,14 +267,24 @@ function ConexoesPage() {
         })}
       </div>
 
-      {pareando && <QRDialog instancia={pareando} onClose={() => { setPareando(null); qc.invalidateQueries({ queryKey: ["wa-instances"] }); }} />}
+      {pareando && (
+        <QRDialog
+          instancia={pareando}
+          onClose={() => {
+            setPareando(null);
+            qc.invalidateQueries({ queryKey: ["wa-instances"] });
+          }}
+        />
+      )}
     </div>
   );
 }
 
 function QRDialog({ instancia, onClose }: { instancia: WaInstance; onClose: () => void }) {
   const [qr, setQr] = useState<string | null>(null);
-  const [estado, setEstado] = useState<"conectando" | "aguardando" | "pareado" | "timeout" | "erro">("conectando");
+  const [estado, setEstado] = useState<
+    "conectando" | "aguardando" | "pareado" | "timeout" | "erro"
+  >("conectando");
   const [erro, setErro] = useState<string | null>(null);
   const closeRef = useRef<(() => void) | null>(null);
 
@@ -230,10 +293,25 @@ function QRDialog({ instancia, onClose }: { instancia: WaInstance; onClose: () =
     (async () => {
       try {
         const close = await openQRStream(instancia.id, {
-          onQR: (code) => { if (!mounted) return; setQr(code); setEstado("aguardando"); },
-          onPaired: () => { if (!mounted) return; setEstado("pareado"); setTimeout(onClose, 1200); },
-          onTimeout: () => { if (!mounted) return; setEstado("timeout"); },
-          onError: (msg) => { if (!mounted) return; setErro(msg); setEstado("erro"); },
+          onQR: (code) => {
+            if (!mounted) return;
+            setQr(code);
+            setEstado("aguardando");
+          },
+          onPaired: () => {
+            if (!mounted) return;
+            setEstado("pareado");
+            setTimeout(onClose, 1200);
+          },
+          onTimeout: () => {
+            if (!mounted) return;
+            setEstado("timeout");
+          },
+          onError: (msg) => {
+            if (!mounted) return;
+            setErro(msg);
+            setEstado("erro");
+          },
         });
         closeRef.current = close;
       } catch (e: any) {
@@ -241,7 +319,10 @@ function QRDialog({ instancia, onClose }: { instancia: WaInstance; onClose: () =
         setEstado("erro");
       }
     })();
-    return () => { mounted = false; closeRef.current?.(); };
+    return () => {
+      mounted = false;
+      closeRef.current?.();
+    };
   }, [instancia.id, onClose]);
 
   return (
@@ -249,10 +330,15 @@ function QRDialog({ instancia, onClose }: { instancia: WaInstance; onClose: () =
       <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-lg">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">Pareamento whatsmeow</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              Pareamento whatsmeow
+            </p>
             <h3 className="mt-1 font-display text-lg font-semibold">{instancia.nome}</h3>
           </div>
-          <button onClick={onClose} className="rounded-lg border border-border px-2 py-1 text-xs hover:border-primary/50">
+          <button
+            onClick={onClose}
+            className="rounded-lg border border-border px-2 py-1 text-xs hover:border-primary/50"
+          >
             Fechar
           </button>
         </div>
@@ -274,21 +360,32 @@ function QRDialog({ instancia, onClose }: { instancia: WaInstance; onClose: () =
             </div>
           )}
           {estado === "timeout" && (
-            <p className="text-sm text-muted-foreground">QR expirou. Feche e abra novamente para tentar de novo.</p>
+            <p className="text-sm text-muted-foreground">
+              QR expirou. Feche e abra novamente para tentar de novo.
+            </p>
           )}
           {estado === "erro" && (
-            <p className="text-sm text-[color:var(--color-destructive)]">{erro ?? "Erro ao conectar."}</p>
+            <p className="text-sm text-[color:var(--color-destructive)]">
+              {erro ?? "Erro ao conectar."}
+            </p>
           )}
         </div>
 
         <ol className="mt-5 space-y-2 text-sm text-muted-foreground">
           <li>1. Abra o WhatsApp no celular do responsável.</li>
-          <li>2. Toque em <span className="text-foreground">Configurações → Aparelhos conectados</span>.</li>
-          <li>3. Toque em <span className="text-foreground">Conectar um aparelho</span> e aponte para este QR.</li>
+          <li>
+            2. Toque em{" "}
+            <span className="text-foreground">Configurações → Aparelhos conectados</span>.
+          </li>
+          <li>
+            3. Toque em <span className="text-foreground">Conectar um aparelho</span> e aponte para
+            este QR.
+          </li>
         </ol>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          O QR é regenerado automaticamente pelo whatsmeow. A sessão fica salva no Postgres (schema <code>whatsmeow</code>).
+          O QR é regenerado automaticamente pelo whatsmeow. A sessão fica salva no Postgres (schema{" "}
+          <code>whatsmeow</code>).
         </p>
       </div>
     </div>

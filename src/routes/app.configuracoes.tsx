@@ -1,6 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Settings, Bell, Shield, CreditCard, Users, Palette, Globe, Link2, CheckCircle2, AlertCircle, PauseCircle, Clock, RefreshCw } from "lucide-react";
+import {
+  Settings,
+  Bell,
+  Shield,
+  CreditCard,
+  Users,
+  Palette,
+  Globe,
+  Link2,
+  CheckCircle2,
+  AlertCircle,
+  PauseCircle,
+  Clock,
+  RefreshCw,
+} from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { portais, type PortalStatus } from "@/mocks/sistema";
 
@@ -15,13 +29,13 @@ export const Route = createFileRoute("/app/configuracoes")({
 });
 
 const tabs = [
-  { id: "empresa",       label: "Empresa",       icon: Globe },
-  { id: "portais",       label: "Portais",       icon: Link2 },
-  { id: "usuarios",      label: "Usuários",      icon: Users },
-  { id: "notificacoes",  label: "Notificações",  icon: Bell },
-  { id: "seguranca",     label: "Segurança",     icon: Shield },
-  { id: "aparencia",     label: "Aparência",     icon: Palette },
-  { id: "faturamento",   label: "Faturamento",   icon: CreditCard },
+  { id: "empresa", label: "Empresa", icon: Globe },
+  { id: "portais", label: "Portais", icon: Link2 },
+  { id: "usuarios", label: "Usuários", icon: Users },
+  { id: "notificacoes", label: "Notificações", icon: Bell },
+  { id: "seguranca", label: "Segurança", icon: Shield },
+  { id: "aparencia", label: "Aparência", icon: Palette },
+  { id: "faturamento", label: "Faturamento", icon: CreditCard },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -31,7 +45,11 @@ function ConfiguracoesPage() {
 
   return (
     <div className="space-y-8">
-      <PageHeader eyebrow="Sistema" title="Configurações" description="Preferências da imobiliária, time e faturamento." />
+      <PageHeader
+        eyebrow="Sistema"
+        title="Configurações"
+        description="Preferências da imobiliária, time e faturamento."
+      />
 
       <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
         <nav className="flex flex-row gap-1 overflow-x-auto rounded-2xl border border-border bg-card p-2 lg:flex-col">
@@ -65,11 +83,26 @@ function ConfiguracoesPage() {
   );
 }
 
-const portalStatusMeta: Record<PortalStatus, { label: string; className: string; Icon: typeof CheckCircle2 }> = {
-  conectado: { label: "Conectado", className: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",       Icon: CheckCircle2 },
-  erro:      { label: "Erro",      className: "bg-[color:var(--color-destructive)]/15 text-[color:var(--color-destructive)]", Icon: AlertCircle },
-  pausado:   { label: "Pausado",   className: "bg-muted text-muted-foreground",                                              Icon: PauseCircle },
-  pendente:  { label: "Pendente",  className: "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)]",         Icon: Clock },
+const portalStatusMeta: Record<
+  PortalStatus,
+  { label: string; className: string; Icon: typeof CheckCircle2 }
+> = {
+  conectado: {
+    label: "Conectado",
+    className: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",
+    Icon: CheckCircle2,
+  },
+  erro: {
+    label: "Erro",
+    className: "bg-[color:var(--color-destructive)]/15 text-[color:var(--color-destructive)]",
+    Icon: AlertCircle,
+  },
+  pausado: { label: "Pausado", className: "bg-muted text-muted-foreground", Icon: PauseCircle },
+  pendente: {
+    label: "Pendente",
+    className: "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)]",
+    Icon: Clock,
+  },
 };
 
 function PortaisTab() {
@@ -91,19 +124,25 @@ function PortaisTab() {
             <div key={p.id} className="rounded-xl border border-border p-4">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="grid size-10 place-items-center rounded-lg bg-muted text-xl">{p.logo}</span>
+                  <span className="grid size-10 place-items-center rounded-lg bg-muted text-xl">
+                    {p.logo}
+                  </span>
                   <div>
                     <p className="font-medium text-foreground">{p.nome}</p>
                     <p className="text-xs text-muted-foreground">Plano: {p.plano}</p>
                   </div>
                 </div>
-                <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${meta.className}`}>
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${meta.className}`}
+                >
                   <meta.Icon className="size-3.5" />
                   {meta.label}
                 </span>
               </div>
               <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                <span>{p.imoveisPublicados} imóveis · {p.leadsMes} leads/mês</span>
+                <span>
+                  {p.imoveisPublicados} imóveis · {p.leadsMes} leads/mês
+                </span>
                 <span>{p.ultimaSync}</span>
               </div>
               <div className="mt-3 flex justify-end">
@@ -122,28 +161,46 @@ function PortaisTab() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{label}</span>
+      <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        {label}
+      </span>
       <div className="mt-1.5">{children}</div>
     </label>
   );
 }
 
-const inputCls = "w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary";
+const inputCls =
+  "w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary";
 
 function EmpresaTab() {
   return (
     <div className="space-y-6">
       <SectionTitle icon={Settings} title="Dados da imobiliária" />
       <div className="grid gap-4 md:grid-cols-2">
-        <Field label="Razão social"><input defaultValue="Terra & Lar Imóveis Ltda" className={inputCls} /></Field>
-        <Field label="CNPJ"><input defaultValue="12.345.678/0001-99" className={inputCls} /></Field>
-        <Field label="CRECI"><input defaultValue="J-4821" className={inputCls} /></Field>
-        <Field label="Telefone"><input defaultValue="(65) 3025-8899" className={inputCls} /></Field>
-        <Field label="E-mail"><input defaultValue="contato@terralar.com.br" className={inputCls} /></Field>
-        <Field label="Site"><input defaultValue="terralar.com.br" className={inputCls} /></Field>
+        <Field label="Razão social">
+          <input defaultValue="Terra & Lar Imóveis Ltda" className={inputCls} />
+        </Field>
+        <Field label="CNPJ">
+          <input defaultValue="12.345.678/0001-99" className={inputCls} />
+        </Field>
+        <Field label="CRECI">
+          <input defaultValue="J-4821" className={inputCls} />
+        </Field>
+        <Field label="Telefone">
+          <input defaultValue="(65) 3025-8899" className={inputCls} />
+        </Field>
+        <Field label="E-mail">
+          <input defaultValue="contato@terralar.com.br" className={inputCls} />
+        </Field>
+        <Field label="Site">
+          <input defaultValue="terralar.com.br" className={inputCls} />
+        </Field>
       </div>
       <Field label="Endereço">
-        <input defaultValue="Av. Historiador Rubens de Mendonça, 3400 — Cuiabá/MT" className={inputCls} />
+        <input
+          defaultValue="Av. Historiador Rubens de Mendonça, 3400 — Cuiabá/MT"
+          className={inputCls}
+        />
       </Field>
       <button className="rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90">
         Salvar alterações
@@ -154,10 +211,15 @@ function EmpresaTab() {
 
 function UsuariosTab() {
   const usuarios = [
-    { nome: "Marcos Silva",    email: "marcos@terralar.com.br",   papel: "Admin",       status: "ativo" },
-    { nome: "Larissa Santos",  email: "larissa@terralar.com.br",  papel: "Corretora",   status: "ativo" },
-    { nome: "Diego Farias",    email: "diego@terralar.com.br",    papel: "Corretor",    status: "ativo" },
-    { nome: "Ana Ribeiro",     email: "ana@terralar.com.br",      papel: "Financeiro",  status: "convite" },
+    { nome: "Marcos Silva", email: "marcos@terralar.com.br", papel: "Admin", status: "ativo" },
+    {
+      nome: "Larissa Santos",
+      email: "larissa@terralar.com.br",
+      papel: "Corretora",
+      status: "ativo",
+    },
+    { nome: "Diego Farias", email: "diego@terralar.com.br", papel: "Corretor", status: "ativo" },
+    { nome: "Ana Ribeiro", email: "ana@terralar.com.br", papel: "Financeiro", status: "convite" },
   ];
   return (
     <div className="space-y-4">
@@ -206,12 +268,12 @@ function UsuariosTab() {
 
 function NotificacoesTab() {
   const items = [
-    { id: "leads",    label: "Novos leads",              on: true },
-    { id: "visitas",  label: "Visitas agendadas",        on: true },
-    { id: "propostas",label: "Propostas recebidas",      on: true },
-    { id: "contratos",label: "Contratos assinados",      on: true },
-    { id: "boletos", label: "Vencimento de boletos",     on: false },
-    { id: "portais", label: "Falhas de sincronização",   on: true },
+    { id: "leads", label: "Novos leads", on: true },
+    { id: "visitas", label: "Visitas agendadas", on: true },
+    { id: "propostas", label: "Propostas recebidas", on: true },
+    { id: "contratos", label: "Contratos assinados", on: true },
+    { id: "boletos", label: "Vencimento de boletos", on: false },
+    { id: "portais", label: "Falhas de sincronização", on: true },
   ];
   return (
     <div className="space-y-4">
@@ -234,15 +296,28 @@ function SegurancaTab() {
       <SectionTitle icon={Shield} title="Segurança da conta" />
       <div className="rounded-xl border border-border p-4">
         <p className="font-medium">Autenticação em dois fatores</p>
-        <p className="mt-1 text-xs text-muted-foreground">Proteja o acesso com código do aplicativo autenticador.</p>
-        <div className="mt-3"><Toggle defaultOn /></div>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Proteja o acesso com código do aplicativo autenticador.
+        </p>
+        <div className="mt-3">
+          <Toggle defaultOn />
+        </div>
       </div>
       <div className="rounded-xl border border-border p-4">
         <p className="font-medium">Sessões ativas</p>
         <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-          <li className="flex justify-between"><span>MacBook Pro — Cuiabá/MT</span><span className="text-xs">agora</span></li>
-          <li className="flex justify-between"><span>iPhone 15 — Cuiabá/MT</span><span className="text-xs">há 2 h</span></li>
-          <li className="flex justify-between"><span>Chrome Windows — Várzea Grande/MT</span><span className="text-xs">há 1 dia</span></li>
+          <li className="flex justify-between">
+            <span>MacBook Pro — Cuiabá/MT</span>
+            <span className="text-xs">agora</span>
+          </li>
+          <li className="flex justify-between">
+            <span>iPhone 15 — Cuiabá/MT</span>
+            <span className="text-xs">há 2 h</span>
+          </li>
+          <li className="flex justify-between">
+            <span>Chrome Windows — Várzea Grande/MT</span>
+            <span className="text-xs">há 1 dia</span>
+          </li>
         </ul>
       </div>
     </div>
@@ -259,7 +334,9 @@ function AparenciaTab() {
             <button
               key={t}
               className={`rounded-xl border px-4 py-2 text-sm ${
-                i === 2 ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"
+                i === 2
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border text-muted-foreground hover:border-primary/40"
               }`}
             >
               {t}
@@ -273,7 +350,9 @@ function AparenciaTab() {
             <button
               key={t}
               className={`rounded-xl border px-4 py-2 text-sm ${
-                i === 0 ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"
+                i === 0
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border text-muted-foreground hover:border-primary/40"
               }`}
             >
               {t}
@@ -294,19 +373,27 @@ function FaturamentoTab() {
           <div>
             <p className="text-xs uppercase tracking-wider text-primary">Plano Ativo</p>
             <p className="mt-1 font-display text-xl font-semibold">Terra & Lar Pro</p>
-            <p className="text-sm text-muted-foreground">10 licenças · 500 imóveis · IA ilimitada</p>
+            <p className="text-sm text-muted-foreground">
+              10 licenças · 500 imóveis · IA ilimitada
+            </p>
           </div>
-          <p className="font-display text-2xl font-semibold">R$ 1.290<span className="text-sm text-muted-foreground">/mês</span></p>
+          <p className="font-display text-2xl font-semibold">
+            R$ 1.290<span className="text-sm text-muted-foreground">/mês</span>
+          </p>
         </div>
         <div className="mt-4 flex gap-2">
           <button className="rounded-xl bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90">
             Trocar plano
           </button>
-          <button className="rounded-xl border border-border px-3 py-2 text-sm hover:border-primary/50">Ver faturas</button>
+          <button className="rounded-xl border border-border px-3 py-2 text-sm hover:border-primary/50">
+            Ver faturas
+          </button>
         </div>
       </div>
       <div>
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">Método de pagamento</p>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Método de pagamento
+        </p>
         <div className="flex items-center justify-between rounded-xl border border-border p-4 text-sm">
           <span>Cartão Visa •••• 4821 — vence 08/28</span>
           <button className="text-primary hover:underline">Alterar</button>

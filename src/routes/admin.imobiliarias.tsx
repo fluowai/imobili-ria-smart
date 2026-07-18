@@ -16,11 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { imobiliarias, type ImobStatus } from "@/mocks/admin";
 import { cn } from "@/lib/utils";
 
@@ -35,8 +31,10 @@ export const Route = createFileRoute("/admin/imobiliarias")({
 });
 
 const statusStyle: Record<ImobStatus, string> = {
-  ativa: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)] border-[color:var(--color-success)]/30",
-  trial: "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)] border-[color:var(--color-warning)]/30",
+  ativa:
+    "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)] border-[color:var(--color-success)]/30",
+  trial:
+    "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)] border-[color:var(--color-warning)]/30",
   suspensa: "bg-muted text-muted-foreground border-border",
   cancelada: "bg-destructive/15 text-destructive border-destructive/30",
 };
@@ -57,31 +55,33 @@ function ImobiliariasPage() {
       const { data, error } = await supabase.from("imobiliarias").select("*");
       if (error) throw error;
       return data;
-    }
+    },
   });
 
   const filtered = useMemo(() => {
     if (!imobiliarias) return [];
-    return imobiliarias.map((i: any) => ({
-      id: i.id,
-      nome: i.nome,
-      cidade: "São Paulo", // Fictício, precisaria de join com endereço
-      uf: "SP",
-      plano: "premium",
-      usuarios: 0,
-      imoveis: 0,
-      mrr: 0,
-      status: "ativa" as ImobStatus
-    })).filter((i: any) => {
-      if (tab !== "todas" && i.status !== tab) return false;
-      if (!q) return true;
-      const t = q.toLowerCase();
-      return (
-        i.nome.toLowerCase().includes(t) ||
-        i.cidade.toLowerCase().includes(t) ||
-        i.id.toLowerCase().includes(t)
-      );
-    });
+    return imobiliarias
+      .map((i: any) => ({
+        id: i.id,
+        nome: i.nome,
+        cidade: "São Paulo", // Fictício, precisaria de join com endereço
+        uf: "SP",
+        plano: "premium",
+        usuarios: 0,
+        imoveis: 0,
+        mrr: 0,
+        status: "ativa" as ImobStatus,
+      }))
+      .filter((i: any) => {
+        if (tab !== "todas" && i.status !== tab) return false;
+        if (!q) return true;
+        const t = q.toLowerCase();
+        return (
+          i.nome.toLowerCase().includes(t) ||
+          i.cidade.toLowerCase().includes(t) ||
+          i.id.toLowerCase().includes(t)
+        );
+      });
   }, [q, tab, imobiliarias]);
 
   return (

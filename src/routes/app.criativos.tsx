@@ -42,7 +42,9 @@ type Imovel = {
 };
 
 const fmtBRL = (v?: number | null) =>
-  v ? v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 }) : "";
+  v
+    ? v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })
+    : "";
 
 function CriativosPage() {
   const [imovelId, setImovelId] = useState("");
@@ -63,7 +65,9 @@ function CriativosPage() {
       const imob = await getActiveImobiliariaId();
       const { data, error } = await supabase
         .from("imoveis")
-        .select("id, titulo, bairro, cidade, quartos, suites, vagas, area_util, area_ha, valor_venda, valor_locacao, tipo, finalidade, descricao, fotos")
+        .select(
+          "id, titulo, bairro, cidade, quartos, suites, vagas, area_util, area_ha, valor_venda, valor_locacao, tipo, finalidade, descricao, fotos",
+        )
         .eq("imobiliaria_id", imob)
         .order("created_at", { ascending: false })
         .limit(200);
@@ -186,7 +190,9 @@ function CriativosPage() {
             >
               <option value="">— selecionar —</option>
               {imoveis?.map((i) => (
-                <option key={i.id} value={i.id}>{i.titulo} {i.bairro ? `· ${i.bairro}` : ""}</option>
+                <option key={i.id} value={i.id}>
+                  {i.titulo} {i.bairro ? `· ${i.bairro}` : ""}
+                </option>
               ))}
             </select>
           </section>
@@ -225,7 +231,12 @@ function CriativosPage() {
             <div>
               <Label>Cor da marca</Label>
               <div className="flex gap-2 items-center">
-                <input type="color" value={cor} onChange={(e) => setCor(e.target.value)} className="h-10 w-16 rounded border" />
+                <input
+                  type="color"
+                  value={cor}
+                  onChange={(e) => setCor(e.target.value)}
+                  className="h-10 w-16 rounded border"
+                />
                 <Input value={cor} onChange={(e) => setCor(e.target.value)} />
               </div>
             </div>
@@ -234,14 +245,26 @@ function CriativosPage() {
           <section className="rounded-xl border border-border bg-card p-5 space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="font-medium">3. Copy (IA)</h3>
-              <Button size="sm" onClick={() => gerarMut.mutate()} disabled={!imovel || gerarMut.isPending}>
-                {gerarMut.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+              <Button
+                size="sm"
+                onClick={() => gerarMut.mutate()}
+                disabled={!imovel || gerarMut.isPending}
+              >
+                {gerarMut.isPending ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Sparkles className="mr-2 h-4 w-4" />
+                )}
                 Gerar com IA
               </Button>
             </div>
             <div>
               <Label>Tom</Label>
-              <select value={tom} onChange={(e) => setTom(e.target.value)} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+              <select
+                value={tom}
+                onChange={(e) => setTom(e.target.value)}
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+              >
                 <option value="profissional-persuasivo">Profissional persuasivo</option>
                 <option value="lifestyle-aspiracional">Lifestyle aspiracional</option>
                 <option value="urgencia-oportunidade">Urgência / oportunidade</option>
@@ -282,7 +305,9 @@ function CriativosPage() {
 
         {/* Preview */}
         <div className="lg:sticky lg:top-6 h-fit">
-          <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">Preview (feed)</p>
+          <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
+            Preview (feed)
+          </p>
           <div
             ref={previewRef}
             style={{ width: 540, height: 540, background: "#111" }}
@@ -327,7 +352,8 @@ function CriativosPage() {
               )}
               {imovel && (
                 <p className="mt-1 text-sm opacity-90">
-                  {imovel.bairro}{imovel.cidade ? ` · ${imovel.cidade}` : ""}
+                  {imovel.bairro}
+                  {imovel.cidade ? ` · ${imovel.cidade}` : ""}
                 </p>
               )}
               <div className="mt-2 flex flex-wrap gap-2 text-xs opacity-90">

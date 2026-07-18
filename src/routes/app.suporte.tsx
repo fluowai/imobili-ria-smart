@@ -1,6 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { LifeBuoy, MessageSquare, BookOpen, Plus, Search, Clock, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import {
+  LifeBuoy,
+  MessageSquare,
+  BookOpen,
+  Plus,
+  Search,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+} from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { tickets, artigosHelp, type TicketSuporte } from "@/mocks/sistema";
@@ -19,23 +29,38 @@ const statusMeta: Record<
   TicketSuporte["status"],
   { label: string; className: string; Icon: typeof CheckCircle2 }
 > = {
-  aberto:      { label: "Aberto",      className: "bg-[color:var(--color-info)]/15 text-[color:var(--color-info)]",   Icon: AlertCircle },
-  andamento:   { label: "Em andamento",className: "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)]", Icon: Loader2 },
-  aguardando:  { label: "Aguardando",  className: "bg-muted text-muted-foreground",                                       Icon: Clock },
-  resolvido:   { label: "Resolvido",   className: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]", Icon: CheckCircle2 },
+  aberto: {
+    label: "Aberto",
+    className: "bg-[color:var(--color-info)]/15 text-[color:var(--color-info)]",
+    Icon: AlertCircle,
+  },
+  andamento: {
+    label: "Em andamento",
+    className: "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)]",
+    Icon: Loader2,
+  },
+  aguardando: { label: "Aguardando", className: "bg-muted text-muted-foreground", Icon: Clock },
+  resolvido: {
+    label: "Resolvido",
+    className: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",
+    Icon: CheckCircle2,
+  },
 };
 
 const prioMeta: Record<TicketSuporte["prioridade"], string> = {
-  baixa:   "text-muted-foreground",
-  media:   "text-[color:var(--color-info)]",
-  alta:    "text-[color:var(--color-warning)]",
+  baixa: "text-muted-foreground",
+  media: "text-[color:var(--color-info)]",
+  alta: "text-[color:var(--color-warning)]",
   critica: "text-[color:var(--color-destructive)]",
 };
 
 function SuportePage() {
   const [q, setQ] = useState("");
   const filtrados = useMemo(
-    () => tickets.filter((t) => q === "" || t.assunto.toLowerCase().includes(q.toLowerCase()) || t.id.includes(q)),
+    () =>
+      tickets.filter(
+        (t) => q === "" || t.assunto.toLowerCase().includes(q.toLowerCase()) || t.id.includes(q),
+      ),
     [q],
   );
 
@@ -56,7 +81,7 @@ function SuportePage() {
       />
 
       <div className="grid gap-4 md:grid-cols-4">
-        <StatCard label="Tickets abertos"  value={abertos.toString()} icon={LifeBuoy} />
+        <StatCard label="Tickets abertos" value={abertos.toString()} icon={LifeBuoy} />
         <StatCard label="Resolvidos (mês)" value={resolvidos.toString()} trend="up" delta="+40%" />
         <StatCard label="Tempo médio 1ª resposta" value="42 min" hint="SLA 2 h" />
         <StatCard label="Satisfação (CSAT)" value="4,7 / 5" trend="up" delta="+0,2" />
@@ -99,16 +124,22 @@ function SuportePage() {
                           {t.responsavel ? ` · ${t.responsavel}` : ""}
                         </p>
                       </td>
-                      <td className={`px-4 py-3 text-xs font-medium capitalize ${prioMeta[t.prioridade]}`}>
+                      <td
+                        className={`px-4 py-3 text-xs font-medium capitalize ${prioMeta[t.prioridade]}`}
+                      >
                         {t.prioridade}
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${s.className}`}>
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${s.className}`}
+                        >
                           <s.Icon className="size-3.5" />
                           {s.label}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-xs text-muted-foreground">{t.ultimaAtualizacao}</td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground">
+                        {t.ultimaAtualizacao}
+                      </td>
                     </tr>
                   );
                 })}
@@ -140,7 +171,10 @@ function SuportePage() {
             </div>
             <ul className="mt-3 space-y-3 text-sm">
               {artigosHelp.map((a) => (
-                <li key={a.titulo} className="border-t border-border pt-3 first:border-t-0 first:pt-0">
+                <li
+                  key={a.titulo}
+                  className="border-t border-border pt-3 first:border-t-0 first:pt-0"
+                >
                   <p className="font-medium text-foreground">{a.titulo}</p>
                   <p className="text-xs text-muted-foreground">
                     {a.categoria} · {a.min} min · {a.views.toLocaleString("pt-BR")} views

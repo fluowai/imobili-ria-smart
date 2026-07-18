@@ -41,18 +41,23 @@ export const Route = createFileRoute("/app/crm")({
 });
 
 const statusStyle: Record<LeadStatus, string> = {
-  novo:     "bg-[color:var(--color-chart-2)]/15 text-[color:var(--color-chart-2)] border-[color:var(--color-chart-2)]/30",
-  contato:  "bg-secondary text-secondary-foreground border-border",
-  visita:   "bg-[color:var(--color-chart-3)]/15 text-[color:var(--color-chart-3)] border-[color:var(--color-chart-3)]/30",
-  proposta: "bg-[color:var(--color-chart-4)]/15 text-[color:var(--color-chart-4)] border-[color:var(--color-chart-4)]/30",
-  fechado:  "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)] border-[color:var(--color-success)]/30",
-  perdido:  "bg-destructive/15 text-destructive border-destructive/30",
+  novo: "bg-[color:var(--color-chart-2)]/15 text-[color:var(--color-chart-2)] border-[color:var(--color-chart-2)]/30",
+  contato: "bg-secondary text-secondary-foreground border-border",
+  visita:
+    "bg-[color:var(--color-chart-3)]/15 text-[color:var(--color-chart-3)] border-[color:var(--color-chart-3)]/30",
+  proposta:
+    "bg-[color:var(--color-chart-4)]/15 text-[color:var(--color-chart-4)] border-[color:var(--color-chart-4)]/30",
+  fechado:
+    "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)] border-[color:var(--color-success)]/30",
+  perdido: "bg-destructive/15 text-destructive border-destructive/30",
 };
 
 // Mapeia enum do banco → UI (banco usa "qualificando", UI usa "contato").
 function dbToUiStatus(s: string): LeadStatus {
   if (s === "qualificando") return "contato";
-  return (["novo", "visita", "proposta", "fechado", "perdido"].includes(s) ? s : "novo") as LeadStatus;
+  return (
+    ["novo", "visita", "proposta", "fechado", "perdido"].includes(s) ? s : "novo"
+  ) as LeadStatus;
 }
 
 function CrmPage() {
@@ -107,7 +112,15 @@ function CrmPage() {
         description="Todos os leads da imobiliária em um só lugar."
         actions={
           <>
-            <Button variant="outline" size="sm" onClick={() => toast("Filtros avançados em breve.", { description: "Funcionalidade em desenvolvimento." })}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                toast("Filtros avançados em breve.", {
+                  description: "Funcionalidade em desenvolvimento.",
+                })
+              }
+            >
               <Filter className="mr-1.5 size-4" /> Filtros
             </Button>
             <NovoLeadDialog />
@@ -151,15 +164,19 @@ function CrmPage() {
           </TableHeader>
           <TableBody>
             {filtered.map((l) => (
-              <TableRow 
-                key={l.id} 
+              <TableRow
+                key={l.id}
                 className="cursor-pointer border-border transition-colors hover:bg-muted/30"
                 onClick={() => navigate({ to: "/app/crm/$id", params: { id: l.id } })}
               >
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <span className="grid size-9 place-items-center rounded-full bg-primary/15 text-xs font-semibold text-primary">
-                      {l.nome.split(" ").map((n: string) => n[0]).slice(0, 2).join("")}
+                      {l.nome
+                        .split(" ")
+                        .map((n: string) => n[0])
+                        .slice(0, 2)
+                        .join("")}
                     </span>
                     <div className="min-w-0">
                       <p className="font-medium">{l.nome}</p>
@@ -169,7 +186,9 @@ function CrmPage() {
                 </TableCell>
                 <TableCell className="text-sm">{l.interesse}</TableCell>
                 <TableCell>
-                  <Badge variant="secondary" className="capitalize">{l.origem}</Badge>
+                  <Badge variant="secondary" className="capitalize">
+                    {l.origem}
+                  </Badge>
                 </TableCell>
                 <TableCell className="text-sm">{l.responsavel}</TableCell>
                 <TableCell className="text-right tabular-nums">
@@ -282,10 +301,7 @@ function NovoLeadDialog() {
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancelar
           </Button>
-          <Button
-            onClick={() => mutation.mutate(form)}
-            disabled={!form.nome || mutation.isPending}
-          >
+          <Button onClick={() => mutation.mutate(form)} disabled={!form.nome || mutation.isPending}>
             {mutation.isPending ? "Salvando..." : "Salvar"}
           </Button>
         </DialogFooter>

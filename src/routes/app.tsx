@@ -1,4 +1,11 @@
-import { Outlet, createFileRoute, Navigate, useNavigate, useRouterState } from "@tanstack/react-router";
+import {
+  Outlet,
+  createFileRoute,
+  Navigate,
+  useNavigate,
+  useRouterState,
+  Link,
+} from "@tanstack/react-router";
 import { Bell, Loader2, Plus, Search } from "lucide-react";
 
 import { AppSidebar } from "@/components/app/app-sidebar";
@@ -31,7 +38,13 @@ function AppLayout() {
   if (configured && !user) {
     return <Navigate to="/auth/login" />;
   }
-  if (configured && user && imob && !imob.onboarding_completed && !pathname.startsWith("/onboarding")) {
+  if (
+    configured &&
+    user &&
+    imob &&
+    !imob.onboarding_completed &&
+    !pathname.startsWith("/onboarding")
+  ) {
     return <Navigate to="/onboarding" />;
   }
 
@@ -61,7 +74,12 @@ function AppLayout() {
       {isMasquerading && (
         <div className="flex h-10 w-full items-center justify-between bg-destructive px-4 text-sm text-destructive-foreground shadow-md z-50 relative">
           <p className="font-semibold">Modo Super Admin: Visualizando painel da imobiliária</p>
-          <Button variant="outline" size="sm" onClick={exitMasquerade} className="h-7 text-xs bg-transparent border-white text-white hover:bg-white/20">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={exitMasquerade}
+            className="h-7 text-xs bg-transparent border-white text-white hover:bg-white/20"
+          >
             Voltar pro Admin
           </Button>
         </div>
@@ -80,9 +98,11 @@ function AppLayout() {
                 />
               </div>
               <div className="ml-auto flex items-center gap-2">
-                <Button size="sm" className="hidden md:inline-flex">
-                  <Plus className="mr-1.5 size-4" />
-                  Novo lead
+                <Button asChild size="sm" className="hidden md:inline-flex">
+                  <Link to="/app/crm">
+                    <Plus className="mr-1.5 size-4" />
+                    Novo lead
+                  </Link>
                 </Button>
                 <Button variant="ghost" size="sm" onClick={handleSignOut}>
                   Sair
@@ -107,4 +127,3 @@ function AppLayout() {
     </div>
   );
 }
-

@@ -27,13 +27,16 @@ export const Route = createFileRoute("/admin/billing")({
 
 const statusStyle: Record<string, string> = {
   paga: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)] border-[color:var(--color-success)]/30",
-  pendente: "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)] border-[color:var(--color-warning)]/30",
+  pendente:
+    "bg-[color:var(--color-warning)]/15 text-[color:var(--color-warning)] border-[color:var(--color-warning)]/30",
   atrasada: "bg-destructive/15 text-destructive border-destructive/30",
 };
 
 function BillingPage() {
   const totalPago = invoices.filter((i) => i.status === "paga").reduce((a, i) => a + i.valor, 0);
-  const totalPendente = invoices.filter((i) => i.status !== "paga").reduce((a, i) => a + i.valor, 0);
+  const totalPendente = invoices
+    .filter((i) => i.status !== "paga")
+    .reduce((a, i) => a + i.valor, 0);
 
   return (
     <div className="space-y-8">
@@ -50,9 +53,27 @@ function BillingPage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Recebido no mês" value={`R$ ${(totalPago / 1000).toFixed(1)}k`} delta="+11%" trend="up" icon={DollarSign} />
-        <StatCard label="A receber" value={`R$ ${(totalPendente / 1000).toFixed(1)}k`} icon={TrendingUp} hint="6 faturas" />
-        <StatCard label="Taxa de sucesso" value="98,4%" delta="+0,3pp" trend="up" icon={CheckCircle2} hint="cobrança automática" />
+        <StatCard
+          label="Recebido no mês"
+          value={`R$ ${(totalPago / 1000).toFixed(1)}k`}
+          delta="+11%"
+          trend="up"
+          icon={DollarSign}
+        />
+        <StatCard
+          label="A receber"
+          value={`R$ ${(totalPendente / 1000).toFixed(1)}k`}
+          icon={TrendingUp}
+          hint="6 faturas"
+        />
+        <StatCard
+          label="Taxa de sucesso"
+          value="98,4%"
+          delta="+0,3pp"
+          trend="up"
+          icon={CheckCircle2}
+          hint="cobrança automática"
+        />
         <StatCard label="Faturas emitidas" value="128" icon={FileText} hint="últimos 30 dias" />
       </div>
 

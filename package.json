@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "postinstall": "node scripts/fix-lucide-react-types.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

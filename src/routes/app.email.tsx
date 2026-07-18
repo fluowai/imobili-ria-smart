@@ -71,12 +71,20 @@ function EmailPage() {
           <div className="flex items-center justify-between border-b border-border px-6 py-3">
             <div className="min-w-0">
               <p className="truncate font-display text-lg font-semibold">{sel.assunto}</p>
-              <p className="truncate text-xs text-muted-foreground">de {sel.remetente} · {sel.quando}</p>
+              <p className="truncate text-xs text-muted-foreground">
+                de {sel.remetente} · {sel.quando}
+              </p>
             </div>
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon"><Star className="size-4" /></Button>
-              <Button variant="ghost" size="icon"><Archive className="size-4" /></Button>
-              <Button variant="ghost" size="icon"><Trash2 className="size-4" /></Button>
+              <Button variant="ghost" size="icon">
+                <Star className="size-4" />
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Archive className="size-4" />
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Trash2 className="size-4" />
+              </Button>
             </div>
           </div>
 
@@ -84,8 +92,8 @@ function EmailPage() {
             <p>Olá,</p>
             <p className="mt-3">{sel.previa}</p>
             <p className="mt-3">
-              Segue em anexo a documentação necessária. Qualquer dúvida, estamos à disposição
-              pelos canais habituais.
+              Segue em anexo a documentação necessária. Qualquer dúvida, estamos à disposição pelos
+              canais habituais.
             </p>
             <p className="mt-3">Atenciosamente,</p>
             <p className="mt-1 font-medium">{sel.remetente}</p>

@@ -12,7 +12,9 @@ type LancamentoInput = {
   contrato_id?: string;
 };
 
-export async function listLancamentos({ data }: { data?: { status?: string; tipo?: string } } = {}) {
+export async function listLancamentos({
+  data,
+}: { data?: { status?: string; tipo?: string } } = {}) {
   const imob = await getActiveImobiliariaId();
   let q = supabase
     .from("lancamentos")
@@ -38,7 +40,11 @@ export async function createLancamento({ data }: { data: LancamentoInput }) {
   return row;
 }
 
-export async function updateLancamento({ data }: { data: { id: string; patch: Partial<LancamentoInput> } }) {
+export async function updateLancamento({
+  data,
+}: {
+  data: { id: string; patch: Partial<LancamentoInput> };
+}) {
   const imob = await getActiveImobiliariaId();
   const { data: row, error } = await supabase
     .from("lancamentos")

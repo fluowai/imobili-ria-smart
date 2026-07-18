@@ -29,9 +29,11 @@ export async function listLeads({ data }: { data?: { status?: string; busca?: st
   const busca = data?.busca?.toLowerCase();
   return busca
     ? (rows ?? []).filter((r: any) =>
-        `${r.nome} ${r.email ?? ""} ${r.telefone ?? ""} ${r.interesse ?? ""}`.toLowerCase().includes(busca),
+        `${r.nome} ${r.email ?? ""} ${r.telefone ?? ""} ${r.interesse ?? ""}`
+          .toLowerCase()
+          .includes(busca),
       )
-    : rows ?? [];
+    : (rows ?? []);
 }
 
 export async function createLead({ data }: { data: LeadInput }) {

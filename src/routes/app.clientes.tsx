@@ -64,8 +64,10 @@ function ClientesPage() {
   const handleExportCSV = () => {
     if (rows.length === 0) return toast("Nenhum cliente para exportar.");
     const header = "Nome,Email,Telefone,Tags\n";
-    const csv = rows.map(c => `"${c.nome}","${c.email || ""}","${c.telefone || ""}","${c.tags.join("; ")}"`).join("\n");
-    const blob = new Blob([header + csv], { type: 'text/csv;charset=utf-8;' });
+    const csv = rows
+      .map((c) => `"${c.nome}","${c.email || ""}","${c.telefone || ""}","${c.tags.join("; ")}"`)
+      .join("\n");
+    const blob = new Blob([header + csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
@@ -83,7 +85,9 @@ function ClientesPage() {
         actions={
           <>
             <NovoClienteDialog />
-            <Button variant="outline" size="sm" onClick={handleExportCSV}>Exportar CSV</Button>
+            <Button variant="outline" size="sm" onClick={handleExportCSV}>
+              Exportar CSV
+            </Button>
           </>
         }
       />
@@ -107,20 +111,26 @@ function ClientesPage() {
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {rows.map((c) => (
-          <div 
-            key={c.id} 
+          <div
+            key={c.id}
             className="rounded-2xl border border-border bg-card p-5 cursor-pointer transition-shadow hover:shadow-md"
             onClick={() => navigate({ to: "/app/clientes/$id", params: { id: c.id } })}
           >
             <div className="flex items-start gap-3">
               <span className="grid size-11 place-items-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
-                {c.nome.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+                {c.nome
+                  .split(" ")
+                  .map((n) => n[0])
+                  .slice(0, 2)
+                  .join("")}
               </span>
               <div className="min-w-0 flex-1">
                 <p className="font-medium">{c.nome}</p>
-                <p className="truncate text-xs text-muted-foreground">{c.email ?? c.telefone ?? "—"}</p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {c.email ?? c.telefone ?? "—"}
+                </p>
               </div>
-              <button 
+              <button
                 className="text-muted-foreground hover:text-[color:var(--color-warning)]"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -144,20 +154,21 @@ function ClientesPage() {
             )}
 
             <div className="mt-4 flex items-center gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="flex-1"
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (c.telefone) window.open(`https://wa.me/${c.telefone.replace(/\D/g, '')}`, '_blank');
+                  if (c.telefone)
+                    window.open(`https://wa.me/${c.telefone.replace(/\D/g, "")}`, "_blank");
                 }}
               >
                 <Phone className="mr-1.5 size-3.5" /> Ligar
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="flex-1"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -166,11 +177,13 @@ function ClientesPage() {
               >
                 <Mail className="mr-1.5 size-3.5" /> Email
               </Button>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
-                  toast("Analisando perfil do cliente com IA...", { description: "Recurso em desenvolvimento." });
+                  toast("Analisando perfil do cliente com IA...", {
+                    description: "Recurso em desenvolvimento.",
+                  });
                 }}
               >
                 <Sparkles className="mr-1.5 size-3.5" /> IA
@@ -256,10 +269,7 @@ function NovoClienteDialog() {
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancelar
           </Button>
-          <Button
-            onClick={() => mutation.mutate(form)}
-            disabled={!form.nome || mutation.isPending}
-          >
+          <Button onClick={() => mutation.mutate(form)} disabled={!form.nome || mutation.isPending}>
             {mutation.isPending ? "Salvando..." : "Salvar"}
           </Button>
         </DialogFooter>
